@@ -3,25 +3,438 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --custom-scale: 0.85;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@media (max-width: 1444px) {
+  #root {
+    transform: scale(var(--custom-scale));
+    transform-origin: top left;
+    width: calc(100% / var(--custom-scale));
+    height: calc(100% / var(--custom-scale));
   }
 }
 
+/* 
+#root {
+  transform: scale(var(--custom-scale)) !important;
+  transform-origin: top left !important;
+  width: calc(100% / var(--custom-scale)) !important;
+  height: calc(100% / var(--custom-scale)) !important;
+} */
+
+
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  overflow: auto;
+}
+
+@font-face {
+  font-family: "Assistant";
+  src: url("/fonts/Assistant.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("/fonts/OpenSans.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "IBMPlexSans";
+  src: url("/fonts/IBMPlexSans.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.font-variant {
+  font-feature-settings: 'clig' off, 'liga' off;
+}
+
+.custom-box-shadow {
+  box-shadow: 0px 2px 4px 0px rgba(74, 74, 74, 0.15);
+}
+
+/* Add this to your CSS file */
+.animate-fadeIn {
+  animation: fadeIn1 0.3s ease-in-out;
+}
+
+@keyframes fadeIn1 {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ag-grid header css */
+
+.ag-theme-alpine {
+  /* --ag-selected-row-background-color: #F9FBFC !important; */
+  --ag-checkbox-checked-color: #114391 !important;
+  --ag-alpine-active-color: #F9FBFC !important;
+  --ag-range-selection-border-color: transparent !important;
+  --ag-row-border-color: #a6a6a6 !important;
+  --ag-header-background-color: #F9FBFC !important;
+}
+
+.ag-theme-alpine .ag-row-hover {
+  background-color: #FAF6EE;
+}
+
+.ag-theme-alpine .ag-header-cell {
+  font-size: 16px;
+}
+
+
+.ag-root-wrapper.ag-ltr.ag-layout-normal {
+  border-radius: 12px;
+  border: 1px solid #A6A6A6;
+}
+
+.ag-row-no-focus.ag-row.ag-row-level-0.custom-row-hover.ag-row-position-absolute {
+  background: white;
+  border-bottom: 1px solid #A6A6A6;
+  /* border-bottom: 1px solid #A6A6A6; */
+}
+
+.ag-header-row.ag-header-row-column {
+  background-color: white;
+  border-bottom: none;
+}
+
+div.ag-header-cell.ag-floating-filter {
+  /* background-color: red; */
+  border-top: none !important;
+}
+
+.ag-floating-filter-button {
+  display: none !important;
+}
+
+.ag-header-row.ag-header-row-column {
+  background: #F9FBFC;
+}
+
+.ag-icon-menu {
+  display: none !important;
+}
+
+span.ag-header-cell-text {
+  color: #262626;
+  /* Body/Body Bold */
+  font-family: Assistant;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+
+.master-data .ag-row.ag-row-hover {
+  background: #CBDDF9 !important;
+}
+
+.ag-row.ag-row-hover,
+.detailsTable .ag-row.ag-row-hover {
+  background: #e0d2b4 !important;
+}
+
+.ag-row-hover::before {
+  content: "";
+  background-color: transparent !important;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 0.3em;
+  height: 0.2rem;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #A6A6A6;
+  border-radius: 12px;
+}
+
+.suggetion-table .ag-root-wrapper.ag-ltr.ag-layout-normal {
+  border-radius: 12px;
+  border: 1px solid #A6A6A6;
+}
+
+.document-table .ag-root-wrapper.ag-ltr.ag-layout-normal {
+  border: none;
+}
+
+/* .drop-table .ag-header-row.ag-header-row-column {
+  background-color: white;
+} */
+
+.drop-table .ag-root-wrapper.ag-ltr.ag-layout-normal {
+  border-radius: 0px;
+  border: none;
+}
+
+.previsit-review-table .ag-cell {
+  padding: 0px;
+}
+
+.previsit-review-table .ag-header-cell {
+  padding: 8px;
+}
+
+.previsitSuggetionTable .ag-root-wrapper.ag-ltr.ag-layout-normal {
+  border-radius: 0px;
+  border: none;
+}
+
+.previsitSuggetionTable .ag-header-cell:hover {
+  background-color: #D0D0CE !important;
+}
+
+
+.checkbox-wrapper-3 {
+  position: relative;
+  display: inline-block;
+}
+
+.toggle-checkbox {
+  visibility: hidden;
+  display: none;
+}
+
+.toggle-label {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 20px;
+  cursor: pointer;
+  transform: translate3d(0, 0, 0);
+}
+
+.toggle-label:before {
+  content: "";
+  position: relative;
+  top: 3px;
+  left: 3px;
+  width: 34px;
+  height: 14px;
+  display: block;
+  background: white;
+  border: 1px solid #114391;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.toggle-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  display: block;
+  background: #870000;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.toggle-handle:before {
+  content: "";
+  position: absolute;
+  display: block;
+  margin: -18px;
+  width: 56px;
+  height: 56px;
+  background: rgba(79, 46, 220, 0.5);
+  border-radius: 50%;
+  transform: scale(0);
+  opacity: 1;
+  pointer-events: none;
+}
+
+.toggle-checkbox:checked+.toggle-label .toggle-handle {
+  background: #107500;
+  transform: translateX(20px);
+  transition: all 0.2s cubic-bezier(0.8, 0.4, 0.3, 1.25), background 0.15s ease;
+  box-shadow: 0 3px 8px rgba(79, 46, 220, 0.2);
+}
+
+.toggle-checkbox:checked+.toggle-label .toggle-handle:before {
+  transform: scale(1);
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.ql-toolbar.ql-snow {
+  border-radius: 4px 4px 0px 0px;
+}
+
+.ql-container.ql-snow {
+  border: 1px solid #A6A6A6;
+  border-radius: 0px 0px 4px 4px;
+}
+
+.calendarWrap {
+  position: absolute;
+  z-index: 1;
+  top: -9px;
+  right: 70px;
+}
+
+.rdrCalendarWrapper {
+  border: 1px solid #a4a4a4;
+  border-radius: 12px;
+}
+
+.rdrDateDisplayWrapper {
+  border-radius: 12px 12px 0px 0px;
+}
+
+.rdrCalendarWrapper.rdrDateRangeWrapper.calendarElement {
+  margin-top: 6px;
+}
+
+input.react-datepicker-ignore-onclickoutside {
+  outline: none;
+}
+
+iframe[title] {
+  border: none;
+  outline: none;
+  cursor: default;
+  text-decoration: none;
+  /* Add more styling as needed */
+}
+
+
+.custom-select .css-1tdat1e-control:hover,
+.css-17yaexx-control:hover,
+.custom-select .css-kyct0n-control:hover {
+  border-color: #092C63 !important;
+}
+
+input[type="radio"]:checked {
+  background-color: #114391;
+  box-shadow: 0px 0px 0px 2px white inset;
+  border: 1px solid #114391;
+}
+
+
+input[type="radio"] {
+  border: 1px solid #4A4A4A;
+}
+
+input[type="radio"].radio-disable {
+  border: 1px solid #929292;
+}
+
+.ql-toolbar.ql-snow {
+  border-radius: 4px 4px 0px 0px;
+}
+
+.ql-container.ql-snow {
+  border: 1px solid #A6A6A6;
+  border-radius: 0px 0px 4px 4px;
+}
+
+.calendarWrap {
+  position: absolute;
+  z-index: 1;
+  top: -9px;
+  right: 70px;
+}
+
+.rdrCalendarWrapper {
+  border: 1px solid #a4a4a4;
+  border-radius: 12px;
+}
+
+.rdrDateDisplayWrapper {
+  border-radius: 12px 12px 0px 0px;
+}
+
+.rdrCalendarWrapper.rdrDateRangeWrapper.calendarElement {
+  margin-top: 6px;
+}
+
+span.rdrInRange,
+span.rdrStartEdge,
+span.rdrEndEdge {
+  color: #114391 !important;
+}
+
+input.react-datepicker-ignore-onclickoutside {
+  outline: none;
+}
+
+.react-datepicker__input-container>input[type="text"] {
+  outline: none;
+}
+
+.custom-toast {
+  height: 80px;
+  width: 20vw;
+  font-size: 25px;
+  font-weight: 700;
+  background-color: #333;
+  color: #fff;
+}
+
+
+.radio-label {
+  position: relative;
+  padding-left: 20px;
+  margin-right: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.radio-input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.radio-custom {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid #000;
+  border-radius: 50%;
+}
+
+.radio-input:checked+.radio-custom {
+  border: 6px solid #1c41b9;
+  background-color: transparent;
 }
