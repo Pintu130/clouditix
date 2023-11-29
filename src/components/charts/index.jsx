@@ -33,38 +33,14 @@ function ChartsPage({handlelogout}) {
 
         setTabs(updatedAllData);
       } else {
-        if (data?.linkTo === "intakeManagement") {
           const newTab = {
             id: generateUniqueKey(),
             title: data?.text,
             selected: true,
             key: data?.linkTo,
-            subTabs: intakeSubTabs
           };
 
           setTabs([...convertedData, newTab]);
-        }
-        else if (data?.linkTo === "medicalRecordsCategories") {
-          const newTab = {
-            id: generateUniqueKey(),
-            title: data?.text,
-            selected: true,
-            key: data?.linkTo,
-            subTabs: medicalRecordsTabs
-          };
-
-          setTabs([...convertedData, newTab]);
-        } else {
-          const newTab = {
-            id: generateUniqueKey(),
-            title: data?.text,
-            selected: true,
-            key: data?.linkTo,
-
-          };
-
-          setTabs([...convertedData, newTab]);
-        }
       }
     } catch (error) {
       console.log(error), "ERROR";

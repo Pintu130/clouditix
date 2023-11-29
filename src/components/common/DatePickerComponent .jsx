@@ -11,19 +11,6 @@ const DatePickerComponent = ({ selectedDate, onChange, name }) => {
     }
     return (
         <>
-            {/*  <DatePicker
-                selected={selectedDate}
-                onChange={onChange}
-                dateFormat="MM/dd/yyyy"
-                placeholderText="MM/DD/YYYY"
-            /> */}
-
-            {/* <DatePicker
-                selected={selectedDate}
-                onChange={handleChange}
-                dateFormat="MM/DD/yyyy"
-                showMonthYearPicker
-                placeholderText="MM/YYYY" /> */}
             <DatePicker
                 selected={selectedDate}
                 onChange={handleChange}

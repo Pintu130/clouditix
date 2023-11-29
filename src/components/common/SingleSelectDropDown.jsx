@@ -1,7 +1,7 @@
 import React from 'react';
+import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import makeAnimated from 'react-select/animated';
-import Select from 'react-select';
 
 const customStyles = {
     option: (provided, state) => {
@@ -19,9 +19,7 @@ const customStyles = {
     control: (provided, state) => {
         return ({
             ...provided,
-            border: state?.isFocused ? "2px solid #092C63" : state?.menuIsOpen ? '2px solid #092C63' : "0.5px solid #A6A6A6",
-            boxShadow: 'none'
-
+            boxShadow: state?.isFocused ? '0 0 0 1.5px #046e04' : "",
         })
     },
     indicatorSeparator: () => ({
@@ -34,46 +32,38 @@ const customStyles = {
         fontWeight: "400",
         fontFamily: "OpenSans"
     }),
-    menuList: (provided, state) => ({
-        ...provided,
-        maxHeight: '200px',
-        overflowY: 'auto',
-
-        '@media screen and (max-width: 600px)': {
-            maxHeight: '300px',
-        },
-    }),
 };
 
-function SingleSelectDropDown({ handleSelectChange, selectedType, options, placeholder = "", target = "", isDisabled = false, isCreatable = true }) {
+function SingleSelectDropDown({ handleSelectChange, selectedType, options, placeholder = "", target = "", creatableSelect, isClearable = true, isDisabled = false }) {
     const animatedComponents = makeAnimated();
     const handleChange = (data) => {
         handleSelectChange(data, target)
     }
     return (
         <div className="w-full">
-            {isCreatable ? <CreatableSelect
+            {creatableSelect ? <CreatableSelect
                 placeholder={""}
-                isClearable={true}
+                isClearable={isClearable}
                 isMulti={false}
                 styles={customStyles}
                 options={options}
                 value={selectedType}
-                isDisabled={isDisabled}
                 onChange={handleChange}
                 components={animatedComponents}
-            /> :
-                <Select
-                    placeholder={""}
-                    isClearable={true}
-                    isMulti={false}
-                    styles={customStyles}
-                    options={options}
-                    value={selectedType}
-                    isDisabled={isDisabled}
-                    onChange={handleChange}
-                    components={animatedComponents}
-                />}
+                className='capitalize'
+                isDisabled={false}
+            /> : <Select
+                placeholder={""}
+                isClearable={isClearable}
+                isMulti={false}
+                styles={customStyles}
+                options={options}
+                value={selectedType}
+                onChange={handleChange}
+                components={animatedComponents}
+                className='capitalize'
+                isDisabled={isDisabled}
+            />}
         </div>
     )
 }

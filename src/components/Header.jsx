@@ -1,18 +1,16 @@
-import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image';
+
+import UserModal from './common/UserModal';
+import { staticMenuItems } from '@/assets/data';
+
 import { AiOutlineMenu } from 'react-icons/ai';
 import { GrClose } from "react-icons/gr"
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
-import { staticMenuItems } from '@/assets/data';
-import { useRouter } from 'next/router';
-import UserModal from './common/UserModal';
 
 
 function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
-  const router = useRouter()
-  const queryData = router.query;
   const [allMenuData] = useState(staticMenuItems);
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [selectedPage, setselectedPage] = useState("home");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,13 +31,6 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
-  useEffect(() => {
-    if (queryData?.menu) {
-      setselectedPage(queryData.menu)
-    }
-  }, [queryData])
-
 
   const handleLinkTo = (link) => {
     handleChangeTab(link)
@@ -79,17 +70,12 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
     };
     return (
       <div className={`flex  ${item.hasChildren ? 'flex-col' : ''} 
-      items-${item.hasChildren ? 'start' : 'center hover:bg-[#EBF2FE]'} cursor-pointer  gap-2 py-2 ${selectedPage === item?.linkTo || item?.linkTo === "medicalRecordsCategories" && selectedPage === "medicalRecordsRules" ?
+      items-${item.hasChildren ? 'start' : 'center hover:bg-[#EBF2FE]'} cursor-pointer  gap-2 py-2 ${selectedPage === item?.linkTo ?
           "bg-[#EBF2FE] " :
           "bg-white "
         }
-        
-    
-        
-        ${selectedPage === item?.linkTo || item?.linkTo === "medicalRecordsCategories" && selectedPage === "medicalRecordsRules" ?
-
-
-          !item.hasChildren ? "border-l-4 border-blue-B40 " : "border-l-4 border-transparent" : ""}
+        ${selectedPage === item?.linkTo ? !item.hasChildren ? "border-l-4 border-[#046e04] " : "border-l-4 border-transparent" : ""
+        }
         `}
       >
         <button onClick={item.hasChildren ? () => toggleChild(item) : () => handleSubChildClick(item)} className="flex items-center w-full pl-3">
@@ -98,7 +84,6 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
           </div>
           <div className='flex justify-between w-full'>
             <span className={`pl-2 text-base font-OpenSans leading-normal 
-            ${item.hasChildren ? '' : ''}
             ${selectedPage === item?.linkTo ? "text-[#046e04] font-bold" : "text-gray-G60 font-normal"}
               `}
             >{item.text}</span>
@@ -153,7 +138,8 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
     }} className="relative ">
       <div className='px-3 pt-3 shadow-[0px_4px_6px_0px_#1143911A]  z-10 '>
         <div className='flex justify-between border-b '>
-          <button className='flex items-center flex-shrink-0 gap-6 '>
+          <button className='flex items-center flex-shrink-0 gap-
+          3 '>
             {!isSidebarOpen ? <AiOutlineMenu className='w-4 h-4 cursor-pointer sm:h-6 sm:w-6' onClick={toggleSidebar} /> : <GrClose className='w-4 h-4 cursor-pointer sm:h-6 sm:w-6' onClick={toggleSidebar} />}
             <Image
               src="/images/icon/logo.png"
@@ -163,6 +149,7 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
               height="40"
               className='flex-shrink-0 w-[163px] h-auto pb-2'
             />
+            <span className='text-xl font-bold'>Guest 360</span>
           </button>
           <div className='flex gap-4 items-center '>
             <Image src="/images/icon/Notification.svg" alt='Notification'
@@ -170,7 +157,7 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
               height="40"
               className='cursor-pointer'
             />
-            <div className="relative flex-shrink-0 bg-blue-900 rounded-full w-9 h-9" onClick={(e) => handleUserIconClick(e)}>
+            <div className="relative flex-shrink-0 bg-[#046e04] rounded-full w-9 h-9" onClick={(e) => handleUserIconClick(e)}>
               <div className="absolute flex items-center justify-center w-full h-full text-base font-bold leading-normal text-white cursor-pointer">CR</div>
               <div className=' absolute top-16 -right-2.5 z-50 custom-box-shadow '>
                 <UserModal isOpen={isModalOpen} onClose={handleCloseModal} handlelogout={handlelogout} />
@@ -180,7 +167,6 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
         </div>
       </div>
       <div className='relative flex w-full h-full md:static'>
-        {/* <div className='relative flex w-full '> */}
         {isSidebarOpen && <div
           className={`bg-white  absolute md:relative top-0 z-20 text-white mt-[7px] w-full max-w-[300px]  transition-all  duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
             }  ${allMenuData?.length < 9 ? "" : "overflow-auto"}`}
@@ -207,4 +193,4 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
   )
 }
 
-export default Header
+export default Header     

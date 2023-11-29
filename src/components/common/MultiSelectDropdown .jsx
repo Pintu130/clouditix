@@ -51,12 +51,6 @@ const MultiSelectDropdown = ({
 
     const [selectedOptions, setSelectedOptions] = useState([]);
 
-    // useEffect(() => {
-    //     setSelectedOptions([])
-    //     onMultiSelectChange([], target)
-    // }, [isClear])
-
-
     const handleChange = (selectedOptions) => {
         setSelectedOptions(selectedOptions);
         onMultiSelectChange(selectedOptions, target)

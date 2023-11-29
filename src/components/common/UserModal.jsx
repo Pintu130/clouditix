@@ -63,19 +63,6 @@ const UserModal = ({ isOpen, handlelogout}) => {
                             />
                             <span className='text-base  font-normal leading-6 text-[#4A4A4A] ' >Change Password</span>
                         </li>
-                        <li
-                            className={`cursor-pointer hover:bg-[#EBF2FE] px-4 py-2 pb-4 flex items-center mb-3 gap-2  ${selectedItem === 'All Services' ? 'bg-gray-100' : ''
-                                }`}
-                        // onClick={(e) => handleItemClick(e, 'All Services')}
-                        >
-                            <Image src="/images/icon/Home.svg"
-                                alt='Notification'
-                                width="22"
-                                height="22"
-                                className='cursor-pointer'
-                            />
-                            <span className='text-base  font-normal leading-6 text-[#4A4A4A] ' >All Services</span>
-                        </li>
                         <hr className='h-[1px] border-[#4A4A4A] ' />
                         <li
                             className={`cursor-pointer  mt-3 hover:bg-[#EBF2FE] px-4 py-2 flex items-center gap-2  ${selectedItem === 'Log Out' ? 'bg-gray-100' : ''

@@ -1,9 +1,42 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { BiSolidPencil } from 'react-icons/bi';
 import CustomButton from '../common/CustomButton';
+import CustomModal from '../common/CustomModal';
+import Image from 'next/image';
+import SingleSelectDropDown from '../common/SingleSelectDropDown';
+import { useDispatch, useSelector } from 'react-redux';
+import { setDataQualityCreate } from '@/store/dataQualitySlice';
+
+
+const Entity = [
+    { label: "guest", value: "guest" },
+];
+const DataSource = [
+    { label: "CRM", value: "crm" },
+];
+const Attribute = [
+    { label: "John", value: "john" },
+    { label: "Jack", value: "jack" },
+    { label: "Pitter", value: "pitter" },
+    { label: "Rock", value: "rock" },
+];
+
+const ValidationRule = [
+    { label: "datatype_check", value: "datatype_check" },
+    { label: "empty_value_check", value: "empty_value_check" },
+    { label: "null_value_check", value: "null_value_check" },
+    { label: "length_check", value: "length_check" },
+    { label: "special_character_check", value: "special_character_check" },
+]
+
+const RuleParameters = [
+    { label: "string", value: "string" },
+    { label: "number", value: "number" },
+    { label: "!,@,#,$,%,^,&,*,+,-", value: "!,@,#,$,%,^,&,*,+,-" },
+]
 
 const tableData = [
     {
@@ -55,6 +88,7 @@ const tableData = [
 
 const DataQualityRules = () => {
     const tableRef = useRef(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [rowData, setRowData] = useState(tableData);
 
     const [columnDefs] = useState([
@@ -63,6 +97,7 @@ const DataQualityRules = () => {
             headerName: "Data Source",
             minWidth: 100,
             maxWidth: 200,
+            filter: true, 
         },
         {
             field: "entity",
@@ -114,7 +149,7 @@ const DataQualityRules = () => {
                 return (
                     <div className="flex items-center justify-center h-full  ">
                         <button
-                        // onClick={() => handleEdit(data.id)}
+                            onClick={(e) => handleEdit(e, data)}
                         >
                             <BiSolidPencil className="w-6 h-6 text-blue-B40" />
                         </button>
@@ -138,9 +173,9 @@ const DataQualityRules = () => {
     };
 
     const defaultColDef = {
-        // filter: true,
+        filter: true,
         sortable: true,
-        // floatingFilter: true,
+        floatingFilter: true,
         flex: 1,
         headerComponentParams: { placeholder: "Enter Member ID" },
         resizable: true,
@@ -174,8 +209,225 @@ const DataQualityRules = () => {
         // params.api.setEditable(true);
     };
 
+    const handleCreateModal = () => {
+        setIsModalOpen(true)
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setFormData({})
+    };
+
+
+
+    const [formData, setFormData] = useState({})
+    const dispatch = useDispatch()
+    const dataQualityTable = useSelector(state => state?.dataQuality?.data)
+    const handleFromData = (data, target) => {
+        setFormData({
+            ...formData,
+            [target]: data,
+        })
+    }
+
+    const handleCreateSave = () => {
+        dispatch(setDataQualityCreate(formData))
+        closeModal()
+    }
+
+    const handleEdit = (e, data) => {
+        e.stopPropagation();
+        const modifyData = {
+            datasource: { label: data?.datasource, value: data?.datasource },
+            entity: { label: data?.entity, value: data?.entity },
+            validationrule: { label: data?.validationrule, value: data?.validationrule },
+            attribute: { label: data?.attribute, value: data?.attribute },
+            ruleparameters: { label: data?.ruleparameters, value: data?.ruleparameters },
+            ismandatory: data?.ismandatory,
+            isactive: false,
+        };
+        setFormData(modifyData);
+        setIsModalOpen(true);
+    }
+
+    useEffect(() => {
+        if (dataQualityTable && Object?.keys(dataQualityTable)?.length > 0) {
+            const addData = {
+                datasource: dataQualityTable?.datasource?.label,
+                entity: dataQualityTable?.entity?.label,
+                validationrule: dataQualityTable?.validationrule?.label,
+                attribute: dataQualityTable?.attribute?.label,
+                ruleparameters: dataQualityTable?.ruleparameters?.label,
+                ismandatory: dataQualityTable?.isMandatory,
+                isactive: false,
+            }
+            setRowData(prevData => [...prevData, addData])
+            dispatch(setDataQualityCreate({}))
+        }
+    }, [dataQualityTable])
+
+
     return (
-        <div className="w-full gap-6 p-3 xl:h-full">
+        <div className="w-full flex flex-col  gap-6 p-3 xl:h-full">
+
+            <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
+                <div className='w-full h-full'>
+                    <div className='flex justify-between border-b '>
+                        <button className='flex items-center flex-shrink-0 gap-6 px-6 '>
+                            <Image
+                                src="/images/icon/logo.png"
+                                alt='HOM-logo'
+                                width="212"
+                                priority
+                                height="40"
+                                className='flex-shrink-0  h-auto pb-2'
+                            />
+                        </button>
+                    </div>
+                    <div className='p-4 lg:p-6 flex flex-col gap-4 w-full h-full '>
+
+                        <h2 className='text-xl font-bold '> Create Data Quality Rule </h2>
+                        <div className='flex flex-col justify-center lg:justify-between h-full'>
+                            <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 w-full'>
+                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
+                                    <label
+                                        htmlFor="speciality"
+                                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
+                                    >
+                                        Entity
+                                    </label>
+                                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
+                                        <SingleSelectDropDown
+                                            placeholder="Enter Entity"
+                                            options={Entity}
+                                            target="entity"
+                                            creatableSelect={true}
+                                            selectedType={formData?.entity}
+                                            handleSelectChange={handleFromData}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
+                                    <label
+                                        htmlFor="speciality"
+                                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
+                                    >
+                                        Attribute
+                                    </label>
+                                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
+                                        <SingleSelectDropDown
+                                            placeholder="Enter Attribute"
+                                            options={Attribute}
+                                            target="attribute"
+                                            creatableSelect={true}
+                                            selectedType={formData?.attribute}
+                                            handleSelectChange={handleFromData}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
+                                    <label
+                                        htmlFor="speciality"
+                                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
+                                    >
+                                        Validation Rule
+                                    </label>
+                                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
+                                        <SingleSelectDropDown
+                                            placeholder="Enter Validation Rule"
+                                            options={ValidationRule}
+                                            target="validationrule"
+                                            creatableSelect={true}
+                                            selectedType={formData?.validationrule}
+                                            handleSelectChange={handleFromData}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
+                                    <label
+                                        htmlFor="speciality"
+                                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
+                                    >
+                                        Rule Parameters
+                                    </label>
+                                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
+                                        <SingleSelectDropDown
+                                            placeholder="Enter Rule Parameters"
+                                            options={RuleParameters}
+                                            target="ruleparameters"
+                                            creatableSelect={true}
+                                            selectedType={formData?.ruleparameters}
+                                            handleSelectChange={handleFromData}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
+                                    <label
+                                        htmlFor="speciality"
+                                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
+                                    >
+                                        Data Source
+                                    </label>
+                                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
+                                        <SingleSelectDropDown
+                                            placeholder="Enter Data Source"
+                                            options={DataSource}
+                                            target="datasource"
+                                            // isDisabled={}
+                                            creatableSelect={true}
+                                            selectedType={formData?.datasource}
+                                            handleSelectChange={handleFromData}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
+                                    <div className='flex items-center w-full gap-2 custom-select pt-10'>
+                                        <input
+                                            type="checkbox"
+                                            className='h-5 w-5 accent-blue-B40 border-[#4A4A4A] rounded-[4px] hover:border-blue-B40   active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none cursor-pointer'
+                                            onChange={(e) => handleFromData(e.target.checked, 'isMandatory')}
+                                        />
+                                        <label htmlFor="speciality" className="text-[#5A5A5A] whitespace-nowrap w-full max-w-[145px] inline-block text-base font-normal">Is Mandatory
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div className='flex items-center justify-end gap-10'>
+                                <div className="w-full max-w-[150px]" >
+                                    <CustomButton
+                                        name="Save"
+                                        handleClick={() => handleCreateSave()}
+                                        isDisable={false}
+                                        isLoading={false}
+                                    />
+                                </div>
+                                <div className="w-full max-w-[150px]" >
+                                    <CustomButton
+                                        name="Cancel"
+                                        handleClick={() => closeModal()}
+                                        isDisable={false}
+                                        isLoading={false}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </CustomModal>
+
+            <div className='flex items-center justify-end'>
+                <div className="w-full max-w-[150px]" >
+                    <CustomButton
+                        name="Create"
+                        handleClick={() => handleCreateModal()}
+                        isDisable={false}
+                        isLoading={false}
+                    />
+                </div>
+            </div>
+
             <div className="flex w-full min-h-[50vh] pb-10  xl:max-h-[30%]  mx-auto ag-theme-alpine ">
                 <div className="relative overflow-auto max-h-[500px]" style={{ width: "100%" }}>
                     <AgGridReact
@@ -198,10 +450,8 @@ const DataQualityRules = () => {
                 </div>
             </div>
 
-            <div className='flex items-center justify-end gap-10'>
-                <div
-                    className="w-full max-w-[200px]"
-                >
+            {/* <div className='flex items-center justify-end gap-10'>
+                <div className="w-full max-w-[150px]" >
                     <CustomButton
                         name="Cancel"
                         handleClick={() => { }}
@@ -209,10 +459,7 @@ const DataQualityRules = () => {
                         isLoading={false}
                     />
                 </div>
-                <div
-                    className="w-full max-w-[200px]"
-
-                >
+                <div className="w-full max-w-[150px]" >
                     <CustomButton
                         name="Save"
                         handleClick={() => { }}
@@ -220,7 +467,7 @@ const DataQualityRules = () => {
                         isLoading={false}
                     />
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

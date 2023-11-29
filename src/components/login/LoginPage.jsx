@@ -4,25 +4,33 @@ import React, { useState } from 'react'
 import CustomLoader from '../common/CutomLoader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SingleSelectDropDown from '../common/SingleSelectDropDown';
 
+const Solution = [
+    { label: "Solution 1", value: "solution1" },
+    { label: "Solution 2", value: "solution2" },
+    { label: "Solution 3", value: "solution3" },
+];
 
-const LoginPage = ({handlelogin}) => {
+const LoginPage = ({ handlelogin }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
         password: '',
+        solution: ''
     });
 
     const [errors, setErrors] = useState({
         username: '',
         password: '',
+        solution: ''
     });
     const router = useRouter();
 
     const handleChange = (e) => {
         const name = e.target.name
-        const value = e.target.value.trim()
-
+        const value = name === 'solution' ? e.target.value : e.target.value.trim();
+        console.log(name, value);
         setFormData({
             ...formData,
             [name]: value
@@ -30,7 +38,8 @@ const LoginPage = ({handlelogin}) => {
 
         setErrors({
             username: '',
-            password: ''
+            password: '',
+            solution: ''
         })
 
     }
@@ -43,95 +52,47 @@ const LoginPage = ({handlelogin}) => {
         if (!formData.password) {
             errors.password = 'Password is required';
         }
-        setErrors(errors); // Update the errors state
-        return Object.keys(errors).length === 0; // Return true if there are no errors
+        if (!formData.solution) {
+            errors.solution = 'Solution is required';
+        }
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
     };
-
-    function setCookie(name, value, daysToExpire) {
-        const date = new Date();
-        date.setTime(date.getTime() + (daysToExpire * 24 * 60 * 60 * 1000)); // Calculate expiration date.
-        const expires = `expires=${date.toUTCString()}`;
-        document.cookie = `${name}=${value}; ${expires}; path=/`;
-    }
 
     const submitForm = async (e) => {
         e.preventDefault();
         if (formvalidation()) {
-            const loginData = {
-                username: formData.username,
-                password: formData.password,
-                ip: "1223345"
-            };
-
-            console.log("login");
 
             handlelogin(true)
-
-           /*  try {
-                if (loginData?.username?.length > 0) {
-                    setIsLoading(true)
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/authenticateuser`, {
-                        method: "POST",
-                        body: JSON.stringify(loginData),
-                    });
-
-
-                    const Data = await response.json();
-
-                    if (Data.Message === "Success") {
-                        setFormData({
-                            username: '',
-                            password: ''
-                        })
-                        //test
-                        localStorage.setItem('Token', JSON.stringify(Data.Data));
-                        setCookie('Token', Data.Data, 365)
-                        router.push('/services');
-                        // setIsLoading(false)
-                    } else {
-                        setFormData({
-                            username: '',
-                            password: ''
-                        })
-                        setIsLoading(false)
-                        toast.error(Data.Message, {
-                            position: "top-center",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "light",
-                            toastId: "toastId"
-                        });
-                    }
-                } else {
-                    console.log("add valid data");
-
-                }
-            } catch (error) {
-                setIsLoading(false)
-                console.log(error);
-                return error
-            } */
+            /* toast.error(Data.Message, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                toastId: "toastId"
+            }); */
         }
 
     };
-
 
     return (
         <>
             <div className='flex flex-col items-center justify-center min-h-screen'>
                 {isLoading && <CustomLoader />}
-                <div className='flex flex-col items-center justify-center gap-6 align-middle font-Assistant '>
-                    <div>
-                        <Image src='/images/icon/logo.png' alt='BrandLogo'
+                <div className='flex flex-col items-center justify-center gap-4 align-middle font-Assistant '>
+                    <div className='flex items-center justify-center'>
+                        <Image src='/images/icon/logo.png'
+                            alt='BrandLogo'
                             width={300}
                             height={300}
                         />
+                        <span className='text-2xl font-extrabold'>MDM 360</span>
                     </div>
-                    <form action="" onSubmit={(e) => submitForm(e)} className='flex flex-col items-center justify-center gap-6 align-middle'>
+                    <form action="" onSubmit={(e) => submitForm(e)} className='flex flex-col items-center justify-center gap-6 align-middle border-b pb-5'>
                         <div className='flex flex-col gap-6'>
                             <div className='relative flex flex-col'>
                                 <label htmlFor='username' className='text-[#4A4A4A] text-sm font-normal font-Assistant '>Username</label>
@@ -142,7 +103,7 @@ const LoginPage = ({handlelogin}) => {
                                     name='username'
                                     value={formData.username}
                                     onChange={(e) => handleChange(e)}
-                                    className={`w-[324px] h-10 p-2 rounded-[4px] border-[1px] ${errors.username ? 'border-Error' : 'border-[#4A4A4A]'} placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40   active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none`} />
+                                    className={`w-[324px] h-10 p-2 rounded-[4px] border-[1px] ${errors.username ? 'border-Error' : 'border-[#4A4A4A]'} placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-[#46e04]   active:border-2 active:border-solid active:border-[#46e04] focus:border-2 focus:border-solid focus:border-[#46e04] outline-none`} />
                                 {errors.username && <span className='absolute pt-1 text-sm font-normal leading-4 -bottom-4 text-Error animate-fade-in '>{errors.username}</span>}
                             </div>
                             <div className='flex flex-col items-center justify-center gap-2'>
@@ -155,8 +116,33 @@ const LoginPage = ({handlelogin}) => {
                                         name='password'
                                         value={formData.password}
                                         onChange={(e) => handleChange(e)}
-                                        className={` w-[324px] p-2 h-10  rounded-[4px] border-[1px] ${errors.password ? 'border-Error' : 'border-[#4A4A4A]'} placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40   active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none`} />
+                                        className={` w-[324px] p-2 h-10  rounded-[4px] border-[1px] ${errors.password ? 'border-Error' : 'border-[#4A4A4A]'} placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-[#46e04]   active:border-2 active:border-solid active:border-[#46e04] focus:border-2 focus:border-solid focus:border-[#46e04] outline-none`} />
                                     {errors.password && <span className='absolute pt-1 text-sm font-normal leading-4 -bottom-4 text-Error animate-fade-in '>{errors.password}</span>}
+                                </div>
+                                <div className='relative flex flex-col w-full pt-3 '>
+                                    <div className="flex flex-col w-full items-start  custom-select">
+                                        <label
+                                            htmlFor="speciality"
+                                            className="text-[#4A4A4A] text-sm font-normal font-Assistant"
+                                        >
+                                            Solution
+                                        </label>
+                                        <div className="w-full max-w-[100%]">
+                                            <SingleSelectDropDown
+                                                placeholder="Enter Solution"
+                                                options={Solution}
+                                                target="solution"
+                                                creatableSelect={true}
+                                                selectedType={formData?.solution}
+                                                handleSelectChange={(data) => handleChange({ target: { name: "solution", value: data } })}
+                                            />
+                                        </div>
+                                        {errors.solution && (
+                                            <span className="absolute pt-1 text-sm font-normal leading-4 -bottom-4 text-Error animate-fade-in ">
+                                                {errors.solution}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className='flex items-center justify-between w-full pt-3'>
                                     <div className='flex items-center justify-center gap-2'>
@@ -166,14 +152,24 @@ const LoginPage = ({handlelogin}) => {
                                     <div className="text-[#4A4A4A] border-b-[1.5px] border-b-[#4A4A4A] cursor-pointer leading-4 font-normal text-base ">Forgot Password</div>
                                 </div>
                             </div>
+
                         </div>
                         <button
                             type="submit"
-                            className=' bg-[#1D458C] w-full py-[10px] px-6 text-[#fff] font-semibold text-lg leading-5 text-center rounded-[3px] '
+                            className=' bg-[#046e04] w-full py-[10px] px-6 text-[#fff] font-semibold text-lg leading-5 text-center rounded-[3px] '
                         >
-                            Log in
+                            SIGN IN
                         </button>
                     </form>
+                    <div className='w-full px-8 flex items-center justify-center gap-3 flex-col'>
+                        <span className='text-[#4A4A4A] text-base font-normal font-Assistant'>New User</span>
+                        <button
+                            type=""
+                            className=' bg-[#046e04] w-full py-[10px] px-6 text-[#fff] font-semibold text-lg leading-5 text-center rounded-[3px] '
+                        >
+                            SIGN UP
+                        </button>
+                    </div>
                 </div>
             </div>
             <ToastContainer
