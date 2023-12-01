@@ -8,7 +8,7 @@ function CustomInput({ label = "", placeholder = "", name = "", value = "", onCh
             </label>}
             <input
                 type={isNUmber ? "number" : "text"}
-                // placeholder={placeholder || ""}
+                placeholder={placeholder || ""}
                 autoComplete='false'
                 id={name}
                 name={name || ""}

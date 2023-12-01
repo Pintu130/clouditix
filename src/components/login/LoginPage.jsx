@@ -92,7 +92,7 @@ const LoginPage = ({ handlelogin }) => {
                         />
                         <span className='text-2xl font-extrabold'>MDM 360</span>
                     </div>
-                    <form action="" onSubmit={(e) => submitForm(e)} className='flex flex-col items-center justify-center gap-6 align-middle border-b pb-5'>
+                    <form action="" onSubmit={(e) => submitForm(e)} className='flex flex-col items-center justify-center gap-6 align-middle pb-5'>
                         <div className='flex flex-col gap-6'>
                             <div className='relative flex flex-col'>
                                 <label htmlFor='username' className='text-[#4A4A4A] text-sm font-normal font-Assistant '>Username</label>
@@ -161,7 +161,7 @@ const LoginPage = ({ handlelogin }) => {
                             SIGN IN
                         </button>
                     </form>
-                    <div className='w-full px-8 flex items-center justify-center gap-3 flex-col'>
+                    {/* <div className='w-full px-8 flex items-center justify-center gap-3 flex-col'>
                         <span className='text-[#4A4A4A] text-base font-normal font-Assistant'>New User</span>
                         <button
                             type=""
@@ -169,7 +169,7 @@ const LoginPage = ({ handlelogin }) => {
                         >
                             SIGN UP
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <ToastContainer

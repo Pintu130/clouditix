@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { ChartTabData, intakeSubTabs, medicalRecordsTabs } from '@/assets/data';
 import Header from '../Header'
 import DataQualityRules from '../Configuration/DataQualityRules';
+import Dashboard from '../Dashboard/Dashboard';
+import DataMatchingRules from '../Configuration/DataMatching/DataMatchingRules';
 
-function ChartsPage({handlelogout}) {
+function ChartsPage({ handlelogout }) {
   const [subSelectedTab, setSubSelectedTab] = useState('');
   const [tabs, setTabs] = useState(ChartTabData);
 
@@ -33,38 +35,46 @@ function ChartsPage({handlelogout}) {
 
         setTabs(updatedAllData);
       } else {
-          const newTab = {
-            id: generateUniqueKey(),
-            title: data?.text,
-            selected: true,
-            key: data?.linkTo,
-          };
+        const newTab = {
+          id: generateUniqueKey(),
+          title: data?.text,
+          selected: true,
+          key: data?.linkTo,
+        };
 
-          setTabs([...convertedData, newTab]);
+        setTabs([...convertedData, newTab]);
       }
     } catch (error) {
       console.log(error), "ERROR";
     }
   }
-
   return (
     <div>
       <div className='sticky top-0 w-full h-full '>
         <Header selectedTab={subSelectedTab} handleChangeTab={handleChangeTab} handlelogout={handlelogout}>
           <div className='flex flex-col w-full h-full'>
-            <div className={`w-full 2xl:h-full h-screen bg-white custom-scroll overflow-auto  
-             ${subSelectedTab === "charts" ? "p-3" : ""}
-             ${subSelectedTab === "loi" ? "h-full" : "3xl:h-[90vh] "}
+            <div className={`w-full 2xl:h-full h-screen bg-white custom-scroll overflow-auto
              `}>
               <div className='w-full h-full p-px'>
-                {subSelectedTab === "data-quality-rules" ?
-                  <div className='h-full'>
-                    <DataQualityRules />
-                  </div>
-                  :
-                  (
-                    <div className="p-6"> {subSelectedTab}</div>
-                  )}
+                {
+                  subSelectedTab === "data-matching-rules" ?
+                    <div className='h-full'>
+                      <DataMatchingRules />
+                    </div>
+                    :
+                    subSelectedTab === "home" ?
+                      <div className='h-full'>
+                        <Dashboard />
+                      </div>
+                      :
+                      subSelectedTab === "data-quality-rules" ?
+                        <div className='h-full'>
+                          <DataQualityRules />
+                        </div>
+                        :
+                        (
+                          <div className="p-6"> {subSelectedTab}</div>
+                        )}
               </div>
             </div>
           </div>

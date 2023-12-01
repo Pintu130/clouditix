@@ -138,9 +138,8 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
     }} className="relative ">
       <div className='px-3 pt-3 shadow-[0px_4px_6px_0px_#1143911A]  z-10 '>
         <div className='flex justify-between border-b '>
-          <button className='flex items-center flex-shrink-0 gap-
-          3 '>
-            {!isSidebarOpen ? <AiOutlineMenu className='w-4 h-4 cursor-pointer sm:h-6 sm:w-6' onClick={toggleSidebar} /> : <GrClose className='w-4 h-4 cursor-pointer sm:h-6 sm:w-6' onClick={toggleSidebar} />}
+          <button className='flex items-center flex-shrink-0 gap-3 '>
+              {!isSidebarOpen ? <AiOutlineMenu className='w-4 h-4 cursor-pointer sm:h-6 sm:w-6' onClick={toggleSidebar} /> : <GrClose className='w-4 h-4 cursor-pointer sm:h-6 sm:w-6 ' onClick={toggleSidebar} />}
             <Image
               src="/images/icon/logo.png"
               alt='HOM-logo'

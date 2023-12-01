@@ -1,90 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
+import Image from 'next/image';
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { BiSolidPencil } from 'react-icons/bi';
+import { useDispatch, useSelector } from 'react-redux';
+import SingleSelectDropDown from '../common/SingleSelectDropDown';
 import CustomButton from '../common/CustomButton';
 import CustomModal from '../common/CustomModal';
-import Image from 'next/image';
-import SingleSelectDropDown from '../common/SingleSelectDropDown';
-import { useDispatch, useSelector } from 'react-redux';
 import { setDataQualityCreate } from '@/store/dataQualitySlice';
-
-
-const Entity = [
-    { label: "guest", value: "guest" },
-];
-const DataSource = [
-    { label: "CRM", value: "crm" },
-];
-const Attribute = [
-    { label: "John", value: "john" },
-    { label: "Jack", value: "jack" },
-    { label: "Pitter", value: "pitter" },
-    { label: "Rock", value: "rock" },
-];
-
-const ValidationRule = [
-    { label: "datatype_check", value: "datatype_check" },
-    { label: "empty_value_check", value: "empty_value_check" },
-    { label: "null_value_check", value: "null_value_check" },
-    { label: "length_check", value: "length_check" },
-    { label: "special_character_check", value: "special_character_check" },
-]
-
-const RuleParameters = [
-    { label: "string", value: "string" },
-    { label: "number", value: "number" },
-    { label: "!,@,#,$,%,^,&,*,+,-", value: "!,@,#,$,%,^,&,*,+,-" },
-]
-
-const tableData = [
-    {
-        datasource: 'CRM',
-        entity: 'guest',
-        validationrule: 'datatype_check',
-        attribute: 'name',
-        ruleparameters: 'string',
-        ismandatory: false,
-        isactive: false,
-    },
-    {
-        datasource: 'CRM',
-        entity: 'guest',
-        validationrule: 'empty_value_check',
-        attribute: 'name',
-        ruleparameters: '',
-        ismandatory: false,
-        isactive: false,
-    },
-    {
-        datasource: 'CRM',
-        entity: 'guest',
-        validationrule: 'null_value_check',
-        attribute: 'name',
-        ruleparameters: 'string',
-        ismandatory: false,
-        isactive: false,
-    },
-    {
-        datasource: 'CRM',
-        entity: 'guest',
-        validationrule: 'length_check',
-        attribute: 'name',
-        ruleparameters: '255',
-        ismandatory: false,
-        isactive: false,
-    },
-    {
-        datasource: 'CRM',
-        entity: 'guest',
-        validationrule: 'special_character_check',
-        attribute: 'name',
-        ruleparameters: '!,@,#,$,%,^,&,*,+,~,|,=',
-        ismandatory: false,
-        isactive: false,
-    },
-]
+import { Attribute, DataSource, Entity, RuleParameters, ValidationRule, tableData } from '@/assets/data';
+import CustomInput from '../common/CustomInput';
+import DataQualitySearch from './DataQualitySearch';
 
 const DataQualityRules = () => {
     const tableRef = useRef(null);
@@ -97,7 +24,7 @@ const DataQualityRules = () => {
             headerName: "Data Source",
             minWidth: 100,
             maxWidth: 200,
-            filter: true, 
+            filter: true,
         },
         {
             field: "entity",
@@ -161,6 +88,7 @@ const DataQualityRules = () => {
 
     const frameworkComponents = {
         agCheckboxCellRenderer: (params) => {
+            console.log(params);
             return (
                 <input
                     type="checkbox"
@@ -194,9 +122,7 @@ const DataQualityRules = () => {
     };
 
     const handleCellClicked = (param) => {
-        if (param?.column?.colId === "chartID") {
-            // openPrevisitPage(param)
-        }
+        // console.log(param?.column);
     };
 
     const gridOptions = {
@@ -223,26 +149,54 @@ const DataQualityRules = () => {
     const [formData, setFormData] = useState({})
     const dispatch = useDispatch()
     const dataQualityTable = useSelector(state => state?.dataQuality?.data)
+
     const handleFromData = (data, target) => {
+        const id = formData.id || generateUniqueId();
         setFormData({
             ...formData,
+            id,
             [target]: data,
         })
     }
 
+
+    const generateUniqueId = () => {
+        return Math.floor(Math.random() * 1000000);;
+    };
+
     const handleCreateSave = () => {
-        dispatch(setDataQualityCreate(formData))
+
+        const checkEditdata = rowData.some(rowId => rowId.id === formData.id);
+        if (checkEditdata) {
+            const editData = {
+                id: formData.id,
+                datasource: formData?.datasource?.label,
+                entity: formData?.entity?.label,
+                validationrule: formData?.validationrule?.label,
+                attribute: formData?.attribute?.label,
+                ruleparameters: formData?.ruleparameters,
+                ismandatory: formData?.ismandatory,
+                isactive: false,
+            }
+            const updatedRowData = rowData.map((row) =>
+                row.id === editData.id ? { ...row, ...editData } : row
+            );
+            setRowData(updatedRowData)
+        } else {
+            dispatch(setDataQualityCreate(formData))
+        }
         closeModal()
     }
 
     const handleEdit = (e, data) => {
         e.stopPropagation();
         const modifyData = {
+            id: data.id,
             datasource: { label: data?.datasource, value: data?.datasource },
             entity: { label: data?.entity, value: data?.entity },
             validationrule: { label: data?.validationrule, value: data?.validationrule },
             attribute: { label: data?.attribute, value: data?.attribute },
-            ruleparameters: { label: data?.ruleparameters, value: data?.ruleparameters },
+            ruleparameters: data?.ruleparameters,
             ismandatory: data?.ismandatory,
             isactive: false,
         };
@@ -253,19 +207,19 @@ const DataQualityRules = () => {
     useEffect(() => {
         if (dataQualityTable && Object?.keys(dataQualityTable)?.length > 0) {
             const addData = {
+                id: dataQualityTable?.id,
                 datasource: dataQualityTable?.datasource?.label,
                 entity: dataQualityTable?.entity?.label,
                 validationrule: dataQualityTable?.validationrule?.label,
                 attribute: dataQualityTable?.attribute?.label,
-                ruleparameters: dataQualityTable?.ruleparameters?.label,
-                ismandatory: dataQualityTable?.isMandatory,
+                ruleparameters: dataQualityTable?.ruleparameters,
+                ismandatory: dataQualityTable?.ismandatory,
                 isactive: false,
             }
             setRowData(prevData => [...prevData, addData])
             dispatch(setDataQualityCreate({}))
         }
     }, [dataQualityTable])
-
 
     return (
         <div className="w-full flex flex-col  gap-6 p-3 xl:h-full">
@@ -351,13 +305,23 @@ const DataQualityRules = () => {
                                         Rule Parameters
                                     </label>
                                     <div className="w-full max-w-[300px] lg:max-w-[100%]">
-                                        <SingleSelectDropDown
+                                        {/* <SingleSelectDropDown
                                             placeholder="Enter Rule Parameters"
                                             options={RuleParameters}
                                             target="ruleparameters"
                                             creatableSelect={true}
                                             selectedType={formData?.ruleparameters}
                                             handleSelectChange={handleFromData}
+                                        /> */}
+                                        <CustomInput
+                                            isNUmber={false}
+                                            isRequired={true}
+                                            isIcon={true}
+                                            label=""
+                                            placeholder=""
+                                            name="identifier"
+                                            value={formData?.ruleparameters}
+                                            onChange={(e) => handleFromData(e.target.value, 'ruleparameters')}
                                         />
                                     </div>
                                 </div>
@@ -373,7 +337,6 @@ const DataQualityRules = () => {
                                             placeholder="Enter Data Source"
                                             options={DataSource}
                                             target="datasource"
-                                            // isDisabled={}
                                             creatableSelect={true}
                                             selectedType={formData?.datasource}
                                             handleSelectChange={handleFromData}
@@ -385,7 +348,7 @@ const DataQualityRules = () => {
                                         <input
                                             type="checkbox"
                                             className='h-5 w-5 accent-blue-B40 border-[#4A4A4A] rounded-[4px] hover:border-blue-B40   active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none cursor-pointer'
-                                            onChange={(e) => handleFromData(e.target.checked, 'isMandatory')}
+                                            onChange={(e) => handleFromData(e.target.checked, 'ismandatory')}
                                         />
                                         <label htmlFor="speciality" className="text-[#5A5A5A] whitespace-nowrap w-full max-w-[145px] inline-block text-base font-normal">Is Mandatory
                                         </label>
@@ -426,6 +389,10 @@ const DataQualityRules = () => {
                         isLoading={false}
                     />
                 </div>
+            </div>
+
+            <div className='border border-[#a6a6a6] rounded-xl p-4'>
+                <DataQualitySearch />
             </div>
 
             <div className="flex w-full min-h-[50vh] pb-10  xl:max-h-[30%]  mx-auto ag-theme-alpine ">
