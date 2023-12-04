@@ -45,7 +45,7 @@ const DataMatchingRules = () => {
                     })}
                 </div>
             </div>}
-            <div className={`text-lg h-full py-3 custom-scroll  font-semibold overflow-auto md:max-h-[92%] '}`}>
+            <div className={`text-lg h-full py-3 px-5 custom-scroll  font-semibold overflow-auto md:max-h-[92%] '}`}>
                 {subSelectedTab === "deterministicmatch" ?
                     <DeterministicMatch  />
                     :
