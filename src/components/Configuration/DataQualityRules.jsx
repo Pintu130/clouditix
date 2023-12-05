@@ -9,7 +9,7 @@ import SingleSelectDropDown from '../common/SingleSelectDropDown';
 import CustomButton from '../common/CustomButton';
 import CustomModal from '../common/CustomModal';
 import { setDataQualityCreate } from '@/store/dataQualitySlice';
-import { Attribute, DataSource, Entity, RuleParameters, ValidationRule, tableData } from '@/assets/data';
+import { Attribute, DataSource, Entity, RuleParameters, ValidationRule, columnName, fetchTableData, ruleDescription, tableData, tableName } from '@/assets/data';
 import CustomInput from '../common/CustomInput';
 import DataQualitySearch from './DataQualitySearch';
 
@@ -20,52 +20,61 @@ const DataQualityRules = () => {
 
     const [columnDefs] = useState([
         {
-            field: "datasource",
+            field: "columnName",
+            headerName: "Column Name",
+            minWidth: 100,
+            maxWidth: 200,
+            filter: true,
+        },
+        {
+            field: "tableName",
+            headerName: "Table Name",
+            minWidth: 100,
+            maxWidth: 200,
+            filter: true,
+        },
+        {
+            field: "dataSource",
             headerName: "Data Source",
             minWidth: 100,
             maxWidth: 200,
             filter: true,
         },
         {
-            field: "entity",
-            headerName: "Entity ",
-            minWidth: 100,
-            maxWidth: 200,
-            cellClass: "uppercase"
-        },
-        {
-            field: "validationrule",
+            field: "validationRule",
             headerName: " Validation Rule",
             minWidth: 200,
             maxWidth: 250,
         },
         {
-            field: "attribute",
-            headerName: "Attribute",
+            field: "ruleDescription",
+            headerName: "Rule Description ",
             minWidth: 100,
-            maxWidth: 200,
+            // maxWidth: 200,
+            cellClass: "uppercase"
         },
         {
-            field: "ruleparameters",
+            field: "ruleParameters",
             headerName: " Rule Parameters",
             minWidth: 180,
+            maxWidth: 250,
             cellClass: "uppercase",
         },
         {
-            field: "ismandatory",
+            field: "isMandatory",
             headerName: "Is Mandatory",
             cellClass: "uppercase",
-            minWidth: 180,
-            maxWidth: 200,
+            minWidth: 80,
+            maxWidth: 100,
             cellRenderer: "agCheckboxCellRenderer",
             editable: true,
         },
         {
-            field: "isactive",
+            field: "isActive",
             headerName: "Is Active",
             cellClass: "uppercase",
-            minWidth: 180,
-            maxWidth: 200,
+            minWidth: 80,
+            maxWidth: 100,
             cellRenderer: "agCheckboxCellRenderer",
             editable: true,
         },
@@ -85,6 +94,17 @@ const DataQualityRules = () => {
             },
         },
     ]);
+
+
+
+    useEffect(() => {
+        ; (async () => {
+            const data = await fetchTableData()
+            setRowData(data);
+        }
+        )()
+    }, [])
+
 
     const frameworkComponents = {
         agCheckboxCellRenderer: (params) => {
@@ -170,13 +190,14 @@ const DataQualityRules = () => {
         if (checkEditdata) {
             const editData = {
                 id: formData.id,
-                datasource: formData?.datasource?.label,
-                entity: formData?.entity?.label,
-                validationrule: formData?.validationrule?.label,
-                attribute: formData?.attribute?.label,
-                ruleparameters: formData?.ruleparameters,
-                ismandatory: formData?.ismandatory,
-                isactive: false,
+                columnName: formData?.columnName?.label,
+                dataSource: formData?.dataSource?.label,
+                tableName: formData?.tableName?.label,
+                validationRule: formData?.validationRule?.label,
+                ruleDescription: formData?.ruleDescription?.label,
+                ruleParameters: formData?.ruleParameters,
+                isMandatory: formData?.isMandatory,
+                isActive: false,
             }
             const updatedRowData = rowData.map((row) =>
                 row.id === editData.id ? { ...row, ...editData } : row
@@ -192,13 +213,14 @@ const DataQualityRules = () => {
         e.stopPropagation();
         const modifyData = {
             id: data.id,
-            datasource: { label: data?.datasource, value: data?.datasource },
-            entity: { label: data?.entity, value: data?.entity },
-            validationrule: { label: data?.validationrule, value: data?.validationrule },
-            attribute: { label: data?.attribute, value: data?.attribute },
-            ruleparameters: data?.ruleparameters,
-            ismandatory: data?.ismandatory,
-            isactive: false,
+            columnName: { label: data?.columnName, value: data?.columnName },
+            dataSource: { label: data?.dataSource, value: data?.dataSource },
+            tableName: { label: data?.tableName, value: data?.tableName },
+            validationRule: { label: data?.validationRule, value: data?.validationRule },
+            ruleDescription: { label: data?.ruleDescription, value: data?.ruleDescription },
+            ruleParameters: data?.ruleParameters,
+            isMandatory: data?.isMandatory,
+            isActive: data?.isActive,
         };
         setFormData(modifyData);
         setIsModalOpen(true);
@@ -208,13 +230,14 @@ const DataQualityRules = () => {
         if (dataQualityTable && Object?.keys(dataQualityTable)?.length > 0) {
             const addData = {
                 id: dataQualityTable?.id,
-                datasource: dataQualityTable?.datasource?.label,
-                entity: dataQualityTable?.entity?.label,
-                validationrule: dataQualityTable?.validationrule?.label,
-                attribute: dataQualityTable?.attribute?.label,
-                ruleparameters: dataQualityTable?.ruleparameters,
-                ismandatory: dataQualityTable?.ismandatory,
-                isactive: false,
+                columnName: dataQualityTable?.columnName?.label,
+                tableName: dataQualityTable?.tableName?.label,
+                ruleDescription: dataQualityTable?.ruleDescription?.label,
+                dataSource: dataQualityTable?.dataSource?.label,
+                validationRule: dataQualityTable?.validationRule?.label,
+                ruleParameters: dataQualityTable?.ruleParameters,
+                isMandatory: dataQualityTable?.isMandatory,
+                isActive: false,
             }
             setRowData(prevData => [...prevData, addData])
             dispatch(setDataQualityCreate({}))
@@ -248,15 +271,15 @@ const DataQualityRules = () => {
                                         htmlFor="speciality"
                                         className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
                                     >
-                                        Entity
+                                        columnName
                                     </label>
                                     <div className="w-full max-w-[300px] lg:max-w-[100%]">
                                         <SingleSelectDropDown
-                                            placeholder="Enter Entity"
-                                            options={Entity}
-                                            target="entity"
+                                            placeholder="Enter Column Name"
+                                            options={columnName}
+                                            target="columnName"
                                             creatableSelect={true}
-                                            selectedType={formData?.entity}
+                                            selectedType={formData?.columnName}
                                             handleSelectChange={handleFromData}
                                         />
                                     </div>
@@ -266,15 +289,34 @@ const DataQualityRules = () => {
                                         htmlFor="speciality"
                                         className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
                                     >
-                                        Attribute
+                                        dataSource
                                     </label>
                                     <div className="w-full max-w-[300px] lg:max-w-[100%]">
                                         <SingleSelectDropDown
-                                            placeholder="Enter Attribute"
-                                            options={Attribute}
-                                            target="attribute"
+                                            placeholder="Enter Data Source"
+                                            options={DataSource}
+                                            target="dataSource"
                                             creatableSelect={true}
-                                            selectedType={formData?.attribute}
+                                            selectedType={formData?.dataSource}
+                                            handleSelectChange={handleFromData}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
+                                    <label
+                                        htmlFor="speciality"
+                                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
+                                    >
+                                        tableName
+                                    </label>
+                                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
+                                        <SingleSelectDropDown
+                                            placeholder="Enter Table Name"
+                                            options={tableName}
+                                            target="tableName"
+                                            creatableSelect={true}
+                                            selectedType={formData?.tableName}
                                             handleSelectChange={handleFromData}
                                         />
                                     </div>
@@ -284,19 +326,38 @@ const DataQualityRules = () => {
                                         htmlFor="speciality"
                                         className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
                                     >
-                                        Validation Rule
+                                        validationRule
                                     </label>
                                     <div className="w-full max-w-[300px] lg:max-w-[100%]">
                                         <SingleSelectDropDown
-                                            placeholder="Enter Validation Rule"
+                                            placeholder="Enter validationRule"
                                             options={ValidationRule}
-                                            target="validationrule"
+                                            target="validationRule"
                                             creatableSelect={true}
-                                            selectedType={formData?.validationrule}
+                                            selectedType={formData?.validationRule}
                                             handleSelectChange={handleFromData}
                                         />
                                     </div>
                                 </div>
+                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
+                                    <label
+                                        htmlFor="speciality"
+                                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
+                                    >
+                                        ruleDescription
+                                    </label>
+                                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
+                                        <SingleSelectDropDown
+                                            placeholder="Enter Rule Description"
+                                            options={ruleDescription}
+                                            target="ruleDescription"
+                                            creatableSelect={true}
+                                            selectedType={formData?.ruleDescription}
+                                            handleSelectChange={handleFromData}
+                                        />
+                                    </div>
+                                </div>
+
                                 <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
                                     <label
                                         htmlFor="speciality"
@@ -305,41 +366,15 @@ const DataQualityRules = () => {
                                         Rule Parameters
                                     </label>
                                     <div className="w-full max-w-[300px] lg:max-w-[100%]">
-                                        {/* <SingleSelectDropDown
-                                            placeholder="Enter Rule Parameters"
-                                            options={RuleParameters}
-                                            target="ruleparameters"
-                                            creatableSelect={true}
-                                            selectedType={formData?.ruleparameters}
-                                            handleSelectChange={handleFromData}
-                                        /> */}
                                         <CustomInput
                                             isNUmber={false}
                                             isRequired={true}
                                             isIcon={true}
                                             label=""
                                             placeholder=""
-                                            name="identifier"
-                                            value={formData?.ruleparameters}
-                                            onChange={(e) => handleFromData(e.target.value, 'ruleparameters')}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
-                                    <label
-                                        htmlFor="speciality"
-                                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
-                                    >
-                                        Data Source
-                                    </label>
-                                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
-                                        <SingleSelectDropDown
-                                            placeholder="Enter Data Source"
-                                            options={DataSource}
-                                            target="datasource"
-                                            creatableSelect={true}
-                                            selectedType={formData?.datasource}
-                                            handleSelectChange={handleFromData}
+                                            name="ruleParameters"
+                                            value={formData?.ruleParameters}
+                                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
                                         />
                                     </div>
                                 </div>
@@ -348,7 +383,7 @@ const DataQualityRules = () => {
                                         <input
                                             type="checkbox"
                                             className='h-5 w-5 accent-blue-B40 border-[#4A4A4A] rounded-[4px] hover:border-blue-B40   active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none cursor-pointer'
-                                            onChange={(e) => handleFromData(e.target.checked, 'ismandatory')}
+                                            onChange={(e) => handleFromData(e.target.checked, 'isMandatory')}
                                         />
                                         <label htmlFor="speciality" className="text-[#5A5A5A] whitespace-nowrap w-full max-w-[145px] inline-block text-base font-normal">Is Mandatory
                                         </label>

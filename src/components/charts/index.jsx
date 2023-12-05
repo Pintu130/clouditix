@@ -5,6 +5,7 @@ import Header from '../Header'
 import DataQualityRules from '../Configuration/DataQualityRules';
 import Dashboard from '../Dashboard/Dashboard';
 import DataMatchingRules from '../Configuration/DataMatching/DataMatchingRules';
+import SurvivorshipRules from '../Configuration/SurvivorshipRules/SurvivorshipRules';
 
 function ChartsPage({ handlelogout }) {
   const [subSelectedTab, setSubSelectedTab] = useState('');
@@ -48,6 +49,7 @@ function ChartsPage({ handlelogout }) {
       console.log(error), "ERROR";
     }
   }
+  console.log(subSelectedTab);
   return (
     <div>
       <div className='sticky top-0 w-full h-full '>
@@ -72,9 +74,14 @@ function ChartsPage({ handlelogout }) {
                           <DataQualityRules />
                         </div>
                         :
-                        (
-                          <div className="p-6"> {subSelectedTab}</div>
-                        )}
+                        subSelectedTab === "survivorship-rule" ?
+                          <div className='h-full'>
+                            <SurvivorshipRules />
+                          </div>
+                          :
+                          (
+                            <div className="p-6"> {subSelectedTab}</div>
+                          )}
               </div>
             </div>
           </div>

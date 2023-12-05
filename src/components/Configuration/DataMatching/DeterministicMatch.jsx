@@ -5,6 +5,7 @@ import Image from 'next/image';
 import CustomModal from '@/components/common/CustomModal';
 import CustomInput from '@/components/common/CustomInput';
 import SmCustomModal from '@/components/common/SmCustomModal';
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
 const DeterministicMatch = () => {
   const [isNewRuleModal, setIsNewRuleModal] = useState(false)
@@ -16,9 +17,6 @@ const DeterministicMatch = () => {
   const [rules, setRules] = useState([]);
   const [openRules, setOpenRules] = useState({});
   const [areAllRulesVisible, setAreAllRulesVisible] = useState(true);
-
-  console.log(dynamicFields);
-  console.log(rules);
 
   const handleAddField = () => [
     setDynamicFields((prevFields) => [...prevFields, { name: '', value: "" }])
@@ -51,7 +49,6 @@ const DeterministicMatch = () => {
     setRules((prevRules) => {
       const updatedRules = [...prevRules];
       updatedRules[ruleIndex].dynamicFields.splice(fieldIndex, 1);
-
       // If dynamicFields is empty, remove the entire rule
       if (updatedRules[ruleIndex].dynamicFields.length === 0) {
         updatedRules.splice(ruleIndex, 1);
@@ -193,6 +190,7 @@ const DeterministicMatch = () => {
             handleClick={() => handleToggleAllRules()}
             isDisable={false}
             isLoading={false}
+            icon=""
           />
         </div>
         <div className="w-full max-w-[150px]" >
@@ -201,10 +199,10 @@ const DeterministicMatch = () => {
             handleClick={() => handleNewRuleModal()}
             isDisable={false}
             isLoading={false}
+            icon=""
           />
         </div>
       </div>
-
 
       <div className='p-3 border-b border-[#a6a6a6] flex justify-center flex-col gap-3 w-full'>
 
@@ -252,54 +250,18 @@ const DeterministicMatch = () => {
         </div>
 
 
-        {/*  <div className='border border-[#a6a6a6] rounded-lg p-2'>
-          <div className="w-full max-w-[150px] " >
-            <CustomButton
-              name="Rules 1"
-              handleClick={() => { }}
-              isDisable={false}
-              isLoading={false}
-            />
-          </div>
-          <div className='flex items-center gap-10 '>
-            <fieldset className='border pl-3 rounded-lg'>
-              <legend className=''>Select Attribute</legend>
-              <div className='flex items-center justify-start gap-5 p-3'>
-                <div className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 '>
-                  <span>Name</span>
-                  <IoClose className='w-5 h-5 flex-shrink-0' />
-                </div>
-                <div className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1'>
-                  <span>date_of_birth</span>
-                  <IoClose className='w-5 h-5 flex-shrink-0' />
-                </div>
-                <div className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1'>
-                  <span>Aadhar</span>
-                  <IoClose className='w-5 h-5 flex-shrink-0' />
-                </div>
-                <div className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1'>
-                  <span>Passport</span>
-                  <IoClose className='w-5 h-5 flex-shrink-0' />
-                </div>
-                <div className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1'>
-                  <span>Driving_License</span>
-                  <IoClose className='w-5 h-5 flex-shrink-0' />
-                </div>
-              </div>
-            </fieldset>
-            <div className='flex flex-col items-start'>
-              <span>Total-threshold </span>
-              <span className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 '>0.2</span>
-            </div>
-          </div>
-        </div> */}
-
         {rules.map((rule, index) => (
           <div key={index} className='border border-[#a6a6a6] rounded-lg p-2'>
             <div className='w-full max-w-[150px]'>
-              <CustomButton name={`Rules ${index + 1}`} handleClick={() => handleToggleRule(index)} isDisable={false} isLoading={false} />
+              <CustomButton
+                name={`Rules ${index + 1}`}
+                handleClick={() => handleToggleRule(index)}
+                isDisable={false}
+                isLoading={false}
+                icon={areAllRulesVisible && openRules[index] ? <FaAngleUp /> : <FaAngleDown />}
+              />
             </div>
-            { areAllRulesVisible && openRules[index] && <div className='flex items-center gap-10 '>
+            {areAllRulesVisible && openRules[index] && <div className='flex items-center gap-10 '>
               <fieldset className='border pl-3 rounded-lg'>
                 <legend className=''>Select Attribute</legend>
                 <div className='flex items-center justify-start gap-5 p-3'>
@@ -321,8 +283,6 @@ const DeterministicMatch = () => {
         ))}
 
       </div>
-
-
 
       <div className=' flex items-center justify-end gap-8 p-3 border-b border-[#a6a6a6]'>
         <div className="w-full max-w-[150px]" >

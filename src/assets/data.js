@@ -3,6 +3,18 @@ import { IoHome } from "react-icons/io5";
 import { FaUserAlt } from "react-icons/fa";
 import { GrConfigure } from "react-icons/gr";
 import { AiOutlineFolderOpen } from "react-icons/ai";
+import axios from 'axios';
+
+
+export const fetchTableData = async () => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}ldg_account_bus_card`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
 
 export const staticMenuItems = [
   {
@@ -141,33 +153,31 @@ export const medicalRecordsTabs = [
     key: 'medicalRecordsRules',
   }
 ]
-export const Entity = [
-  { label: "guest", value: "guest" },
+export const columnName = [
+  { label: "legacyid", value: "legacyid" },
+  { label: "email", value: "email" },
+  { label: "city", value: "city" },
+  { label: "street_line_1", value: "street_line_1" },
+  { label: "State", value: "State" },
+  { label: "name", value: "name" },
+  { label: "pci_status", value: "pci_status" },
 ];
 
 export const DataSource = [
   { label: "CRM", value: "crm" },
 ];
-
-export const Attribute = [
-  { label: "John", value: "john" },
-  { label: "Jack", value: "jack" },
-  { label: "Pitter", value: "pitter" },
-  { label: "Rock", value: "rock" },
+export const tableName = [
+  { label: "ldg_account_bus_card", value: "ldg_account_bus_card" },
 ];
-
+export const ruleDescription = [
+  { label: "Check if the column(s) conatins duplicate values across rows.", value: "Check if the column(s) conatins duplicate values across rows." },
+];
 export const ValidationRule = [
   { label: "datatype_check", value: "datatype_check" },
   { label: "empty_value_check", value: "empty_value_check" },
   { label: "null_value_check", value: "null_value_check" },
   { label: "length_check", value: "length_check" },
   { label: "special_character_check", value: "special_character_check" },
-]
-
-export const RuleParameters = [
-  { label: "string", value: "string" },
-  { label: "number", value: "number" },
-  { label: "!,@,#,$,%,^,&,*,+,-", value: "!,@,#,$,%,^,&,*,+,-" },
 ]
 
 export const tableData = [
@@ -220,6 +230,37 @@ export const tableData = [
     ruleparameters: '!,@,#,$,%,^,&,*,+,~,|,=',
     ismandatory: false,
     isactive: false,
+  },
+]
+
+export const ProbabilisticMatchtableData = [
+  {
+    id: 0,
+    attribute: 'name',
+    colwight: '0.2',
+    minmatch: '1',
+    delete: false,
+  },
+  {
+    id: 1,
+    attribute: 'date_of_birth',
+    colwight: '0.2',
+    minmatch: '1',
+    delete: false,
+  },
+  {
+    id: 2,
+    attribute: 'aadhar',
+    colwight: '0.2',
+    minmatch: '1',
+    delete: false,
+  },
+  {
+    id: 3,
+    attribute: 'passport',
+    colwight: '0.2',
+    minmatch: '1',
+    delete: false,
   },
 ]
 
@@ -289,3 +330,119 @@ export const statussearch = [
   { label: "status 2", value: "status2" },
   { label: "status 3", value: "status3" },
 ]
+
+export const survivorshipData = [
+  {
+    entity: "Guest",
+    attribute: "guest_category_type",
+    priority1: "CRM",
+    priority2: "PMS",
+    priority3: "CRM",
+  },
+  {
+    entity: "",
+    attribute: "middle_name",
+    priority1: "CRM",
+    priority2: "PMS",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "last_name",
+    priority1: "CRM",
+    priority2: "PMS",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "full_name",
+    priority1: "CRM",
+    priority2: "PMS",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "gender",
+    priority1: "PMS",
+    priority2: "CRM",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "marital_status",
+    priority1: "PMS",
+    priority2: "CRM",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "no_of_children",
+    priority1: "PMS",
+    priority2: "CRM",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "income_level",
+    priority1: "CRM",
+    priority2: "PMS",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "company_name",
+    priority1: "CRM",
+    priority2: "PMS",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "notes",
+    priority1: "CRM",
+    priority2: "PMS",
+    priority3: "CRS",
+  },
+
+  {
+    entity: "contact_details",
+    attribute: "business_phone",
+    priority1: "CRM",
+    priority2: "PMS",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "home_phone",
+    priority1: "CRM",
+    priority2: "PMS",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "mobile_phone",
+    priority1: "PMS",
+    priority2: "PMS",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "alternane_phone",
+    priority1: "PMS",
+    priority2: "CRM",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "business_email",
+    priority1: "PMS",
+    priority2: "CRM",
+    priority3: "CRS",
+  },
+  {
+    entity: "",
+    attribute: "personal_email",
+    priority1: "PMS",
+    priority2: "CRM",
+    priority3: "CRS",
+  },
+];

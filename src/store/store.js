@@ -1,9 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import dataQualitySlice from './dataQualitySlice';
+import ProbMatchSlice from './ProbMatchSlice';
 
 const store = configureStore({
     reducer: {
-        dataQuality: dataQualitySlice
+        dataQuality: dataQualitySlice,
+        ProbMatch: ProbMatchSlice,
+
     },
 })
 
