@@ -8,13 +8,40 @@ import axios from 'axios';
 
 export const fetchTableData = async () => {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}ldg_account_bus_card`)
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GetDQMetaData/cloud_storage/ldg_account_bus_card`)
     return response?.data
   } catch (error) {
     return error
   }
 }
 
+export const fetchInsertTableData = async (data) => {
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}InsertDQMetaData`, data);
+    console.log(response);
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
+export const fetchUpdateTableData = async (data) => {
+  try {
+    const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}UpdateDQMetaData`, data)
+    return response
+  } catch (error) {
+    return error
+  }
+}
+
+export const fetchDeleteTableData = async (data) => {
+  try {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}DeleteDQMetaData?id=${data}`)
+    return response
+  } catch (error) {
+    return error
+  }
+}
 
 export const staticMenuItems = [
   {
@@ -161,6 +188,16 @@ export const columnName = [
   { label: "State", value: "State" },
   { label: "name", value: "name" },
   { label: "pci_status", value: "pci_status" },
+];
+
+export const matchdata = [
+  { label: "name", value: "name" },
+  { label: "date_of_birth", value: "date_of_birth" },
+  { label: "Aadhar", value: "Aadhar" },
+  { label: "Passport", value: "Passport" },
+  { label: "Driving_License", value: "Driving_License" },
+  { label: "email", value: "email" },
+  { label: "mobile number", value: "mobile_number" },
 ];
 
 export const DataSource = [
@@ -445,4 +482,201 @@ export const survivorshipData = [
     priority2: "CRM",
     priority3: "CRS",
   },
+];
+
+
+export const rolesAndPermissionsTable = [
+  {
+    id: 0,
+    section: 'Configuration',
+    item: '',
+    admin: '',
+    datasteward: '',
+    dataowner: '',
+    dataentry: '',
+  },
+  {
+    id: 1,
+    section: '',
+    item: 'Data Quality Rules',
+    admin: 'Edit',
+    datasteward: 'No Access',
+    dataowner: 'View',
+    dataentry: 'No Access'
+  },
+  {
+    id: 2,
+    section: '',
+    item: 'Data Matching Rules',
+    admin: 'Edit',
+    datasteward: 'No Access',
+    dataowner: 'View',
+    dataentry: 'No Access'
+  },
+  {
+    id: 3,
+    section: '',
+    item: 'Survivorship Rule',
+    admin: 'Edit',
+    datasteward: 'No Access',
+    dataowner: 'View',
+    dataentry: 'No Access'
+  },
+  {
+    id: 4,
+    section: '',
+    item: 'User Management',
+    admin: 'Edit',
+    datasteward: 'No Access',
+    dataowner: 'View',
+    dataentry: 'No Access'
+  },
+  {
+    id: 5,
+    section: 'Audit Logs',
+    item: '',
+    admin: '',
+    datasteward: '',
+    dataowner: '',
+    dataentry: '',
+  },
+  {
+    id: 6,
+    section: '',
+    item: 'Batch Jobs',
+    admin: 'Edit',
+    datasteward: 'Edit',
+    dataowner: 'Edit',
+    dataentry: 'View'
+  },
+  {
+    id: 7,
+    section: 'Guest Data Management',
+    item: '',
+    admin: '',
+    datasteward: '',
+    dataowner: '',
+    dataentry: '',
+  },
+  {
+    id: 8,
+    section: '',
+    item: 'MY Tasks',
+    admin: 'Edit',
+    datasteward: 'Edit',
+    dataowner: 'Edit',
+    dataentry: 'Edit'
+  },
+  {
+    id: 9,
+    section: '',
+    item: 'Guest 360 Dashboard',
+    admin: 'Edit',
+    datasteward: 'Edit',
+    dataowner: 'Edit',
+    dataentry: 'Edit'
+  },
+  {
+    id: 10,
+    section: '',
+    item: 'Data Quality Dashboard',
+    admin: 'Edit',
+    datasteward: 'Edit',
+    dataowner: 'Edit',
+    dataentry: 'Edit'
+  },
+  {
+    id: 11,
+    section: '',
+    item: 'Guest Data - Search',
+    admin: 'Edit',
+    datasteward: 'Edit',
+    dataowner: 'Edit',
+    dataentry: 'Edit'
+  },
+  {
+    id: 12,
+    section: '',
+    item: 'Guest Data - Create',
+    admin: 'Edit',
+    datasteward: 'Edit',
+    dataowner: 'Edit',
+    dataentry: 'Edit'
+  },
+  {
+    id: 13,
+    section: '',
+    item: 'Guest Data - Update',
+    admin: 'Edit',
+    datasteward: 'Edit',
+    dataowner: 'Edit',
+    dataentry: 'Edit'
+  },
+  {
+    id: 14,
+    section: '',
+    item: 'Guest Data - Cross Ref',
+    admin: 'Edit',
+    datasteward: 'Edit',
+    dataowner: 'Edit',
+    dataentry: 'Edit'
+  },
+  {
+    id: 15,
+    section: '',
+    item: 'Guest Data - Delete',
+    admin: 'Edit',
+    datasteward: 'Edit',
+    dataowner: 'Edit',
+    dataentry: 'Edit'
+  },
+  {
+    id: 16,
+    section: '',
+    item: 'Guest Data - erge/UnMerge',
+    admin: 'Edit',
+    datasteward: 'Edit',
+    dataowner: 'Edit',
+    dataentry: 'Edit'
+  },
+]
+
+export const UserStatus = [
+  { label: "Active", value: "active" },
+  { label: "In-Active", value: "inactive" },
+];
+
+export const MfaEnabled = [
+  { label: "True", value: "true" },
+  { label: "False", value: "false" },
+];
+
+
+export const UserRole = [
+  { label: "Manager", value: "manager" },
+
+
+];
+
+export const Country = [
+  { label: "India", value: "india" },
+  { label: "United State", value: "unitedState" },
+  { label: "Pakisthan", value: "pakisthan" },
+  { label: "France", value: "france" },
+  { label: "Japan", value: "japan" },
+  { label: "Maldivs", value: "maldivs" },
+  { label: "Germany", value: "germany" },
+  { label: "Fransisco", value: "fransisco" },
+  { label: "New Zeland", value: "newZeland" },
+  { label: "Shrilanka", value: "shrilanka" },
+  { label: "UAE", value: "uae" },
+];
+
+export const TimeZone = [
+  { label: "GMT+05:30", value: "gmt" },
+  { label: "UTC+04:20", value: "utc" },
+  { label: "EST+09:45", value: "est" },
+  { label: "CST+07:12", value: "cst" },
+
+
 ];

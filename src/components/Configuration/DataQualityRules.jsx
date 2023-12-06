@@ -9,9 +9,10 @@ import SingleSelectDropDown from '../common/SingleSelectDropDown';
 import CustomButton from '../common/CustomButton';
 import CustomModal from '../common/CustomModal';
 import { setDataQualityCreate } from '@/store/dataQualitySlice';
-import { Attribute, DataSource, Entity, RuleParameters, ValidationRule, columnName, fetchTableData, ruleDescription, tableData, tableName } from '@/assets/data';
+import { DataSource,  ValidationRule, columnName, fetchDeleteTableData, fetchInsertTableData, fetchTableData, fetchUpdateTableData, ruleDescription, tableData, tableName } from '@/assets/data';
 import CustomInput from '../common/CustomInput';
 import DataQualitySearch from './DataQualitySearch';
+import { MdDeleteForever } from 'react-icons/md';
 
 const DataQualityRules = () => {
     const tableRef = useRef(null);
@@ -23,7 +24,7 @@ const DataQualityRules = () => {
             field: "columnName",
             headerName: "Column Name",
             minWidth: 100,
-            maxWidth: 200,
+            maxWidth: 150,
             filter: true,
         },
         {
@@ -37,7 +38,7 @@ const DataQualityRules = () => {
             field: "dataSource",
             headerName: "Data Source",
             minWidth: 100,
-            maxWidth: 200,
+            maxWidth: 150,
             filter: true,
         },
         {
@@ -80,7 +81,7 @@ const DataQualityRules = () => {
         },
         {
 
-            field: '', headerName: "", minWidth: 80, maxWidth: 100, cellRenderer: (params) => {
+            field: '', headerName: "Edit", minWidth: 60, maxWidth: 80, cellRenderer: (params) => {
                 const data = params.data;
                 return (
                     <div className="flex items-center justify-center h-full  ">
@@ -93,6 +94,21 @@ const DataQualityRules = () => {
                 );
             },
         },
+        {
+
+            field: '', headerName: "Delete", minWidth: 60, maxWidth: 80, cellRenderer: (params) => {
+                const data = params.data;
+                return (
+                    <div className="flex items-center justify-center h-full  ">
+                        <button
+                            onClick={(e) => handleDelete(e, data)}
+                        >
+                            <MdDeleteForever className="w-6 h-6 text-blue-B40" />
+                        </button>
+                    </div>
+                );
+            },
+        },
     ]);
 
 
@@ -100,7 +116,10 @@ const DataQualityRules = () => {
     useEffect(() => {
         ; (async () => {
             const data = await fetchTableData()
-            setRowData(data);
+
+            if (data?.length > 0) {
+                setRowData(data);
+            }
         }
         )()
     }, [])
@@ -184,12 +203,13 @@ const DataQualityRules = () => {
         return Math.floor(Math.random() * 1000000);;
     };
 
-    const handleCreateSave = () => {
+    const handleCreateSave = async () => {
 
         const checkEditdata = rowData.some(rowId => rowId.id === formData.id);
         if (checkEditdata) {
             const editData = {
                 id: formData.id,
+                tableId: 1,
                 columnName: formData?.columnName?.label,
                 dataSource: formData?.dataSource?.label,
                 tableName: formData?.tableName?.label,
@@ -197,16 +217,47 @@ const DataQualityRules = () => {
                 ruleDescription: formData?.ruleDescription?.label,
                 ruleParameters: formData?.ruleParameters,
                 isMandatory: formData?.isMandatory,
-                isActive: false,
+                isActive: formData?.isActive,
             }
+
+            console.log(editData);
+            const updateData = await fetchUpdateTableData(editData)
+            console.log(updateData);
+
             const updatedRowData = rowData.map((row) =>
                 row.id === editData.id ? { ...row, ...editData } : row
             );
             setRowData(updatedRowData)
         } else {
+            console.log(formData);
+            const insertData = {
+                id: 0,
+                tableId: 1,
+                columnName: formData?.columnName?.label,
+                dataSource: formData?.dataSource?.label,
+                tableName: formData?.tableName?.label,
+                validationRule: formData?.validationRule?.label,
+                ruleDescription: formData?.ruleDescription?.label,
+                ruleParameters: formData?.ruleParameters,
+                isMandatory: formData?.isMandatory,
+                isActive: formData?.isActive,
+            }
+
+            const createTable = await fetchInsertTableData(insertData)
+
+            console.log(createTable);
+            console.log(insertData);
             dispatch(setDataQualityCreate(formData))
         }
         closeModal()
+    }
+
+    const handleDelete = async (e, data) => {
+        console.log(data?.id);
+        if (data?.id) {
+            const deleteData = await fetchDeleteTableData(data?.id);
+            console.log(deleteData);
+        }
     }
 
     const handleEdit = (e, data) => {
@@ -379,13 +430,26 @@ const DataQualityRules = () => {
                                     </div>
                                 </div>
                                 <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
-                                    <div className='flex items-center w-full gap-2 custom-select pt-10'>
+                                    <div className='flex items-center w-full gap-2 custom-select '>
                                         <input
                                             type="checkbox"
                                             className='h-5 w-5 accent-blue-B40 border-[#4A4A4A] rounded-[4px] hover:border-blue-B40   active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none cursor-pointer'
+                                            checked={formData?.isMandatory}
                                             onChange={(e) => handleFromData(e.target.checked, 'isMandatory')}
                                         />
                                         <label htmlFor="speciality" className="text-[#5A5A5A] whitespace-nowrap w-full max-w-[145px] inline-block text-base font-normal">Is Mandatory
+                                        </label>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
+                                    <div className='flex items-center w-full gap-2 custom-select '>
+                                        <input
+                                            type="checkbox"
+                                            className='h-5 w-5 accent-blue-B40 border-[#4A4A4A] rounded-[4px] hover:border-blue-B40   active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none cursor-pointer'
+                                            checked={formData?.isActive}
+                                            onChange={(e) => handleFromData(e.target.checked, 'isActive')}
+                                        />
+                                        <label htmlFor="speciality" className="text-[#5A5A5A] whitespace-nowrap w-full max-w-[145px] inline-block text-base font-normal">Is Active
                                         </label>
                                     </div>
                                 </div>

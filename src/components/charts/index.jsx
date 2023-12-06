@@ -6,6 +6,8 @@ import DataQualityRules from '../Configuration/DataQualityRules';
 import Dashboard from '../Dashboard/Dashboard';
 import DataMatchingRules from '../Configuration/DataMatching/DataMatchingRules';
 import SurvivorshipRules from '../Configuration/SurvivorshipRules/SurvivorshipRules';
+import RolesAndPermissions from '../Configuration/RolesAndPermissions/RolesAndPermissions';
+import UserManagement from '../Configuration/UserManagement/UserManagement';
 
 function ChartsPage({ handlelogout }) {
   const [subSelectedTab, setSubSelectedTab] = useState('');
@@ -79,9 +81,19 @@ function ChartsPage({ handlelogout }) {
                             <SurvivorshipRules />
                           </div>
                           :
-                          (
-                            <div className="p-6"> {subSelectedTab}</div>
-                          )}
+                        subSelectedTab === "user-management" ?
+                          <div className='h-full'>
+                            <UserManagement />
+                          </div>
+                          :
+                          subSelectedTab === "roles-&-permissions" ?
+                            <div className='h-full'>
+                              <RolesAndPermissions />
+                            </div>
+                            :
+                            (
+                              <div className="p-6"> {subSelectedTab}</div>
+                            )}
               </div>
             </div>
           </div>

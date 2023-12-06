@@ -53,7 +53,6 @@ const SurvivorshipRules = () => {
       editable: true,
       filter: true,
       sortable: true,
-      floatingFilter: true,
     };
   }, []);
 
@@ -93,7 +92,7 @@ const SurvivorshipRules = () => {
   const handleUpdateModal = () => {};
 
   return (
-    <div className="w-full flex flex-col justify-center items-center gap-2 mt-3">
+    <div className="w-full flex flex-col justify-center items-center gap-2 py-4">
       <div className="flex w-full justify-end pr-8 ">
         <div className="w-full max-w-[100px]">
           <CustomButton
