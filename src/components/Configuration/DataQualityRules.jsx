@@ -9,15 +9,17 @@ import SingleSelectDropDown from '../common/SingleSelectDropDown';
 import CustomButton from '../common/CustomButton';
 import CustomModal from '../common/CustomModal';
 import { setDataQualityCreate } from '@/store/dataQualitySlice';
-import { DataSource,  ValidationRule, columnName, fetchDeleteTableData, fetchInsertTableData, fetchTableData, fetchUpdateTableData, ruleDescription, tableData, tableName } from '@/assets/data';
+import { DataSource, ValidationRule, columnName, fetchDeleteTableData, fetchInsertTableData, fetchTableData, fetchUpdateTableData, ruleDescription, tableData, tableName } from '@/assets/data';
 import CustomInput from '../common/CustomInput';
 import DataQualitySearch from './DataQualitySearch';
 import { MdDeleteForever } from 'react-icons/md';
+import DeletePopup from '../common/DeletePopup';
 
 const DataQualityRules = () => {
     const tableRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [rowData, setRowData] = useState(tableData);
+    const [isDelete, setIsDelete] = useState()
 
     const [columnDefs] = useState([
         {
@@ -255,8 +257,9 @@ const DataQualityRules = () => {
     const handleDelete = async (e, data) => {
         console.log(data?.id);
         if (data?.id) {
-            const deleteData = await fetchDeleteTableData(data?.id);
-            console.log(deleteData);
+            // const deleteData = await fetchDeleteTableData(data?.id);
+            setIsDelete(data?.id)
+            // console.log(deleteData);
         }
     }
 
@@ -295,8 +298,36 @@ const DataQualityRules = () => {
         }
     }, [dataQualityTable])
 
+
+    const closePopup = () => {
+        setIsDelete()
+    }
+
+    console.log('delete Confirmation', isDelete);
+
+    const deleteConfirmation = async () => {
+        console.log('delete Confirmation', isDelete);
+        if (isDelete) {
+            const deleteData = await fetchDeleteTableData(isDelete);
+            console.log(deleteData);
+            if (deleteData?.data?.isSuccess) {
+                const data = await fetchTableData()
+                if (data?.length > 0) {
+                    setRowData(data);
+                }
+                closePopup()
+            }
+        }
+    }
+
     return (
         <div className="w-full flex flex-col  gap-6 p-3 xl:h-full">
+
+            <DeletePopup
+                isOpen={isDelete}
+                onCancel={closePopup}
+                onDelete={() => deleteConfirmation()}
+            />
 
             <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
                 <div className='w-full h-full'>
