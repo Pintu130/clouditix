@@ -9,7 +9,7 @@ import SingleSelectDropDown from '../common/SingleSelectDropDown';
 import CustomButton from '../common/CustomButton';
 import CustomModal from '../common/CustomModal';
 import { setDataQualityCreate } from '@/store/dataQualitySlice';
-import { DataSource, ValidationRule, columnName, fetchDeleteTableData, fetchInsertTableData, fetchTableData, fetchUpdateTableData, ruleDescription, tableData, tableName } from '@/assets/data';
+import { DataSource, ValidationRule, columnName, fetchDeleteTableData, fetchInsertTableData, fetchTableData, fetchUpdateTableData, tableData, tableName } from '@/assets/data';
 import CustomInput from '../common/CustomInput';
 import DataQualitySearch from './DataQualitySearch';
 import { MdDeleteForever } from 'react-icons/md';
@@ -179,23 +179,26 @@ const DataQualityRules = () => {
     const handleCreateModal = () => {
         setIsModalOpen(true)
     };
+    const [formData, setFormData] = useState({})
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setFormData({})
+        setFormData({
+            columnName: '',
+            dataSource: '',
+            tableName: '',
+            validationRule: '',
+            ruleParameters: '',
+            isMandatory: '',
+            isActive: '',
+        })
     };
 
-
-
-    const [formData, setFormData] = useState({})
     const dispatch = useDispatch()
     const dataQualityTable = useSelector(state => state?.dataQuality?.data)
-
     const handleFromData = (data, target) => {
-        const id = formData.id || generateUniqueId();
         setFormData({
             ...formData,
-            id,
             [target]: data,
         })
     }
@@ -211,67 +214,70 @@ const DataQualityRules = () => {
         if (checkEditdata) {
             const editData = {
                 id: formData.id,
-                tableId: 1,
+                tableId: formData.tableId,
                 columnName: formData?.columnName?.label,
                 dataSource: formData?.dataSource?.label,
                 tableName: formData?.tableName?.label,
                 validationRule: formData?.validationRule?.label,
-                ruleDescription: formData?.ruleDescription?.label,
                 ruleParameters: formData?.ruleParameters,
                 isMandatory: formData?.isMandatory,
                 isActive: formData?.isActive,
             }
 
-            console.log(editData);
             const updateData = await fetchUpdateTableData(editData)
-            console.log(updateData);
 
-            const updatedRowData = rowData.map((row) =>
+            if (updateData?.isSuccess) {
+                const data = await fetchTableData()
+                if (data?.length > 0) {
+                    setRowData(data);
+                }
+                closePopup()
+            }
+
+            /* const updatedRowData = rowData.map((row) =>
                 row.id === editData.id ? { ...row, ...editData } : row
             );
-            setRowData(updatedRowData)
+            setRowData(updatedRowData) */
         } else {
-            console.log(formData);
             const insertData = {
                 id: 0,
-                tableId: 1,
+                tableId: 0,
                 columnName: formData?.columnName?.label,
                 dataSource: formData?.dataSource?.label,
                 tableName: formData?.tableName?.label,
                 validationRule: formData?.validationRule?.label,
-                ruleDescription: formData?.ruleDescription?.label,
-                ruleParameters: formData?.ruleParameters,
-                isMandatory: formData?.isMandatory,
-                isActive: formData?.isActive,
+                ruleParameters: formData?.ruleParameters || '',
+                isMandatory: formData?.isMandatory || false,
+                isActive: formData?.isActive || false,
             }
 
             const createTable = await fetchInsertTableData(insertData)
-
-            console.log(createTable);
-            console.log(insertData);
-            dispatch(setDataQualityCreate(formData))
+            if (createTable?.isSuccess) {
+                const data = await fetchTableData()
+                if (data?.length > 0) {
+                    setRowData(data);
+                }
+                closePopup()
+            }
+            // dispatch(setDataQualityCreate(formData))
         }
         closeModal()
     }
 
     const handleDelete = async (e, data) => {
-        console.log(data?.id);
         if (data?.id) {
-            // const deleteData = await fetchDeleteTableData(data?.id);
             setIsDelete(data?.id)
-            // console.log(deleteData);
         }
     }
-
     const handleEdit = (e, data) => {
         e.stopPropagation();
         const modifyData = {
             id: data.id,
+            tableId: data?.tableId,
             columnName: { label: data?.columnName, value: data?.columnName },
             dataSource: { label: data?.dataSource, value: data?.dataSource },
             tableName: { label: data?.tableName, value: data?.tableName },
             validationRule: { label: data?.validationRule, value: data?.validationRule },
-            ruleDescription: { label: data?.ruleDescription, value: data?.ruleDescription },
             ruleParameters: data?.ruleParameters,
             isMandatory: data?.isMandatory,
             isActive: data?.isActive,
@@ -286,7 +292,6 @@ const DataQualityRules = () => {
                 id: dataQualityTable?.id,
                 columnName: dataQualityTable?.columnName?.label,
                 tableName: dataQualityTable?.tableName?.label,
-                ruleDescription: dataQualityTable?.ruleDescription?.label,
                 dataSource: dataQualityTable?.dataSource?.label,
                 validationRule: dataQualityTable?.validationRule?.label,
                 ruleParameters: dataQualityTable?.ruleParameters,
@@ -303,13 +308,9 @@ const DataQualityRules = () => {
         setIsDelete()
     }
 
-    console.log('delete Confirmation', isDelete);
-
     const deleteConfirmation = async () => {
-        console.log('delete Confirmation', isDelete);
         if (isDelete) {
             const deleteData = await fetchDeleteTableData(isDelete);
-            console.log(deleteData);
             if (deleteData?.data?.isSuccess) {
                 const data = await fetchTableData()
                 if (data?.length > 0) {
@@ -319,7 +320,6 @@ const DataQualityRules = () => {
             }
         }
     }
-
     return (
         <div className="w-full flex flex-col  gap-6 p-3 xl:h-full">
 
@@ -348,24 +348,7 @@ const DataQualityRules = () => {
                         <h2 className='text-xl font-bold '> Create Data Quality Rule </h2>
                         <div className='flex flex-col justify-center lg:justify-between h-full'>
                             <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 w-full'>
-                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
-                                    <label
-                                        htmlFor="speciality"
-                                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
-                                    >
-                                        columnName
-                                    </label>
-                                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
-                                        <SingleSelectDropDown
-                                            placeholder="Enter Column Name"
-                                            options={columnName}
-                                            target="columnName"
-                                            creatableSelect={true}
-                                            selectedType={formData?.columnName}
-                                            handleSelectChange={handleFromData}
-                                        />
-                                    </div>
-                                </div>
+
                                 <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
                                     <label
                                         htmlFor="speciality"
@@ -426,20 +409,19 @@ const DataQualityRules = () => {
                                         htmlFor="speciality"
                                         className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
                                     >
-                                        ruleDescription
+                                        columnName
                                     </label>
                                     <div className="w-full max-w-[300px] lg:max-w-[100%]">
                                         <SingleSelectDropDown
-                                            placeholder="Enter Rule Description"
-                                            options={ruleDescription}
-                                            target="ruleDescription"
+                                            placeholder="Enter Column Name"
+                                            options={columnName}
+                                            target="columnName"
                                             creatableSelect={true}
-                                            selectedType={formData?.ruleDescription}
+                                            selectedType={formData?.columnName}
                                             handleSelectChange={handleFromData}
                                         />
                                     </div>
                                 </div>
-
                                 <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
                                     <label
                                         htmlFor="speciality"

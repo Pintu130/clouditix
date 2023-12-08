@@ -3,7 +3,7 @@ import LoginPage from "@/components/login/LoginPage";
 import { useState } from "react";
 
 export default function Home() {
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState(true);
 
   const handlelogin = (data) => {
     setUser(true);

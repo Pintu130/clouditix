@@ -51,7 +51,6 @@ function ChartsPage({ handlelogout }) {
       console.log(error), "ERROR";
     }
   }
-  console.log(subSelectedTab);
   return (
     <div>
       <div className='sticky top-0 w-full h-full '>
@@ -81,19 +80,19 @@ function ChartsPage({ handlelogout }) {
                             <SurvivorshipRules />
                           </div>
                           :
-                        subSelectedTab === "user-management" ?
-                          <div className='h-full'>
-                            <UserManagement />
-                          </div>
-                          :
-                          subSelectedTab === "roles-&-permissions" ?
+                          subSelectedTab === "user-management" ?
                             <div className='h-full'>
-                              <RolesAndPermissions />
+                              <UserManagement />
                             </div>
                             :
-                            (
-                              <div className="p-6"> {subSelectedTab}</div>
-                            )}
+                            subSelectedTab === "roles-&-permissions" ?
+                              <div className='h-full'>
+                                <RolesAndPermissions />
+                              </div>
+                              :
+                              (
+                                <div className="p-6"> {subSelectedTab}</div>
+                              )}
               </div>
             </div>
           </div>

@@ -18,7 +18,6 @@ export const fetchTableData = async () => {
 export const fetchInsertTableData = async (data) => {
   try {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}InsertDQMetaData`, data);
-    console.log(response);
     return response?.data
   } catch (error) {
     return error
@@ -28,7 +27,7 @@ export const fetchInsertTableData = async (data) => {
 export const fetchUpdateTableData = async (data) => {
   try {
     const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}UpdateDQMetaData`, data)
-    return response
+    return response.data
   } catch (error) {
     return error
   }
@@ -199,22 +198,37 @@ export const matchdata = [
   { label: "email", value: "email" },
   { label: "mobile number", value: "mobile_number" },
 ];
+export const matchdataValue = [
+  { label: "0.1", value: "0.1" },
+  { label: "0.2", value: "0.2" },
+  { label: "0.3", value: "0.3" },
+  { label: "0.4", value: "0.4" },
+  { label: "0.5", value: "0.5" },
+];
 
 export const DataSource = [
-  { label: "CRM", value: "crm" },
+  { label: "cloud_storage", value: "cloud_storage" },
+  { label: "AWS_S3", value: "AWS_S3" },
 ];
 export const tableName = [
   { label: "ldg_account_bus_card", value: "ldg_account_bus_card" },
+  { label: "guest", value: "guest" },
 ];
 export const ruleDescription = [
   { label: "Check if the column(s) conatins duplicate values across rows.", value: "Check if the column(s) conatins duplicate values across rows." },
 ];
 export const ValidationRule = [
-  { label: "datatype_check", value: "datatype_check" },
-  { label: "empty_value_check", value: "empty_value_check" },
   { label: "null_value_check", value: "null_value_check" },
-  { label: "length_check", value: "length_check" },
+  { label: "duplicate_value_check", value: "duplicate_value_check" },
+  { label: "empty_value_check", value: "empty_value_check" },
   { label: "special_character_check", value: "special_character_check" },
+  { label: "datatype_check", value: "datatype_check" },
+  { label: "length_check", value: "length_check" },
+  { label: "synonyms_check", value: "synonyms_check" },
+  { label: "country_check", value: "country_check" },
+  { label: "email_format_check", value: "email_format_check" },
+  { label: "telephone_format_check", value: "telephone_format_check" },
+  { label: "accepted_values_check", value: "accepted_values_check" },
 ]
 
 export const tableData = [
