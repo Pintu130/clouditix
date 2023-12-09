@@ -42,7 +42,7 @@ function SingleSelectDropDown({ handleSelectChange, selectedType, options, place
     return (
         <div className="w-full">
             {creatableSelect ? <CreatableSelect
-                placeholder={""}
+                placeholder={placeholder}
                 isClearable={isClearable}
                 isMulti={false}
                 styles={customStyles}
@@ -53,7 +53,7 @@ function SingleSelectDropDown({ handleSelectChange, selectedType, options, place
                 className='capitalize'
                 isDisabled={false}
             /> : <Select
-                placeholder={""}
+                placeholder={placeholder}
                 isClearable={isClearable}
                 isMulti={false}
                 styles={customStyles}

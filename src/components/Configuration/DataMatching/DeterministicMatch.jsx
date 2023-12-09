@@ -208,58 +208,59 @@ const DeterministicMatch = () => {
             <h1 className='pl-6'>Add New - Rule</h1>
             <div className='p-5 pl-6  h-[250px] overflow-auto flex flex-col  '>
 
-              <div className='flex items-center gap-10'>
-                <span className='w-52'>Attribute</span>
-                <span className='w-52'>Col_weight</span>
-              </div>
+              <div className='pb-5'>
+                <div className='flex items-center gap-10'>
+                  <span className='w-52'>Attribute</span>
+                  <span className='w-52'>Col_weight</span>
+                </div>
 
-              <div className='flex flex-col gap-2'>
-                {dynamicFields?.map((field, index) => {
-                  return (
-                    <div key={index} className='flex items-center gap-10'>
-                      <div className='w-52'>
-                        <Select
-                          placeholder="Enter Data Source"
-                          isMulti={false}
-                          styles={customStyles}
-                          name='name'
-                          options={matchdata}
-                          value={field?.name}
-                          onChange={(selectedOption) =>
-                            handleFromData(selectedOption, index, 'name')
-                          }
-                          components={animatedComponents}
-                          className='capitalize'
-                        />
+                <div className='flex flex-col gap-2'>
+                  {dynamicFields?.map((field, index) => {
+                    return (
+                      <div key={index} className='flex items-center gap-10'>
+                        <div className='w-52'>
+                          <Select
+                            placeholder="Enter Data Source"
+                            isMulti={false}
+                            styles={customStyles}
+                            name='name'
+                            options={matchdata}
+                            value={field?.name}
+                            onChange={(selectedOption) =>
+                              handleFromData(selectedOption, index, 'name')
+                            }
+                            components={animatedComponents}
+                            className='capitalize'
+                          />
+                        </div>
+                        <div className='w-52'>
+                          <Select
+                            placeholder="Enter Data Source"
+                            isMulti={false}
+                            styles={customStyles}
+                            name='name'
+                            options={matchdataValue}
+                            value={field?.value}
+                            onChange={(selectedOption) =>
+                              handleFromData(selectedOption, index, 'value')
+                            }
+                            components={animatedComponents}
+                            className='capitalize'
+                          />
+                        </div>
+                        {index === dynamicFields.length - 1 && <div className="w-full max-w-[80px]" >
+                          <CustomButton
+                            name="Add"
+                            handleClick={() => handleAddField()}
+                            isDisable={false}
+                            isLoading={false}
+                          />
+                        </div>}
                       </div>
-                      <div className='w-52'>
-                        <Select
-                          placeholder="Enter Data Source"
-                          isMulti={false}
-                          styles={customStyles}
-                          name='name'
-                          options={matchdataValue}
-                          value={field?.value}
-                          onChange={(selectedOption) =>
-                            handleFromData(selectedOption, index, 'value')
-                          }
-                          components={animatedComponents}
-                          className='capitalize'
-                        />
-                      </div>
-                      {index === dynamicFields.length - 1 && <div className="w-full max-w-[80px]" >
-                        <CustomButton
-                          name="Add"
-                          handleClick={() => handleAddField()}
-                          isDisable={false}
-                          isLoading={false}
-                        />
-                      </div>}
-                    </div>
-                  )
-                })}
+                    )
+                  })}
+                </div>
               </div>
-
 
             </div>
           </div>

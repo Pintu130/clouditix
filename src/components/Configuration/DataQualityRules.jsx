@@ -286,8 +286,10 @@ const DataQualityRules = () => {
         setIsModalOpen(true);
     }
 
-    useEffect(() => {
+   /*  useEffect(() => {
+        console.log(dataQualityTable);
         if (dataQualityTable && Object?.keys(dataQualityTable)?.length > 0) {
+            console.log(dataQualityTable);
             const addData = {
                 id: dataQualityTable?.id,
                 columnName: dataQualityTable?.columnName?.label,
@@ -301,7 +303,7 @@ const DataQualityRules = () => {
             setRowData(prevData => [...prevData, addData])
             dispatch(setDataQualityCreate({}))
         }
-    }, [dataQualityTable])
+    }, [dataQualityTable]) */
 
 
     const closePopup = () => {
