@@ -1,85 +1,61 @@
-import { GuestCreateAddressData } from "@/assets/data";
+import { IdentificationData } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
+import CustomModal from "@/components/common/CustomModal";
 import { AgGridReact } from "ag-grid-react";
 import React, { useRef, useState } from "react";
+import { FaChevronDown } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
-import { FaChevronDown } from "react-icons/fa6";
-import CustomModal from "@/components/common/CustomModal";
-import AddressModel from "./AddressModel";
+import IdentificationModel from "./IdentificationModel";
+import SmCustomModal from "@/components/common/SmCustomModal";
 
-const GuestCreateAddress = () => {
+const GuestIdentification = () => {
   const tableRef = useRef(null);
-  const [rowData, setRowData] = useState(GuestCreateAddressData);
+  const [rowData, setRowData] = useState(IdentificationData);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [columnDefs] = useState([
-    {
-      field: "addressType",
-      headerName: "AddressType",
-      minWidth: 100,
-      maxWidth: 150,
-      filter: true,
-    },
-    {
-      field: "addressLine1",
-      headerName: "Address Line 1",
-      minWidth: 100,
-      filter: true,
-    },
-    {
-      field: "addressLine2",
-      headerName: "Address Line 2",
-      minWidth: 100,
-      filter: true,
-    },
-    {
-      field: "addressLine3",
-      headerName: " Address Line 3",
-      minWidth: 200,
-    },
-    {
-      field: "city",
-      headerName: "City ",
-      minWidth: 100,
-      maxWidth: 200,
-    },
-    {
-      field: "state",
-      headerName: "State",
-      minWidth: 180,
-      maxWidth: 250,
-    },
-    {
-      field: "country",
-      headerName: "Country",
 
-      minWidth: 80,
-      maxWidth: 100,
-
-      editable: true,
-    },
-    {
-      field: "zipCode",
-      headerName: "Zip Code",
-
-      minWidth: 80,
-      maxWidth: 100,
-
-      editable: true,
-    },
-    {
-      field: "isActive",
-      headerName: "isActive",
-      cellClass: "uppercase",
-      minWidth: 80,
-      maxWidth: 100,
-      cellRenderer: "agCheckboxCellRenderer",
-      editable: true,
-    },
-  ]);
+  const handleIdentificationModal = () => {
+    setIsModalOpen(true);
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const [columnDefs] = useState([
+    {
+      field: "identificationType",
+      headerName: "Identification Type",
+      minWidth: 200,
+      maxWidth: 250,
+      filter: true,
+    },
+    {
+      field: "identificationValue",
+      headerName: "identification Value",
+      minWidth: 200,
+      maxWidth: 250,
+      filter: true,
+    },
+    {
+      field: "issuingCountry",
+      headerName: "Issuing Country",
+      minWidth: 200,
+      maxWidth: 250,
+      filter: true,
+    },
+    {
+      field: "issueDate",
+      headerName: " Issue Date",
+      minWidth: 200,
+      maxWidth: 250,
+    },
+    {
+      field: "expiryDate",
+      headerName: "Expiry Date ",
+      minWidth: 200,
+      maxWidth: 250,
+    },
+  ]);
 
   const defaultColDef = {
     filter: true,
@@ -135,16 +111,18 @@ const GuestCreateAddress = () => {
     // domLayout: 'autoHeight',
   };
   return (
-    <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll ">
-      <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <AddressModel onClose={closeModal} />
-      </CustomModal>
+    <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full max-h-[250px] custom-scroll">
+
+      <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
+        <IdentificationModel onClose={closeModal} />
+      </SmCustomModal>
+
       <div className="flex items-center gap-3">
         <FaChevronDown className="h-4 w-4" />
         <div className=" w-[150px] flex gap-2   ">
           <CustomButton
-            name="Address"
-            handleClick={() => setIsModalOpen(true)}
+            name="Identification"
+            handleClick={() => handleIdentificationModal()}
             isDisable={false}
             isLoading={false}
             icon={<MdOutlineAdd className="h-6 w-6  " />}
@@ -152,10 +130,10 @@ const GuestCreateAddress = () => {
         </div>
       </div>
 
-      <div className="flex w-full h-full min-h-[20vh] xl:max-h-[30%]  mx-auto ag-theme-alpine ">
+      <div className="flex w-full h-full min-h-[25vh] pb-10  xl:max-h-[30%]  mx-auto ag-theme-alpine ">
         <div
-          className="relative overflow-auto max-h-[200px]"
-          style={{ width: "100%" }}
+          className="relative overflow-auto max-h-[150px]"
+          style={{ width: "70%" }}
         >
           <AgGridReact
             ref={tableRef}
@@ -180,4 +158,4 @@ const GuestCreateAddress = () => {
   );
 };
 
-export default GuestCreateAddress;
+export default GuestIdentification;

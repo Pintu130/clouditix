@@ -1,86 +1,81 @@
-import { GuestCreateAddressData } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
+import CustomModal from "@/components/common/CustomModal";
 import { AgGridReact } from "ag-grid-react";
 import React, { useRef, useState } from "react";
+import { FaChevronDown } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
-import { FaChevronDown } from "react-icons/fa6";
-import CustomModal from "@/components/common/CustomModal";
-import AddressModel from "./AddressModel";
+import LoyalityModel from "./LoyalityModel";
+import { LoyalityData } from "@/assets/data";
+import SmCustomModal from "@/components/common/SmCustomModal";
 
-const GuestCreateAddress = () => {
+const LoyalityProgram = () => {
   const tableRef = useRef(null);
-  const [rowData, setRowData] = useState(GuestCreateAddressData);
+  const [rowData, setRowData] = useState(LoyalityData);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [columnDefs] = useState([
-    {
-      field: "addressType",
-      headerName: "AddressType",
-      minWidth: 100,
-      maxWidth: 150,
-      filter: true,
-    },
-    {
-      field: "addressLine1",
-      headerName: "Address Line 1",
-      minWidth: 100,
-      filter: true,
-    },
-    {
-      field: "addressLine2",
-      headerName: "Address Line 2",
-      minWidth: 100,
-      filter: true,
-    },
-    {
-      field: "addressLine3",
-      headerName: " Address Line 3",
-      minWidth: 200,
-    },
-    {
-      field: "city",
-      headerName: "City ",
-      minWidth: 100,
-      maxWidth: 200,
-    },
-    {
-      field: "state",
-      headerName: "State",
-      minWidth: 180,
-      maxWidth: 250,
-    },
-    {
-      field: "country",
-      headerName: "Country",
 
-      minWidth: 80,
-      maxWidth: 100,
-
-      editable: true,
-    },
-    {
-      field: "zipCode",
-      headerName: "Zip Code",
-
-      minWidth: 80,
-      maxWidth: 100,
-
-      editable: true,
-    },
-    {
-      field: "isActive",
-      headerName: "isActive",
-      cellClass: "uppercase",
-      minWidth: 80,
-      maxWidth: 100,
-      cellRenderer: "agCheckboxCellRenderer",
-      editable: true,
-    },
-  ]);
+  const handleLoyalityModal = () => {
+    setIsModalOpen(true);
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
+  const [columnDefs] = useState([
+    {
+      field: "loyalityProgramMembership",
+      headerName: "Loyality Program Membership",
+      minWidth: 150,
+      maxWidth: 200,
+      filter: true,
+    },
+    {
+      field: "tierLevel",
+      headerName: "Tier Level",
+      minWidth: 150,
+      maxWidth: 200,
+      filter: true,
+    },
+    {
+      field: "startDate",
+      headerName: "Start Date",
+      minWidth: 150,
+      maxWidth: 200,
+      filter: true,
+    },
+    {
+      field: "endDate",
+      headerName: " End Date",
+      minWidth: 150,
+      maxWidth: 200,
+    },
+    {
+      field: "earningHistory",
+      headerName: "Earning History ",
+      minWidth: 150,
+      maxWidth: 200,
+    },
+    {
+      field: "remptionHistory",
+      headerName: "Remption History ",
+      minWidth: 150,
+      maxWidth: 200,
+    },
+    {
+      field: "loyalityPoints",
+      headerName: "Loyality Points ",
+      minWidth: 150,
+      maxWidth: 200,
+    },
+    {
+      field: "isActive",
+      headerName: "Is Active ",
+      minWidth: 150,
+      maxWidth: 200,
+      cellRenderer: "agCheckboxCellRenderer",
+      editable: true,
+    },
+  ]);
   const defaultColDef = {
     filter: true,
     sortable: true,
@@ -123,28 +118,26 @@ const GuestCreateAddress = () => {
 
   const onGridReady = (params) => {
     tableRef.current = params.api;
-    // params.api.setEditable(true);
   };
 
-  const handleCellClicked = (param) => {
-    // console.log(param?.column);
-  };
+  const handleCellClicked = (param) => {};
 
   const gridOptions = {
     rowClass: "custom-row-hover",
-    // domLayout: 'autoHeight',
   };
   return (
-    <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll ">
-      <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <AddressModel onClose={closeModal} />
-      </CustomModal>
+    <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll">
+
+      <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
+        <LoyalityModel onClose={closeModal} />
+      </SmCustomModal>
+
       <div className="flex items-center gap-3">
         <FaChevronDown className="h-4 w-4" />
-        <div className=" w-[150px] flex gap-2   ">
+        <div className=" w-[190px] flex gap-2   ">
           <CustomButton
-            name="Address"
-            handleClick={() => setIsModalOpen(true)}
+            name="Loyality Program"
+            handleClick={() => handleLoyalityModal()}
             isDisable={false}
             isLoading={false}
             icon={<MdOutlineAdd className="h-6 w-6  " />}
@@ -152,7 +145,7 @@ const GuestCreateAddress = () => {
         </div>
       </div>
 
-      <div className="flex w-full h-full min-h-[20vh] xl:max-h-[30%]  mx-auto ag-theme-alpine ">
+      <div className="flex w-full h-full min-h-[20vh] pb-10  xl:max-h-[30%]  mx-auto ag-theme-alpine ">
         <div
           className="relative overflow-auto max-h-[200px]"
           style={{ width: "100%" }}
@@ -180,4 +173,4 @@ const GuestCreateAddress = () => {
   );
 };
 
-export default GuestCreateAddress;
+export default LoyalityProgram;

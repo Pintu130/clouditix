@@ -13,30 +13,12 @@ import GuestSearchData from "./GuestSearchData";
 const GuestDataSearch = () => {
   const tableRef = useRef({});
   const [rowData, setRowData] = useState(GuestDataSearchData);
-  
+
   const handleSearch = () => { };
 
   const handleEdit = (e, data) => {
     e.stopPropagation();
-    const modifyData = {
-      id: data.id,
-      columnName: { label: data?.columnName, value: data?.columnName },
-      dataSource: { label: data?.dataSource, value: data?.dataSource },
-      tableName: { label: data?.tableName, value: data?.tableName },
-      validationRule: {
-        label: data?.validationRule,
-        value: data?.validationRule,
-      },
-      ruleDescription: {
-        label: data?.ruleDescription,
-        value: data?.ruleDescription,
-      },
-      ruleParameters: data?.ruleParameters,
-      isMandatory: data?.isMandatory,
-      isActive: data?.isActive,
-    };
-    setFormData(modifyData);
-    setIsModalOpen(true);
+
   };
 
   const [columnDefs] = useState([
@@ -144,7 +126,7 @@ const GuestDataSearch = () => {
 
       minWidth: 100,
       maxWidth: 150,
-      editable: true,
+      editable: false,
       cellRenderer: (params) => {
         const data = params.data;
         return (
@@ -211,7 +193,7 @@ const GuestDataSearch = () => {
   return (
     <div className="w-full h-full flex flex-col  items-center gap-6 px-6 py-4  ">
 
-        <GuestSearchData />
+      <GuestSearchData />
 
       <div className="flex w-full min-h-[62vh] pb-10  mx-auto ag-theme-alpine ">
         <div

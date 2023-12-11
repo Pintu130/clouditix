@@ -6,23 +6,23 @@ import React, { useState } from "react";
 import GuestCreateAddress from "./GuestCreateAddress";
 import PreferanceModel from "./PreferanceModel";
 import { genderDate, income, married, nationality } from "@/assets/data";
+import { FaChevronDown } from "react-icons/fa";
+import GuestContactDetails from "./GuestContactDetails";
+import GuestIdentification from "./GuestIdentification";
+import SocialMedia from "./SocialMedia";
+import LoyalityProgram from "./LoyalityProgram";
 
 const GuestDataCreate = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setformData] = useState({})
 
   const handleFromData = (value, name) => {
-    console.log(value);
-    console.log(name);
-
-
     setformData({
       ...formData,
       [name]: value
     })
   }
 
-  console.log(formData);
 
   const handleAddModal = () => {
     setIsModalOpen(true);
@@ -301,8 +301,43 @@ const GuestDataCreate = () => {
         </div>
       </div>
 
-      <div className="border border-gray-400 rounded-lg p-2">
+      {/*  <div className="border border-gray-400 rounded-lg p-2">
         <GuestCreateAddress />
+      </div> */}
+      <div className=" w-full h-full border border-gray-400 rounded-lg p-2 flex flex-col gap-6 max-h-[450px] overflow-auto custom-scroll    ">
+        <div className="flex items-center gap-3  px-4">
+          <FaChevronDown className="h-4 w-4" />
+          <div className=" w-[150px] flex gap-2">
+            <CustomButton
+              name="Hide All"
+              handleClick={() => { }}
+              isDisable={false}
+              isLoading={false}
+            />
+          </div>
+        </div>
+
+        <div className="w-full h-full flex flex-col gap-6">
+          <div className="w-full h-full">
+            <GuestCreateAddress />
+          </div>
+
+          <div className="w-full h-full">
+            <GuestContactDetails />
+          </div>
+
+          <div className="w-full h-full">
+            <GuestIdentification />
+          </div>
+
+          <div className="w-full h-full">
+            <SocialMedia />
+          </div>
+
+          <div className="w-full h-full">
+            <LoyalityProgram />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ const CustomModal = ({ children, isopen, onClose, type }) => {
         <div className={`fixed inset-0 backdrop-blur-[1.5px] flex items-center justify-center z-50   transition-all duration-700
             ${modalOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         >
-            <div className={`bg-white  w-full  h-full  overflow-auto shadow-[#64646f33_0px_7px_29px_0px]  rounded-lg py-4 md:py-6 transform transition-transform ease-in-out duration-300 relative
+            <div className={`bg-white  w-full  h-full custom-scroll  overflow-auto shadow-[#64646f33_0px_7px_29px_0px]  rounded-lg py-4 md:py-6 transform transition-transform ease-in-out duration-300 relative
             ${type === "inactive" ? "max-h-[35%] max-w-[55%]" : "max-h-[67%] max-w-[60%]"}
             `}>
                 <div className="absolute flex justify-end right-5 top-5">

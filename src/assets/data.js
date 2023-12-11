@@ -925,6 +925,21 @@ export const GuestCreateAddressData = [
   }
 ]
 
+export const IdentificationData = [
+  {
+    id: 0,
+    identificationType: "Aadhar_card",
+    identificationValue: "123456789023",
+    issuingCountry: "India",
+    issueDate: "15-01-2020",
+    expiryDate: "15-01-2030",
+
+
+
+  }
+]
+
+
 export const nationality = [
   { label: "India", value: "india" },
   { label: "NRI", value: "NRI" }
@@ -942,4 +957,113 @@ export const income = [
   { label: "Low", value: "low" },
   { label: "Middle", value: "Middle" },
   { label: "High", value: "High" }
+]
+export const bedtype = [
+  { label: "King_Size", value: "King_Size" },
+  { label: "Full_Size", value: "Full_Size" },
+  { label: "Twin Xl", value: "Twin Xl" }
+]
+export const floorlevel = [
+  { label: "Low", value: "low" },
+  { label: "Middle", value: "Middle" },
+  { label: "High", value: "High" }
+]
+export const roomviewpref = [
+  { label: "Fountain View", value: "Fountain View" }
+]
+export const bathslippers = [
+  { label: "Large", value: "Large" },
+  { label: "Small", value: "Small" },
+]
+export const favouritecuisine = [
+  { label: "Indian, Italian", value: "Indian, Italian" }
+]
+export const airporttransfer = [
+  { label: "Limousine", value: "Limousine" }
+]
+export const conceirgeservices = [
+  { label: "Reservations twice a day", value: "Reservations twice a day" }
+]
+export const connectivityreg = [
+  { label: "Wifi", value: "Wifi" }
+]
+export const promotionalmaterials = [
+  { label: "Yes", value: "yes" },
+  { label: "No", value: "No" },
+]
+export const donotdisturb = [
+  { label: "Yes", value: "yes" },
+  { label: "No", value: "No" },
+]
+export const pillowtype = [
+  { label: "Film", value: "Film" }
+]
+export const roomtemppref = [
+  { label: "Cool", value: "Cool" },
+  { label: "Warm", value: "Warm" },
+]
+export const dietaryallergy = [
+  { label: "Vegetarian", value: "Vegetarian" }
+]
+export const celebratoryoccasion = [
+  { label: "BrithDay", value: "BrithDay" },
+  { label: "Anniversary", value: "Anniversary" },
+]
+export const spatreatments = [
+  { label: "Swedish Massage", value: "Swedish Massage" }
+]
+export const housekeepingschedule = [
+  { label: "8:00 AM - 10:00 PM", value: "8:00 AM - 10:00 PM" }
+]
+export const modeofcommunication = [
+  { label: "Email", value: "Email" },
+  { label: "SMS", value: "SMS" },
+]
+export const preferreddiningtimes = [
+  { label: "Lunch", value: "Lunch" },
+  { label: "Dinner", value: "Dinner" },
+]
+
+export const SocialMediaData = [
+  {
+    id: 0,
+    socialMediaApplication: "facebook",
+    socialMediaProfile: "https://www.facebook.com/Arjun.Sharma",
+  }
+]
+
+export const LoyalityData = [
+  {
+    id: 0,
+    loyalityProgramMembership: "Elite Rewards",
+    tierLevel: "Basic",
+    startDate: "22-07-2022",
+    endDate: "21-07-2026",
+    earningHistory: "2900",
+    remptionHistory: "145",
+    loyalityPoints: "11600",
+  }
+]
+
+export const identificationtype = [
+  { label: "Aadhar_Card", value: "Aadhar_Card" },
+  { label: "PassPort", value: "PassPort" },
+]
+export const issuingcountry = [
+  { label: "India", value: "India" },
+  { label: "USA", value: "USA" },
+  { label: "UK", value: "UK" },
+  { label: "Canada", value: "Canada" },
+  { label: "Sweden", value: "Sweden" },
+  { label: "Australia", value: "Australia" },
+  { label: "Germany", value: "Germany" },
+]
+export const socialmediaData = [
+  { label: "Facebook", value: "Facebook" },
+  { label: "YouTube", value: "YouTube" },
+  { label: "WhatsApp", value: "WhatsApp" },
+  { label: "Twitter", value: "Twitter" },
+  { label: "instagram", value: "instagram" },
+  { label: "TikTOk", value: "TikTOk" },
+  { label: "Linkedin", value: "Linkedin" },
 ]
