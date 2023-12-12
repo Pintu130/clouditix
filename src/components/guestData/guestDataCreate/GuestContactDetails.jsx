@@ -1,30 +1,17 @@
 import CustomButton from "@/components/common/CustomButton";
 import { AgGridReact } from "ag-grid-react";
-import React, { useRef, useState, useMemo, useCallback } from "react";
+import React, { useRef, useState, useMemo, useCallback, useEffect } from "react";
 import "ag-grid-enterprise";
 import "ag-grid-community/styles/ag-grid.css";
 import { FaChevronDown } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
-import CustomModal from "@/components/common/CustomModal";
 import ContactModel from "./ContactModel";
 import SmCustomModal from "@/components/common/SmCustomModal";
+import { useSelector } from "react-redux";
 
-const staticData = [
-  {
-    athlete: "Coralie Simmons",
-    age: 23,
-    country: "United States",
-    year: 2000,
-    date: "01/10/2000",
-    sport: "Waterpolo",
-    gold: 0,
-    silver: 1,
-    bronze: 0,
-    total: 1,
-  },
-];
 
-const GuestContactDetails = () => {
+
+const GuestContactDetails = ({ isHideAll, onHandleHide }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState([
     {
@@ -65,94 +52,92 @@ const GuestContactDetails = () => {
     },
   ]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-
-
-  const handleContactModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
   const [columnDefs] = useState([
     {
       headerName: 'Business Phone',
-      headerClass: "flex justify-center",
+      headerClass: "flex justify-center border-r border-[#a6a6a6]",
       children: [
         {
           field: 'busineddCountryCode',
           width: 180,
           headerName: "Country Code",
+          headerClass: "flex justify-center border-r border-[#a6a6a6]",
           filter: 'agTextColumnFilter',
         },
         {
+          headerClass: "flex justify-center border-r",
           field: 'busineddPhone',
           headerName: "Phone",
           width: 90,
           filter: 'agNumberColumnFilter',
+          headerClass: "flex justify-center border-r border-[#a6a6a6]",
         },
       ],
     },
     {
       headerName: 'Home Phone',
-      headerClass: "flex justify-center",
+      headerClass: "flex justify-center border-r border-[#a6a6a6]",
       children: [
         {
           field: 'homeCountryCode',
           width: 180,
           headerName: "Country Code",
           filter: 'homeCountryCode',
+          headerClass: "flex justify-center border-r border-[#a6a6a6]",
         },
         {
           field: 'homePhone',
           headerName: "Phone",
           width: 90,
           filter: 'agNumberColumnFilter',
+          headerClass: "flex justify-center border-r border-[#a6a6a6]",
         },
       ],
     },
     {
       headerName: 'Mobile Phone',
-      headerClass: "flex justify-center",
+      headerClass: "flex justify-center border-r border-[#a6a6a6]",
       children: [
         {
           field: 'mobileCountryCode',
           width: 180,
           headerName: "Country Code",
           filter: 'agTextColumnFilter',
+          headerClass: "flex justify-center border-r border-[#a6a6a6]",
         },
         {
           field: 'mobilePhone',
           headerName: "Phone",
           width: 90,
           filter: 'agNumberColumnFilter',
+          headerClass: "flex justify-center border-r border-[#a6a6a6]",
         },
       ],
     },
     {
       headerName: 'Email Address',
-      headerClass: "flex justify-center",
+      headerClass: "flex justify-center ",
       children: [
         {
           field: 'emailBusiness',
           minWidth: 250,
           headerName: "Business",
           filter: 'agTextColumnFilter',
+          headerClass: "flex justify-center border-r border-[#a6a6a6]",
         },
         {
           field: 'emailPersonal',
           headerName: "Personal",
           minWidth: 250,
           filter: 'agNumberColumnFilter',
+          headerClass: "flex justify-center border-r border-[#a6a6a6]",
         },
         {
           field: 'emailAlternate',
           headerName: "Alternate",
           minWidth: 250,
           filter: 'agNumberColumnFilter',
+          headerClass: "flex justify-center ",
         },
       ],
     },
@@ -173,6 +158,7 @@ const GuestContactDetails = () => {
       lineHeight: "24px",
       paddingTop: "8px",
       paddingBottom: "8px",
+      // borderRight: '1px solid #a6a6a6',
     },
     wrapText: true,
     autoHeight: true,
@@ -183,15 +169,61 @@ const GuestContactDetails = () => {
     rowClass: 'custom-row-hover',
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHideContact, setisHideContact] = useState(true);
+  const contectData = useSelector(state => state?.createData?.contect)
+
+  useEffect(() => {
+
+    if (contectData?.length > 0) {
+      const newContect = contectData?.map((item) => ({
+        busineddCountryCode: "IND",
+        homeCountryCode: "USA",
+        busineddPhone: item?.businessphone,
+        homePhone: item?.homephone,
+        mobileCountryCode: "IND",
+        mobilePhone: item?.mobilephone,
+        emailBusiness: item?.businessemail,
+        emailPersonal: item?.personalemail,
+        emailAlternate: item?.alternateemail
+      }));
+
+      setRowData(newContect)
+    }
+  }, [contectData])
+
+
+  const handleContactModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+
+
+  useEffect(() => {
+    setisHideContact(isHideAll)
+  }, [isHideAll])
+
+  const handleHide = (e) => {
+    e.stopPropagation();
+    setisHideContact(!isHideContact);
+    onHandleHide(!isHideContact);
+  }
+
   return (
-    <div className=" w-full  flex flex-col gap-2 border border-gray-400 rounded-lg p-2 h-full custom-scroll">
+    <div className=" w-full  flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll">
 
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <ContactModel />
+        <ContactModel onClose={closeModal} />
       </SmCustomModal>
 
       <div className=" w-full h-full flex items-center gap-3">
-        <FaChevronDown className="h-4 w-4" />
+
+        <FaChevronDown className={`h-4 w-4 transform ${!isHideContact ? 'rotate-180' : 'rotate-0'} cursor-pointer transition-transform duration-300 ease-in-out`} onClick={(e) => handleHide(e)} />
+
         <div className=" w-[170px] flex gap-2   ">
           <CustomButton
             name="Contact Details"
@@ -203,7 +235,7 @@ const GuestContactDetails = () => {
         </div>
       </div>
 
-      <div className="flex w-full h-full min-h-[30vh] pb-10  xl:max-h-[60%]  mx-auto ag-theme-alpine ">
+      {isHideContact && <div className="flex w-full h-full min-h-[30vh] pb-10  xl:max-h-[60%]  mx-auto ag-theme-alpine ">
         <div
           className="relative overflow-auto"
           style={{ width: "100%" }}
@@ -217,11 +249,12 @@ const GuestContactDetails = () => {
             rowSelection='multiple'
             gridOptions={gridOptions}
             paginationAutoPageSize={true}
+            pagination={true}
             animateRows={true}
             suppressRowClickSelection={true}
           />
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

@@ -2,11 +2,24 @@ import { AddressTypeData, StateData } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
 import CustomInput from "@/components/common/CustomInput";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
+import { setCreateAddressData } from "@/store/guestDataCreateSlice";
 import Image from "next/image";
 import React, { useState } from "react";
+import { useDispatch } from 'react-redux';
 
-const AddressModel = () => {
-  const [formData, setFormData] = useState({});
+const AddressModel = ({ onClose }) => {
+  const [formData, setFormData] = useState({
+    address: { label: '2 xyc soc ', value: '2 xyc soc ', __isNew__: true },
+    line: 'xyz to abc road',
+    line1: 'mlq stale',
+    line2: 'sddv',
+    city: 'Mumbai',
+    state: { label: 'maharastra', value: 'maharastra', __isNew__: true },
+    country: 'india',
+    zip: '365010'
+  });
+
+  const dispatch = useDispatch()
 
   const handleFromData = (data, target) => {
     setFormData((prevFormData) => ({
@@ -15,11 +28,16 @@ const AddressModel = () => {
     }));
   };
   const handleAddressSave = () => {
-    console.log(formData);
+
+    if (Object.keys(formData)?.length > 0) {
+      dispatch(setCreateAddressData(formData))
+      onClose()
+    }
   };
 
   const handleCancleModel = () => {
     setFormData({});
+    onClose()
   };
   return (
     <div className="h-full flex flex-col gap-4 w-full p-2  ">
@@ -57,7 +75,7 @@ const AddressModel = () => {
           <label className="text-lg font-semibold flex justify-center items-center">
             Guest ID
           </label>
-          <div className="w-full max-w-[300px] lg:max-w-[70%]">
+          <div className="w-[100px]">
             <CustomInput
               isNUmber={true}
               isRequired={true}
@@ -134,7 +152,16 @@ const AddressModel = () => {
           </div>
           <div className="flex gap-20">
             <label className="">Is Active</label>
-            <input type="checkbox" className="h-5 w-5"></input>
+            <input
+              type='checkbox'
+              placeholder=""
+              autoComplete='false'
+              id='date'
+              name='isActive'
+              checked={formData?.isActive}
+              onChange={(e) => handleFromData(e.target.checked, 'isActive', )}
+              className={`w-5 h-5 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none`}
+            />
           </div>
         </div>
 

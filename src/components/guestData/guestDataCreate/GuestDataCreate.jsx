@@ -2,7 +2,7 @@ import CustomButton from "@/components/common/CustomButton";
 import CustomInput from "@/components/common/CustomInput";
 import CustomModal from "@/components/common/CustomModal";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GuestCreateAddress from "./GuestCreateAddress";
 import PreferanceModel from "./PreferanceModel";
 import { genderDate, income, married, nationality } from "@/assets/data";
@@ -15,6 +15,14 @@ import LoyalityProgram from "./LoyalityProgram";
 const GuestDataCreate = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setformData] = useState({})
+  const [isHideAll, setIsHideAll] = useState(true);
+  const [hideAllStates, setHideAllStates] = useState({
+    creareAddress: false,
+    contactDetails: false,
+    identification: false,
+    socialMedia: false,
+    lotaltyProgram: false
+  });
 
   const handleFromData = (value, name) => {
     setformData({
@@ -22,6 +30,21 @@ const GuestDataCreate = () => {
       [name]: value
     })
   }
+
+  const handlehideChange = (component, isHidden) => {
+    setHideAllStates((prevHideStates) => ({
+      ...prevHideStates,
+      [component]: isHidden
+    }))
+  }
+
+  useEffect(() => {
+    const areALLHidden = Object.values(hideAllStates).every((state) => state)
+    console.log(areALLHidden);
+    if (areALLHidden) {
+      setIsHideAll(true);
+    }
+  }, [hideAllStates])
 
 
   const handleAddModal = () => {
@@ -38,7 +61,7 @@ const GuestDataCreate = () => {
       </CustomModal>
 
 
-      <h1 className=" text-lg font-semibold px-2">Add Guest</h1>
+      <h1 className=" text-lg font-semibold px-2">Guest Information</h1>
 
       <div className="flex flex-col md:flex-row items-center justify-between gap-5 p-5 w-full">
 
@@ -301,16 +324,14 @@ const GuestDataCreate = () => {
         </div>
       </div>
 
-      {/*  <div className="border border-gray-400 rounded-lg p-2">
-        <GuestCreateAddress />
-      </div> */}
-      <div className=" w-full h-full border border-gray-400 rounded-lg p-2 flex flex-col gap-6 max-h-[450px] overflow-auto custom-scroll    ">
+      <div className=" w-full h-full border border-gray-400 rounded-lg p-2 flex flex-col gap-6 max-h-[52vh] overflow-auto custom-scroll    ">
         <div className="flex items-center gap-3  px-4">
-          <FaChevronDown className="h-4 w-4" />
+          <FaChevronDown className={`h-4 w-4 transform ${!isHideAll ? 'rotate-180' : 'rotate-0'} transition-transform duration-300 ease-in-out`} onClick={() => setIsHideAll(!isHideAll)} />
+
           <div className=" w-[150px] flex gap-2">
             <CustomButton
-              name="Hide All"
-              handleClick={() => { }}
+              name={isHideAll ? "Hide All" : "Show All"}
+              handleClick={() => setIsHideAll(!isHideAll)}
               isDisable={false}
               isLoading={false}
             />
@@ -319,26 +340,27 @@ const GuestDataCreate = () => {
 
         <div className="w-full h-full flex flex-col gap-6">
           <div className="w-full h-full">
-            <GuestCreateAddress />
+            <GuestCreateAddress isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("creareAddress", isHidden)} />
           </div>
 
           <div className="w-full h-full">
-            <GuestContactDetails />
+            <GuestContactDetails isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("contactDetails", isHidden)} />
           </div>
 
           <div className="w-full h-full">
-            <GuestIdentification />
+            <GuestIdentification isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("identification", isHidden)} />
           </div>
 
           <div className="w-full h-full">
-            <SocialMedia />
+            <SocialMedia isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("socialMedia", isHidden)} />
           </div>
 
           <div className="w-full h-full">
-            <LoyalityProgram />
+            <LoyalityProgram isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("lotaltyProgram", isHidden)} />
           </div>
         </div>
       </div>
+
     </div>
   );
 };

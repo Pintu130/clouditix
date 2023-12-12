@@ -286,26 +286,6 @@ const DataQualityRules = () => {
         setIsModalOpen(true);
     }
 
-   /*  useEffect(() => {
-        console.log(dataQualityTable);
-        if (dataQualityTable && Object?.keys(dataQualityTable)?.length > 0) {
-            console.log(dataQualityTable);
-            const addData = {
-                id: dataQualityTable?.id,
-                columnName: dataQualityTable?.columnName?.label,
-                tableName: dataQualityTable?.tableName?.label,
-                dataSource: dataQualityTable?.dataSource?.label,
-                validationRule: dataQualityTable?.validationRule?.label,
-                ruleParameters: dataQualityTable?.ruleParameters,
-                isMandatory: dataQualityTable?.isMandatory,
-                isActive: false,
-            }
-            setRowData(prevData => [...prevData, addData])
-            dispatch(setDataQualityCreate({}))
-        }
-    }, [dataQualityTable]) */
-
-
     const closePopup = () => {
         setIsDelete()
     }

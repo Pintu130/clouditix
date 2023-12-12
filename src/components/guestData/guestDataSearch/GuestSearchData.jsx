@@ -2,6 +2,7 @@ import CustomButton from '@/components/common/CustomButton'
 import CustomInput from '@/components/common/CustomInput'
 import SingleSelectDropDown from '@/components/common/SingleSelectDropDown'
 import React, { useState } from 'react'
+import { GrClose } from 'react-icons/gr';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 
@@ -37,13 +38,20 @@ const customStyles = {
 };
 
 const and = [
-    { label: 'AND', value: 'AND' }
+    { label: 'AND', value: 'and' },
+    { label: 'OR', value: 'or' },
 ]
 const guestid = [
-    { label: 'guestid', value: 'guestid' }
+    { label: 'Guest ID', value: 'guestid' },
+    { label: 'Name', value: 'name' },
+    { label: 'City', value: 'city' },
+    { label: 'Nationality', value: 'Nationality' },
+    { label: 'Address Line 1', value: 'addressline1' },
+    { label: 'Company Name', value: 'companyname' },
 ]
 const is = [
-    { label: 'is', value: 'is' }
+    { label: 'is', value: 'is' },
+    { label: 'is Not', value: 'isnot' }
 ]
 
 const GuestSearchData = () => {
@@ -55,8 +63,6 @@ const GuestSearchData = () => {
             prevData.map((item, i) => i === index ? { ...item, data: { ...item.data, [field]: value } } : item)
         );
     }
-
-    console.log(searchData);
 
     const handleAddRule = () => {
         setSearchData((prevData) => [
@@ -85,6 +91,20 @@ const GuestSearchData = () => {
     const handleSave = () => {
         console.log(searchData);
     }
+
+    const handleClose = (index) => {
+
+        const deleteSearchData = [...searchData];
+
+        deleteSearchData?.splice(index, 1);
+
+        setSearchData(deleteSearchData);
+
+        /* const updateSearchData = searchData?.filter((item, i) => i !== index)
+        setSearchData(updateSearchData); */
+
+    }
+
 
     return (
         <>
@@ -120,7 +140,7 @@ const GuestSearchData = () => {
                                 isMulti={false}
                                 styles={customStyles}
                                 name='and'
-                                options={[]}
+                                options={and}
                                 value={searchData?.and}
                                 onChange={handleOnchange}
                                 components={animatedComponents}
@@ -130,18 +150,8 @@ const GuestSearchData = () => {
                         <div>
                             <div className="w-full max-w-[150px] ">
                                 <CustomButton
-                                    name="Rule"
+                                    name="ADD"
                                     handleClick={handleAddRule}
-                                    isDisable={false}
-                                    isLoading={false}
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <div className="w-full max-w-[150px]  ">
-                                <CustomButton
-                                    name="Group"
-                                    handleClick={handleAddGroup}
                                     isDisable={false}
                                     isLoading={false}
                                 />
@@ -155,7 +165,7 @@ const GuestSearchData = () => {
                                 return (
                                     <div key={index} className=''>
                                         {
-                                            item.type === 'rule' ? (
+                                            /* item.type === 'rule' ? (
                                                 <div className="flex gap-4 w-full">
                                                     <div className="w-full max-w-[300px] lg:max-w-[20%]">
                                                         <Select
@@ -191,54 +201,136 @@ const GuestSearchData = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            ) : (
-                                                <div className="flex gap-4 w-full">
-                                                    <div className="w-full max-w-[300px] lg:max-w-[20%]">
-                                                        <Select
-                                                            placeholder="Guest_ID"
-                                                            isMulti={false}
-                                                            styles={customStyles}
-                                                            name='guestid'
-                                                            options={guestid}
-                                                            value={item.data.guestid}
-                                                            onChange={(selectedOption) => handleOnchange(index, 'guestid', selectedOption)}
-                                                            components={animatedComponents}
-                                                            className='capitalize'
-                                                        />
-                                                    </div>
-                                                    <div className="w-full max-w-[300px] lg:max-w-[10%]">
-                                                        <Select
-                                                            placeholder="IS"
-                                                            isMulti={false}
-                                                            styles={customStyles}
-                                                            name='is'
-                                                            options={is}
-                                                            value={item.data.is}
-                                                            onChange={(selectedOption) => handleOnchange(index, 'is', selectedOption)}
-                                                            components={animatedComponents}
-                                                            className='capitalize'
-                                                        />
-                                                    </div>
-                                                    <div className="w-full max-w-[300px] lg:max-w-[30%]">
-                                                        <CustomInput
-                                                            isNUmber={false}
-                                                            isRequired={true}
-                                                            isIcon={true}
-                                                            label=""
-                                                            placeholder=""
-                                                            name="groupName"
-                                                            value={item.data.groupName}
-                                                            onChange={(e) => handleOnchange(index, 'groupName', e.target.value)}
-                                                        />
-                                                    </div>
+                                            ) : ( */
+                                            item.type === 'rule' && <div className="flex gap-4 w-full items-center">
+                                                <div className="w-full max-w-[300px] lg:max-w-[20%]">
+                                                    <Select
+                                                        placeholder="Guest_ID"
+                                                        isMulti={false}
+                                                        styles={customStyles}
+                                                        name='guestid'
+                                                        options={guestid}
+                                                        value={item.data.guestid}
+                                                        onChange={(selectedOption) => handleOnchange(index, 'guestid', selectedOption)}
+                                                        components={animatedComponents}
+                                                        className='capitalize'
+                                                    />
                                                 </div>
-                                            )
+                                                <div className="w-full max-w-[300px] lg:max-w-[10%]">
+                                                    <Select
+                                                        placeholder="IS"
+                                                        isMulti={false}
+                                                        styles={customStyles}
+                                                        name='is'
+                                                        options={is}
+                                                        value={item.data.is}
+                                                        onChange={(selectedOption) => handleOnchange(index, 'is', selectedOption)}
+                                                        components={animatedComponents}
+                                                        className='capitalize'
+                                                    />
+                                                </div>
+                                                <div className="w-full max-w-[300px] lg:max-w-[30%]">
+                                                    <CustomInput
+                                                        isNUmber={false}
+                                                        isRequired={true}
+                                                        isIcon={true}
+                                                        label=""
+                                                        placeholder=""
+                                                        name="groupName"
+                                                        value={item.data.groupName}
+                                                        onChange={(e) => handleOnchange(index, 'groupName', e.target.value)}
+                                                    />
+                                                </div>
+                                                <GrClose className="w-5 h-5 font-bold cursor-pointer" onClick={() => handleClose(index)} />
+                                            </div>
+                                            /* ) */
                                         }
                                     </div>
                                 )
                             })
                         }
                     </div>
+
+                    <div className="flex gap-4 w-full ">
+                        <div className="w-full max-w-[300px] lg:max-w-[20%]">
+                            <Select
+                                placeholder="AND"
+                                isMulti={false}
+                                styles={customStyles}
+                                name='and'
+                                options={and}
+                                value={searchData?.and}
+                                onChange={handleOnchange}
+                                components={animatedComponents}
+                                className='capitalize'
+                            />
+                        </div>
+                        <div>
+                            <div className="w-full max-w-[150px]  ">
+                                <CustomButton
+                                    name="ADD"
+                                    handleClick={handleAddGroup}
+                                    isDisable={false}
+                                    isLoading={false}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className='py-2 flex justify-center gap-2 flex-col'>
+                        {
+                            searchData.map((item, index) => {
+                                return (
+                                    <div key={index} className=''>
+                                        {
+                                            item.type === 'group' && <div className="flex gap-4 w-full items-center">
+                                                <div className="w-full max-w-[300px] lg:max-w-[20%]">
+                                                    <Select
+                                                        placeholder="Guest_ID"
+                                                        isMulti={false}
+                                                        styles={customStyles}
+                                                        name='guestid'
+                                                        options={guestid}
+                                                        value={item.data.guestid}
+                                                        onChange={(selectedOption) => handleOnchange(index, 'guestid', selectedOption)}
+                                                        components={animatedComponents}
+                                                        className='capitalize'
+                                                    />
+                                                </div>
+                                                <div className="w-full max-w-[300px] lg:max-w-[10%]">
+                                                    <Select
+                                                        placeholder="IS"
+                                                        isMulti={false}
+                                                        styles={customStyles}
+                                                        name='is'
+                                                        options={is}
+                                                        value={item.data.is}
+                                                        onChange={(selectedOption) => handleOnchange(index, 'is', selectedOption)}
+                                                        components={animatedComponents}
+                                                        className='capitalize'
+                                                    />
+                                                </div>
+                                                <div className="w-full max-w-[300px] lg:max-w-[30%]">
+                                                    <CustomInput
+                                                        isNUmber={false}
+                                                        isRequired={true}
+                                                        isIcon={true}
+                                                        label=""
+                                                        placeholder=""
+                                                        name="groupName"
+                                                        value={item.data.groupName}
+                                                        onChange={(e) => handleOnchange(index, 'groupName', e.target.value)}
+                                                    />
+                                                </div>
+                                                <GrClose className="w-5 h-5 font-bold cursor-pointer" onClick={() => handleClose(index)} />
+                                            </div>
+                                        }
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+
                 </div>
             </div>
 

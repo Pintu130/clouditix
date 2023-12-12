@@ -933,9 +933,6 @@ export const IdentificationData = [
     issuingCountry: "India",
     issueDate: "15-01-2020",
     expiryDate: "15-01-2030",
-
-
-
   }
 ]
 

@@ -26,18 +26,11 @@ const ProbabilisticAdd = ({ onClose }) => {
     }
 
     const handleSave = () => {
-        console.log(formData);
         dispatch(setProbMatchAdd(formData))
         setFormData({})
         onClose()
     }
 
-  /*   const handleFromDatass = (e) => {
-        const name = e.target.name;
-        const value = e.target.value
-
-        console.log(name, value);
-    } */
  
     return (
         <div className='flex flex-col gap-5 px-5'>

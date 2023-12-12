@@ -22,7 +22,7 @@ const ProbabilisticMatch = () => {
   const [managedModal, setManagedModal] = useState();
   const dispatch = useDispatch()
   const addData = useSelector(state => state?.ProbMatch?.add)
-  console.log(addData);
+
   const [columnDefs] = useState([
     {
       field: "attribute",
@@ -149,7 +149,6 @@ const ProbabilisticMatch = () => {
 
   useEffect(() => {
     if (addData && Object?.keys(addData)?.length > 0) {
-      console.log(addData);
       setRowData(prevData => [...prevData, addData])
     }
   }, [addData])

@@ -1,18 +1,20 @@
 import CustomButton from "@/components/common/CustomButton";
 import CustomModal from "@/components/common/CustomModal";
 import { AgGridReact } from "ag-grid-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
 import LoyalityModel from "./LoyalityModel";
 import { LoyalityData } from "@/assets/data";
 import SmCustomModal from "@/components/common/SmCustomModal";
+import { useSelector } from "react-redux"
 
-const LoyalityProgram = () => {
+const LoyalityProgram = ({ isHideAll, onHandleHide }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState(LoyalityData);
-
+  const loyality = useSelector(state => state?.createData?.loyality)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHideLoyalityProgram, setisHideLoyalityProgram] = useState(true);
 
   const handleLoyalityModal = () => {
     setIsModalOpen(true);
@@ -120,11 +122,39 @@ const LoyalityProgram = () => {
     tableRef.current = params.api;
   };
 
-  const handleCellClicked = (param) => {};
+  const handleCellClicked = (param) => { };
 
   const gridOptions = {
     rowClass: "custom-row-hover",
   };
+
+  useEffect(() => {
+    if (loyality?.length > 0) {
+      const newData = loyality?.map((item) => ({
+        id: rowData?.length + 1,
+        loyalityProgramMembership: item?.loyaltyprogrammembership?.value,
+        tierLevel: item?.tierlevel?.value,
+        startDate: item?.membershipstartdate,
+        endDate: item?.membershipenddate,
+        earningHistory: item?.earninghistory,
+        remptionHistory: item?.redemtionhistory,
+        loyalityPoints: item?.loyaltypoints,
+        isActive: item?.isActive,
+      }));
+      setRowData(newData);
+    }
+  }, [loyality])
+
+  useEffect(() => {
+    setisHideLoyalityProgram(isHideAll)
+  }, [isHideAll])
+
+  const handleHide = (e) => {
+    e.stopPropagation();
+    setisHideLoyalityProgram(!isHideLoyalityProgram);
+    onHandleHide(!isHideLoyalityProgram);
+  }
+
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll">
 
@@ -133,7 +163,9 @@ const LoyalityProgram = () => {
       </SmCustomModal>
 
       <div className="flex items-center gap-3">
-        <FaChevronDown className="h-4 w-4" />
+
+        <FaChevronDown className={`h-4 w-4 transform ${!isHideLoyalityProgram ? 'rotate-180' : 'rotate-0'} cursor-pointer transition-transform duration-300 ease-in-out`} onClick={(e) => handleHide(e)} />
+
         <div className=" w-[190px] flex gap-2   ">
           <CustomButton
             name="Loyality Program"
@@ -145,9 +177,9 @@ const LoyalityProgram = () => {
         </div>
       </div>
 
-      <div className="flex w-full h-full min-h-[20vh] pb-10  xl:max-h-[30%]  mx-auto ag-theme-alpine ">
+      {isHideLoyalityProgram && <div className="flex w-full h-full min-h-[30vh] pb-10  xl:max-h-[60%]  mx-auto ag-theme-alpine ">
         <div
-          className="relative overflow-auto max-h-[200px]"
+          className="relative overflow-auto "
           style={{ width: "100%" }}
         >
           <AgGridReact
@@ -168,7 +200,7 @@ const LoyalityProgram = () => {
             animateRows={true}
           />
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

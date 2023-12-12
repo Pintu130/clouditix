@@ -3,11 +3,14 @@ import Image from 'next/image';
 import CustomInput from "@/components/common/CustomInput";
 import CustomButton from "@/components/common/CustomButton";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
-import { bedtype, identificationtype, issuingcountry } from "@/assets/data";
+import { identificationtype, issuingcountry } from "@/assets/data";
+import { useDispatch } from "react-redux"
+import { setIdentificationData } from "@/store/guestDataCreateSlice";
 
 const IdentificationModel = ({ onClose }) => {
 
   const [identification, setIdentification] = useState({})
+  const dispatch = useDispatch()
 
   const handleidentificationData = (name, value) => {
     setIdentification({
@@ -16,11 +19,16 @@ const IdentificationModel = ({ onClose }) => {
     })
   }
   const HandleSave = () => {
-    console.log(identification);
+    if (identification) {
+      dispatch(setIdentificationData(identification))
+      onClose()
+      setIdentification({})
+    }
   }
 
   const handleClose = () => {
     onClose()
+    setIdentification({})
   }
 
   return <>

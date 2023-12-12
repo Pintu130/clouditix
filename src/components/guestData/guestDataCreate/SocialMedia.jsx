@@ -2,17 +2,19 @@ import { SocialMediaData } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
 import CustomModal from "@/components/common/CustomModal";
 import { AgGridReact } from "ag-grid-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
 import SocialMediaModel from "./SocialMediaModel";
 import SmCustomModal from "@/components/common/SmCustomModal";
+import { useSelector } from "react-redux"
 
-const SocialMedia = () => {
+const SocialMedia = ({ isHideAll, onHandleHide }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState(SocialMediaData);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHideSocialMedia, setisHideSocialMedia] = useState(true);
+  const socialMedia = useSelector(state => state?.createData?.socialMedia)
 
   const handleSocialModal = () => {
     setIsModalOpen(true);
@@ -21,6 +23,7 @@ const SocialMedia = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   const [columnDefs] = useState([
     {
       field: "socialMediaApplication",
@@ -90,15 +93,41 @@ const SocialMedia = () => {
     rowClass: "custom-row-hover",
     // domLayout: 'autoHeight',
   };
+
+  useEffect(() => {
+
+    if (socialMedia?.length > 0) {
+      const newData = socialMedia?.map((item) => ({
+        id: rowData.length + 1,
+        socialMediaApplication: item?.socialMediatype?.value,
+        socialMediaProfile: item?.Profile,
+      }));
+      setRowData(newData)
+    }
+  }, [socialMedia])
+
+
+  useEffect(() => {
+    setisHideSocialMedia(isHideAll)
+  }, [isHideAll])
+
+  const handleHide = (e) => {
+    e.stopPropagation();
+      setisHideSocialMedia(!isHideSocialMedia);
+      onHandleHide(!isHideSocialMedia);
+  }
+
   return (
-    <div className="flex flex-col gap-2 border border-gray-400 rounded-lg p-2 h-full custom-scroll">
+    <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll">
 
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
         <SocialMediaModel onClose={closeModal} />
       </SmCustomModal>
 
       <div className="flex items-center gap-3">
-        <FaChevronDown className="h-4 w-4" />
+
+        <FaChevronDown className={`h-4 w-4 transform ${!isHideSocialMedia ? 'rotate-180' : 'rotate-0'} cursor-pointer transition-transform duration-300 ease-in-out`} onClick={(e) => handleHide(e)} />
+
         <div className=" w-[150px] flex gap-2   ">
           <CustomButton
             name="Social Media"
@@ -110,9 +139,9 @@ const SocialMedia = () => {
         </div>
       </div>
 
-      <div className="flex w-full h-full min-h-[20vh] pb-10  xl:max-h-[30%]  mx-auto ag-theme-alpine ">
+      {isHideSocialMedia && <div className="flex w-full h-full min-h-[30vh] pb-10  xl:max-h-[60%]  mx-auto ag-theme-alpine ">
         <div
-          className="relative overflow-auto max-h-[200px]"
+          className="relative overflow-auto"
           style={{ width: "50%" }}
         >
           <AgGridReact
@@ -133,7 +162,7 @@ const SocialMedia = () => {
             animateRows={true}
           />
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

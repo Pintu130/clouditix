@@ -2,20 +2,25 @@ import React, { useState } from "react";
 import Image from 'next/image';
 import CustomInput from "@/components/common/CustomInput";
 import CustomButton from "@/components/common/CustomButton";
-import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
-import { bedtype, identificationtype, issuingcountry } from "@/assets/data";
+import { useDispatch } from "react-redux"
+import { setContectData } from "@/store/guestDataCreateSlice";
 
-const ContactModel = () => {
-  const [identification, setIdentification] = useState({})
+const ContactModel = ({ onClose }) => {
+  const [contact, setcontact] = useState({})
+  const dispatch = useDispatch()
 
-  const handleidentificationData = (name, value) => {
-    setIdentification({
-      ...identification,
+  const handlecontactData = (name, value) => {
+    setcontact({
+      ...contact,
       [name]: value
     })
   }
+
   const HandleSave = () => {
-    console.log(identification);
+    if (contact) {
+      dispatch(setContectData(contact));
+      onClose()
+    }
   }
 
   const handleClose = () => {
@@ -49,8 +54,8 @@ const ContactModel = () => {
                 label=""
                 placeholder="Kumar"
                 name="fullname"
-                value={identification?.fullname}
-                onChange={(e) => handleidentificationData(e.target.name, e.target.value)}
+                value={contact?.fullname}
+                onChange={(e) => handlecontactData(e.target.name, e.target.value)}
               />
             </div>
           </div>
@@ -65,8 +70,8 @@ const ContactModel = () => {
                 label=""
                 placeholder="Kumar"
                 name="guestID"
-                value={identification?.guestID}
-                onChange={(e) => handleidentificationData(e.target.name, e.target.value)}
+                value={contact?.guestID}
+                onChange={(e) => handlecontactData(e.target.name, e.target.value)}
               />
             </div>
           </div>
@@ -87,8 +92,8 @@ const ContactModel = () => {
                     autoComplete='false'
                     id='businessphone'
                     name='businessphone'
-                    value={identification?.businessphone}
-                    onChange={(e) => handleidentificationData(e.target.name, e.target.value)}
+                    value={contact?.businessphone}
+                    onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
               </div>
@@ -102,8 +107,8 @@ const ContactModel = () => {
                     autoComplete='false'
                     id='mobilephone'
                     name='mobilephone'
-                    value={identification?.mobilephone}
-                    onChange={(e) => handleidentificationData(e.target.name, e.target.value)}
+                    value={contact?.mobilephone}
+                    onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
               </div>
@@ -117,8 +122,8 @@ const ContactModel = () => {
                     autoComplete='false'
                     id='alternateemail'
                     name='alternateemail'
-                    value={identification?.alternateemail}
-                    onChange={(e) => handleidentificationData(e.target.name, e.target.value)}
+                    value={contact?.alternateemail}
+                    onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
               </div>
@@ -132,8 +137,8 @@ const ContactModel = () => {
                     autoComplete='false'
                     id='businessemail'
                     name='businessemail'
-                    value={identification?.businessemail}
-                    onChange={(e) => handleidentificationData(e.target.name, e.target.value)}
+                    value={contact?.businessemail}
+                    onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
               </div>
@@ -151,8 +156,8 @@ const ContactModel = () => {
                     autoComplete='false'
                     id='homephone'
                     name='homephone'
-                    value={identification?.homephone}
-                    onChange={(e) => handleidentificationData(e.target.name, e.target.value)}
+                    value={contact?.homephone}
+                    onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
               </div>
@@ -166,8 +171,8 @@ const ContactModel = () => {
                     autoComplete='false'
                     id='alternatephone'
                     name='alternatephone'
-                    value={identification?.alternatephone}
-                    onChange={(e) => handleidentificationData(e.target.name, e.target.value)}
+                    value={contact?.alternatephone}
+                    onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
               </div>
@@ -181,8 +186,8 @@ const ContactModel = () => {
                     autoComplete='false'
                     id='personalemail'
                     name='personalemail'
-                    value={identification?.personalemail}
-                    onChange={(e) => handleidentificationData(e.target.name, e.target.value)}
+                    value={contact?.personalemail}
+                    onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
               </div>
@@ -201,8 +206,8 @@ const ContactModel = () => {
                 autoComplete='false'
                 id='date'
                 name='isActive'
-                checked={identification?.isActive}
-                onChange={(e) => handleidentificationData(e.target.name, e.target.checked)}
+                checked={contact?.isActive}
+                onChange={(e) => handlecontactData(e.target.name, e.target.checked)}
                 className={`w-5 h-5 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none`}
               />
             </div>

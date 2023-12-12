@@ -70,35 +70,6 @@ const DeterministicMatch = () => {
     setDynamicFields([{ name: '', value: "" }])
   };
 
-  /* const handleDynamicInputChange = (index, field, e) => {
-    const { value } = e.target;
-    setDynamicFields((prevFields) => {
-      const updatedFields = [...prevFields];
-      updatedFields[index] = { ...updatedFields[index], [field]: value, id: index };
-      return updatedFields;
-    });
-  }; */
-  /* console.log();
-  const handleFromData = (data, target) => {
-    console.log(data);
-    console.log(target.name);
-
-    // Use map to update the array
-    setDynamicFields(prevFields => {
-      return prevFields.map(field => {
-        console.log(field.name, target.name);
-        console.log({ ...field, [target.name]: data.value });
-        // Update the target field with the new value
-        // if (field.name === target) {
-        console.log("enter this ");
-        return { ...field, [target.name]: data.value };
-        // }
-        return field;
-      });
-    });
-  }
- */
-  console.log(dynamicFields);
   const handleFromData = (selectedOption, index, fieldKey) => {
     setDynamicFields((prevFields) => {
       const newFields = [...prevFields];
@@ -107,18 +78,6 @@ const DeterministicMatch = () => {
     });
   };
 
-  /*   [
-      {
-        dynamicFields: [
-          {
-            name: { label: 'date_of_birth', value: 'date_of_birth' },
-            value: { label: '0.2', value: '0.2' }
-          }
-        ]
-      }
-    ] */
-  console.log(dynamicFields);
-  console.log(rules);
   const handleSaveRule = () => {
     const newRule = {
       dynamicFields: dynamicFields.map(field => ({
@@ -131,16 +90,6 @@ const DeterministicMatch = () => {
     closeModal();
   };
 
-  /*  [
-     {
-       dynamicFields: [
-         {
-           name: 'date_of_birth',
-           value: '0.2',
-         }
-       ]
-     }
-   ] */
 
   const handleRemoveField = (ruleIndex, fieldIndex) => {
     setRules((prevRules) => {

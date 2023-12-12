@@ -3,10 +3,19 @@ import CustomInput from "@/components/common/CustomInput";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
 import React, { useState } from "react";
 import Image from 'next/image';
-import { bedtype, socialMediatype, issuingcountry, socialmedia, socialmediaData } from "@/assets/data";
+import { socialmediaData } from "@/assets/data";
+import { useDispatch } from "react-redux"
+import { setSocialMediaData } from "@/store/guestDataCreateSlice";
+
+const initialValue = {
+  socialMediatype: '',
+  Profile: '',
+  isActive: ''
+}
 
 const SocialMediaModel = ({ onClose }) => {
   const [socialMedia, setSocialMedia] = useState({})
+  const dispatch = useDispatch()
 
   const handlesocialMediaData = (name, value) => {
     setSocialMedia({
@@ -14,11 +23,17 @@ const SocialMediaModel = ({ onClose }) => {
       [name]: value
     })
   }
+
   const HandleSave = () => {
-    console.log(socialMedia);
+    if (socialMedia) {
+      dispatch(setSocialMediaData(socialMedia))
+      setSocialMedia(initialValue)
+      onClose()
+    };
   }
 
   const handleClose = () => {
+    setSocialMedia(initialValue)
     onClose()
   }
   return <>
@@ -76,35 +91,35 @@ const SocialMediaModel = ({ onClose }) => {
 
           <div className=" w-full flex flex-col md:flex-row items-center justify-between gap-5 ">
 
-              <div className=" w-full flex items-start justify-start flex-col   gap-2 ">
-                <label className="flex items-center w-full  xl:max-w-[160px]">Social Media</label>
-                <div className=" w-full md:w-[250px] lg:w-full xl:w-[250px] ]">
-                  <SingleSelectDropDown
-                    placeholder="Social Media"
-                    options={socialmediaData}
-                    target="socialmedia"
-                    creatableSelect={true}
-                    selectedType={socialMedia?.socialmedia}
-                    handleSelectChange={(data) => handlesocialMediaData('socialMediatype', data)}
-                  />
-                </div>
+            <div className=" w-full flex items-start justify-start flex-col   gap-2 ">
+              <label className="flex items-center w-full  xl:max-w-[160px]">Social Media</label>
+              <div className=" w-full md:w-[250px] lg:w-full xl:w-[250px] ]">
+                <SingleSelectDropDown
+                  placeholder="Social Media"
+                  options={socialmediaData}
+                  target="socialmedia"
+                  creatableSelect={true}
+                  selectedType={socialMedia?.socialmedia}
+                  handleSelectChange={(data) => handlesocialMediaData('socialMediatype', data)}
+                />
               </div>
+            </div>
 
-              <div className=" w-full flex items-start justify-start flex-col  gap-2 ">
-                <label className="flex items-center w-full  xl:max-w-[160px]">Profile</label>
-                <div className=" w-full md:w-[250px] lg:w-full xl:w-[350px] ]">
-                  <CustomInput
-                    isNUmber={false}
-                    isRequired={true}
-                    isIcon={true}
-                    label=""
-                    placeholder="https://www.facebook.com/Arjun_Sharma"
-                    name="Profile"
-                    value={socialMedia?.Profile}
-                    onChange={(e) => handlesocialMediaData(e.target.name, e.target.value)}
-                  />
-                </div>
+            <div className=" w-full flex items-start justify-start flex-col  gap-2 ">
+              <label className="flex items-center w-full  xl:max-w-[160px]">Profile</label>
+              <div className=" w-full md:w-[250px] lg:w-full xl:w-[350px] ]">
+                <CustomInput
+                  isNUmber={false}
+                  isRequired={true}
+                  isIcon={true}
+                  label=""
+                  placeholder="https://www.facebook.com/Arjun_Sharma"
+                  name="Profile"
+                  value={socialMedia?.Profile}
+                  onChange={(e) => handlesocialMediaData(e.target.name, e.target.value)}
+                />
               </div>
+            </div>
 
           </div>
 

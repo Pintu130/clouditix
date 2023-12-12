@@ -4,10 +4,24 @@ import Image from 'next/image';
 import CustomInput from "@/components/common/CustomInput";
 import CustomButton from "@/components/common/CustomButton";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
-import { bedtype, loyalitytype, issuingcountry } from "@/assets/data";
+import { useDispatch } from "react-redux"
+import { setLotalityData } from "@/store/guestDataCreateSlice";
+
+const initialData = {
+  fullname: '',
+  guestID: '',
+  membershipstartdate: '',
+  redemtionhistory: '',
+  loyaltypoints: '',
+  membershipenddate: '',
+  earninghistory: '',
+  tierlevel: "",
+  loyaltyprogrammembership: ""
+}
 
 const LoyalityModel = ({ onClose }) => {
   const [loyality, setLoyality] = useState({})
+  const dispatch = useDispatch()
 
   const handleloyalityData = (name, value) => {
     setLoyality({
@@ -15,12 +29,18 @@ const LoyalityModel = ({ onClose }) => {
       [name]: value
     })
   }
+  
   const HandleSave = () => {
-    console.log(loyality);
+    if (loyality) {
+      dispatch(setLotalityData(loyality))
+      setLoyality(initialData)
+      onClose()
+    }
   }
 
   const handleClose = () => {
     onClose()
+    setLoyality(initialData)
   }
 
   return <>

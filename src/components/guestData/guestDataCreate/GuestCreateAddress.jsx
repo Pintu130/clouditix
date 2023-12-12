@@ -1,16 +1,21 @@
 import { GuestCreateAddressData } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
 import { AgGridReact } from "ag-grid-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
 import { FaChevronDown } from "react-icons/fa6";
 import CustomModal from "@/components/common/CustomModal";
 import AddressModel from "./AddressModel";
+import { useSelector } from "react-redux";
 
-const GuestCreateAddress = () => {
+const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState(GuestCreateAddressData);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHideAddress, setIsHideAddress] = useState(true);
+
+  const CreatedAddressData = useSelector(state => state?.createData?.Address)
+
   const [columnDefs] = useState([
     {
       field: "addressType",
@@ -134,13 +139,48 @@ const GuestCreateAddress = () => {
     rowClass: "custom-row-hover",
     // domLayout: 'autoHeight',
   };
+
+  useEffect(() => {
+
+    if (CreatedAddressData.length > 0) {
+
+      const newAddress = CreatedAddressData?.map((CreatedAddressData) => ({
+        id: rowData?.length + 1,
+        addressType: CreatedAddressData?.address?.label,
+        addressLine1: CreatedAddressData?.line,
+        addressLine2: CreatedAddressData?.line1,
+        addressLine3: CreatedAddressData?.line2,
+        city: CreatedAddressData?.city,
+        state: CreatedAddressData?.state?.label,
+        country: CreatedAddressData?.country,
+        zipCode: CreatedAddressData?.zip,
+        isActive: CreatedAddressData?.isActive,
+
+      }))
+
+      setRowData(newAddress)
+    }
+  }, [CreatedAddressData])
+
+
+  useEffect(() => {
+    setIsHideAddress(isHideAll)
+  }, [isHideAll])
+
+  const handleHide = (e) => {
+    e.stopPropagation();
+    setIsHideAddress(!isHideAddress);
+    onHandleHide(!isHideAddress);
+  }
+
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll ">
       <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
         <AddressModel onClose={closeModal} />
       </CustomModal>
       <div className="flex items-center gap-3">
-        <FaChevronDown className="h-4 w-4" />
+        <FaChevronDown className={`h-4 w-4 transform ${!isHideAddress ? 'rotate-180' : 'rotate-0'} cursor-pointer transition-transform duration-300 ease-in-out`} onClick={(e) => handleHide(e)} />
+
         <div className=" w-[150px] flex gap-2   ">
           <CustomButton
             name="Address"
@@ -152,9 +192,9 @@ const GuestCreateAddress = () => {
         </div>
       </div>
 
-      <div className="flex w-full h-full min-h-[20vh] xl:max-h-[30%]  mx-auto ag-theme-alpine ">
+      {isHideAddress && <div className="flex w-full h-full min-h-[30vh] pb-10  xl:max-h-[60%]  mx-auto ag-theme-alpine ">
         <div
-          className="relative overflow-auto max-h-[200px]"
+          className="relative overflow-auto "
           style={{ width: "100%" }}
         >
           <AgGridReact
@@ -175,7 +215,7 @@ const GuestCreateAddress = () => {
             animateRows={true}
           />
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

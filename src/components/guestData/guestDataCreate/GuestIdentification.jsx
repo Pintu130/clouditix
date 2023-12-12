@@ -2,17 +2,20 @@ import { IdentificationData } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
 import CustomModal from "@/components/common/CustomModal";
 import { AgGridReact } from "ag-grid-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
 import IdentificationModel from "./IdentificationModel";
 import SmCustomModal from "@/components/common/SmCustomModal";
+import { useSelector } from "react-redux";
 
-const GuestIdentification = () => {
+const GuestIdentification = ({ isHideAll, onHandleHide }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState(IdentificationData);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHideIdentification, setisHideIdentification] = useState(true);
+  const identification = useSelector(state => state?.createData?.identification);
 
   const handleIdentificationModal = () => {
     setIsModalOpen(true);
@@ -110,15 +113,44 @@ const GuestIdentification = () => {
     rowClass: "custom-row-hover",
     // domLayout: 'autoHeight',
   };
+
+  useEffect(() => {
+
+    if (identification.length > 0) {
+      const newData = identification?.map((item) => ({
+        id: rowData.length + 1,
+        identificationType: item?.identificationtype?.value,
+        identificationValue: item?.identificationvalue,
+        issuingCountry: item?.issuingcountry?.value,
+        issueDate: item?.issuingdate,
+        expiryDate: item?.expirydate,
+      }));
+
+      setRowData(newData);
+    }
+
+  }, [identification])
+
+
+  useEffect(() => {
+    setisHideIdentification(isHideAll)
+  }, [isHideAll])
+
+  const handleHide = (e) => {
+    e.stopPropagation();
+      setisHideIdentification(!isHideIdentification);
+      onHandleHide(!isHideIdentification);
+  }
+
   return (
-    <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full max-h-[250px] custom-scroll">
+    <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full  custom-scroll">
 
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
         <IdentificationModel onClose={closeModal} />
       </SmCustomModal>
 
       <div className="flex items-center gap-3">
-        <FaChevronDown className="h-4 w-4" />
+        <FaChevronDown className={`h-4 w-4 transform ${!isHideIdentification ? 'rotate-180' : 'rotate-0'} cursor-pointer transition-transform duration-300 ease-in-out`} onClick={(e) => handleHide(e)} />
         <div className=" w-[150px] flex gap-2   ">
           <CustomButton
             name="Identification"
@@ -130,9 +162,9 @@ const GuestIdentification = () => {
         </div>
       </div>
 
-      <div className="flex w-full h-full min-h-[25vh] pb-10  xl:max-h-[30%]  mx-auto ag-theme-alpine ">
+      {isHideIdentification && <div className="flex w-full h-full min-h-[30vh] pb-10  xl:max-h-[60%]  mx-auto ag-theme-alpine ">
         <div
-          className="relative overflow-auto max-h-[150px]"
+          className="relative overflow-auto "
           style={{ width: "70%" }}
         >
           <AgGridReact
@@ -153,7 +185,7 @@ const GuestIdentification = () => {
             animateRows={true}
           />
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

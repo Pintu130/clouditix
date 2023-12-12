@@ -89,7 +89,6 @@ body {
 /* ag-grid header css */
 
 .ag-theme-alpine {
-  /* --ag-selected-row-background-color: #F9FBFC !important; */
   --ag-checkbox-checked-color: #114391 !important;
   --ag-alpine-active-color: #F9FBFC !important;
   --ag-range-selection-border-color: transparent !important;
@@ -114,7 +113,6 @@ body {
 .ag-row-no-focus.ag-row.ag-row-level-0.custom-row-hover.ag-row-position-absolute {
   background: white;
   border-bottom: 1px solid #A6A6A6;
-  /* border-bottom: 1px solid #A6A6A6; */
 }
 
 .ag-header-row.ag-header-row-column {
@@ -123,7 +121,6 @@ body {
 }
 
 div.ag-header-cell.ag-floating-filter {
-  /* background-color: red; */
   border-top: none !important;
 }
 
@@ -141,7 +138,6 @@ div.ag-header-cell.ag-floating-filter {
 
 span.ag-header-cell-text {
   color: #262626;
-  /* Body/Body Bold */
   font-family: Assistant;
   font-size: 16px;
   font-style: normal;
@@ -192,10 +188,6 @@ span.ag-header-cell-text {
 .document-table .ag-root-wrapper.ag-ltr.ag-layout-normal {
   border: none;
 }
-
-/* .drop-table .ag-header-row.ag-header-row-column {
-  background-color: white;
-} */
 
 .drop-table .ag-root-wrapper.ag-ltr.ag-layout-normal {
   border-radius: 0px;
@@ -330,7 +322,6 @@ iframe[title] {
   outline: none;
   cursor: default;
   text-decoration: none;
-  /* Add more styling as needed */
 }
 
 
