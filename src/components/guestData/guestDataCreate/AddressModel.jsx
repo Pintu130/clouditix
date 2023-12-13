@@ -2,24 +2,16 @@ import { AddressTypeData, StateData } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
 import CustomInput from "@/components/common/CustomInput";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
-import { setCreateAddressData } from "@/store/guestDataCreateSlice";
+import { setCreateAddressData, setCreateAddressDataUpdate } from "@/store/guestDataCreateSlice";
 import Image from "next/image";
-import React, { useState } from "react";
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 
-const AddressModel = ({ onClose }) => {
-  const [formData, setFormData] = useState({
-    address: { label: '2 xyc soc ', value: '2 xyc soc ', __isNew__: true },
-    line: 'xyz to abc road',
-    line1: 'mlq stale',
-    line2: 'sddv',
-    city: 'Mumbai',
-    state: { label: 'maharastra', value: 'maharastra', __isNew__: true },
-    country: 'india',
-    zip: '365010'
-  });
+const AddressModel = ({ onClose, updateRowData }) => {
+  const [formData, setFormData] = useState({});
 
   const dispatch = useDispatch()
+  const oldFormData = useSelector(state => state?.createData?.Address)
 
   const handleFromData = (data, target) => {
     setFormData((prevFormData) => ({
@@ -27,13 +19,48 @@ const AddressModel = ({ onClose }) => {
       [target]: data,
     }));
   };
-  const handleAddressSave = () => {
 
-    if (Object.keys(formData)?.length > 0) {
-      dispatch(setCreateAddressData(formData))
-      onClose()
-    }
+  console.log(oldFormData);
+
+  const handleAddressSave = () => {
+/* 
+    if (updateRowData && Object.keys(updateRowData).length > 0) {
+      console.log(formData, "formData");
+
+
+      // dispatch(setCreateAddressDataUpdate(formData))
+    } else { */
+      if (Object.keys(formData)?.length > 0) {
+        console.log(formData);
+        dispatch(setCreateAddressData(formData))
+        onClose()
+      }
+    // }
+
+
   };
+
+  useEffect(() => {
+    if (updateRowData && Object.keys(updateRowData).length > 0) {
+      console.log(updateRowData);
+
+      const convertData = {
+        id: updateRowData?.id,
+        address: { label: updateRowData?.addressType, value: updateRowData?.addressType },
+        line: updateRowData?.addressLine1,
+        line1: updateRowData?.addressLine2,
+        line2: updateRowData?.addressLine3,
+        isActive: true,
+        city: updateRowData?.city,
+        state: { label: updateRowData?.state, value: updateRowData?.state },
+        country: updateRowData?.country,
+        zip: updateRowData?.zipCode
+      }
+
+      setFormData(convertData)
+    }
+  }, [updateRowData])
+
 
   const handleCancleModel = () => {
     setFormData({});
@@ -159,7 +186,7 @@ const AddressModel = ({ onClose }) => {
               id='date'
               name='isActive'
               checked={formData?.isActive}
-              onChange={(e) => handleFromData(e.target.checked, 'isActive', )}
+              onChange={(e) => handleFromData(e.target.checked, 'isActive',)}
               className={`w-5 h-5 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none`}
             />
           </div>

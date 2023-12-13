@@ -57,7 +57,7 @@ const GuestDataCreate = () => {
   return (
     <div className="w-full p-2 ">
       <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <PreferanceModel />
+        <PreferanceModel onClose={closeModal} />
       </CustomModal>
 
 
@@ -311,7 +311,7 @@ const GuestDataCreate = () => {
               </div>
               <div className="w-full max-w-[150px]  ">
                 <CustomButton
-                  name="Cancle"
+                  name="Cancel"
                   handleClick={() => { }}
                   isDisable={false}
                   isLoading={false}

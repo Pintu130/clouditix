@@ -197,7 +197,7 @@ const IdentificationModel = ({ onClose }) => {
               </div>
               <div className="w-full max-w-[150px]  ">
                 <CustomButton
-                  name="Cancle"
+                  name="Cancel"
                   handleClick={() => handleClose()}
                   isDisable={false}
                   isLoading={false}

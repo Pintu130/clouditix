@@ -25,8 +25,12 @@ const guestDataCreareSlice = createSlice({
         setLotalityData: (state, action) => {
             state.loyality.push(action.payload);
         },
+        setCreateAddressDataUpdate: (state, action) => {
+            state.Address = action.payload;
+        }
+
     }
 });
 
-export const { setCreateAddressData, setContectData, setIdentificationData, setSocialMediaData, setLotalityData } = guestDataCreareSlice.actions;
+export const { setCreateAddressData, setContectData, setIdentificationData, setSocialMediaData, setLotalityData, setCreateAddressDataUpdate } = guestDataCreareSlice.actions;
 export default guestDataCreareSlice.reducer;

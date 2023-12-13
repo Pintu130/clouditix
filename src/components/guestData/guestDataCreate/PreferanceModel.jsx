@@ -5,7 +5,7 @@ import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
 import { airporttransfer, bathslippers, bedtype, celebratoryoccasion, conceirgeservices, connectivityreg, dietaryallergy, donotdisturb, favouritecuisine, floorlevel, genderDate, housekeepingschedule, modeofcommunication, pillowtype, preferreddiningtimes, promotionalmaterials, roomtemppref, roomviewpref, spatreatments } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
 
-const PreferanceModel = () => {
+const PreferanceModel = ({ onClose }) => {
   const [preferance, setPreferance] = useState({})
 
   const handlepreferanceData = (name, value) => {
@@ -17,6 +17,11 @@ const PreferanceModel = () => {
   const HandleSave = () => {
     console.log(preferance);
   }
+
+  const handlCancel = () => {
+    onClose()
+  }
+
   return <>
     <div className='w-full h-full '>
       <div className='flex justify-between border-b '>
@@ -31,7 +36,7 @@ const PreferanceModel = () => {
           />
         </button>
       </div>
-      
+
       <div className="flex flex-col gap-5 p-5">
 
         <div className="flex items-center gap-5">
@@ -357,8 +362,8 @@ const PreferanceModel = () => {
             </div>
             <div className="w-full max-w-[150px]  ">
               <CustomButton
-                name="Cancle"
-                handleClick={() => { }}
+                name="Cancel"
+                handleClick={() => handlCancel()}
                 isDisable={false}
                 isLoading={false}
               />

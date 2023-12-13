@@ -7,12 +7,14 @@ import { FaChevronDown } from "react-icons/fa6";
 import CustomModal from "@/components/common/CustomModal";
 import AddressModel from "./AddressModel";
 import { useSelector } from "react-redux";
+import { BiSolidPencil } from "react-icons/bi";
 
 const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState(GuestCreateAddressData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideAddress, setIsHideAddress] = useState(true);
+  const [updateRowData, setUpdateRowData] = useState({})
 
   const CreatedAddressData = useSelector(state => state?.createData?.Address)
 
@@ -80,6 +82,21 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
       cellRenderer: "agCheckboxCellRenderer",
       editable: true,
     },
+    {
+
+      field: '', headerName: "Edit", minWidth: 60, maxWidth: 80, cellRenderer: (params) => {
+          const data = params.data;
+          return (
+              <div className="flex items-center justify-center h-full  ">
+                  <button
+                      onClick={(e) => handleEdit(e, data)}
+                  >
+                      <BiSolidPencil className="w-6 h-6 text-blue-B40" />
+                  </button>
+              </div>
+          );
+      },
+  },
   ]);
 
   const closeModal = () => {
@@ -173,10 +190,19 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
     onHandleHide(!isHideAddress);
   }
 
+  console.log(updateRowData, "setUpdateRowData");
+  const handleEdit = (e, data) => {
+    e.stopPropagation();
+    console.log(e);
+    console.log(data);
+    setUpdateRowData(data);
+    setIsModalOpen(true);
+  }
+
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll ">
       <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <AddressModel onClose={closeModal} />
+        <AddressModel onClose={closeModal} updateRowData={updateRowData} />
       </CustomModal>
       <div className="flex items-center gap-3">
         <FaChevronDown className={`h-4 w-4 transform ${!isHideAddress ? 'rotate-180' : 'rotate-0'} cursor-pointer transition-transform duration-300 ease-in-out`} onClick={(e) => handleHide(e)} />
