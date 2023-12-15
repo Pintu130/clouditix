@@ -1,11 +1,11 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from 'next/image';
 import CustomInput from "@/components/common/CustomInput";
 import CustomButton from "@/components/common/CustomButton";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
-import { useDispatch } from "react-redux"
-import { setLotalityData } from "@/store/guestDataCreateSlice";
+import { useDispatch, useSelector } from "react-redux"
+import { setLotalityData, setLotalityDataUpdate } from "@/store/guestDataCreateSlice";
 
 const initialData = {
   fullname: '',
@@ -19,24 +19,63 @@ const initialData = {
   loyaltyprogrammembership: ""
 }
 
-const LoyalityModel = ({ onClose }) => {
+const LoyalityModel = ({ onClose, updateRowData }) => {
   const [loyality, setLoyality] = useState({})
   const dispatch = useDispatch()
+  const oldFormData = useSelector(state => state?.createData?.loyality)
 
   const handleloyalityData = (name, value) => {
+    const dynamicId = generateDynamicId();
+
     setLoyality({
       ...loyality,
+      id: dynamicId,
       [name]: value
     })
   }
-  
+
+  const generateDynamicId = () => {
+    return Math.floor(Math.random() * 1000) + 1;
+  };
+
   const HandleSave = () => {
-    if (loyality) {
-      dispatch(setLotalityData(loyality))
-      setLoyality(initialData)
+    if (Object.keys(updateRowData).length > 0) {
+      const updatedata = oldFormData?.map((item) => item.id === updateRowData.id ? loyality : item)
+
+      dispatch(setLotalityDataUpdate(updatedata))
       onClose()
+    } else {
+      if (loyality) {
+        dispatch(setLotalityData(loyality))
+        setLoyality(initialData)
+        onClose()
+      }
     }
-  }
+  };
+
+
+  useEffect(() => {
+    if (updateRowData && Object.keys(updateRowData).length > 0) {
+      
+      const convertData = {
+        id: updateRowData?.id,
+        membershipstartdate: updateRowData?.startDate,
+        redemtionhistory: updateRowData?.remptionHistory,
+        loyaltypoints: updateRowData?.loyalityPoints,
+        membershipenddate: updateRowData?.endDate,
+        earninghistory: updateRowData?.earningHistory,
+        tierlevel: {
+          label: updateRowData?.tierLevel, value: updateRowData?.tierLevel
+        },
+        loyaltyprogrammembership: {
+          label: updateRowData?.loyalityProgramMembership, value: updateRowData?.loyalityProgramMembership,
+        },
+        isActive: updateRowData?.isActive
+      }
+
+      setLoyality(convertData)
+    }
+  }, [updateRowData])
 
   const handleClose = () => {
     onClose()

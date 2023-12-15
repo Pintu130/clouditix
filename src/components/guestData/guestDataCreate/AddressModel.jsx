@@ -14,35 +14,41 @@ const AddressModel = ({ onClose, updateRowData }) => {
   const oldFormData = useSelector(state => state?.createData?.Address)
 
   const handleFromData = (data, target) => {
+
+    const dynamicId = generateDynamicId();
+
     setFormData((prevFormData) => ({
       ...prevFormData,
+      id: dynamicId,
       [target]: data,
     }));
   };
 
-  console.log(oldFormData);
+  const generateDynamicId = () => {
+    return Math.floor(Math.random() * 1000) + 1;
+  };
+
 
   const handleAddressSave = () => {
-/* 
-    if (updateRowData && Object.keys(updateRowData).length > 0) {
-      console.log(formData, "formData");
 
+    if (Object.keys(updateRowData).length > 0) {
+      const updatedata = oldFormData?.map((item) => item.id === updateRowData.id ? formData : item)
 
-      // dispatch(setCreateAddressDataUpdate(formData))
-    } else { */
+      dispatch(setCreateAddressDataUpdate(updatedata))
+      onClose()
+    } else {
       if (Object.keys(formData)?.length > 0) {
-        console.log(formData);
+        
         dispatch(setCreateAddressData(formData))
         onClose()
       }
-    // }
+    }
 
 
   };
 
   useEffect(() => {
     if (updateRowData && Object.keys(updateRowData).length > 0) {
-      console.log(updateRowData);
 
       const convertData = {
         id: updateRowData?.id,

@@ -40,7 +40,7 @@ const GuestDataCreate = () => {
 
   useEffect(() => {
     const areALLHidden = Object.values(hideAllStates).every((state) => state)
-    console.log(areALLHidden);
+    
     if (areALLHidden) {
       setIsHideAll(true);
     }
@@ -293,7 +293,7 @@ const GuestDataCreate = () => {
 
             <div className="w-full max-w-[150px]  ">
               <CustomButton
-                name="Add Preferences"
+                name="Show Preferences"
                 handleClick={() => handleAddModal()}
                 isDisable={false}
                 isLoading={false}

@@ -1,27 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from 'next/image';
 import CustomInput from "@/components/common/CustomInput";
 import CustomButton from "@/components/common/CustomButton";
-import { useDispatch } from "react-redux"
-import { setContectData } from "@/store/guestDataCreateSlice";
+import { useDispatch, useSelector } from "react-redux"
+import { setContectData, setContectDataUpdate } from "@/store/guestDataCreateSlice";
 
-const ContactModel = ({ onClose }) => {
+const ContactModel = ({ onClose, updateRowData }) => {
   const [contact, setcontact] = useState({})
   const dispatch = useDispatch()
+  const oldformData = useSelector(state => state?.createData?.contect)
 
   const handlecontactData = (name, value) => {
+    const dynamicId = generateDynamicId();
     setcontact({
       ...contact,
+      id: dynamicId,
       [name]: value
     })
   }
 
+  const generateDynamicId = () => {
+    return Math.floor(Math.random() * 1000) + 1;
+  };
+
+
   const HandleSave = () => {
-    if (contact) {
-      dispatch(setContectData(contact));
+
+    if (Object.keys(updateRowData).length > 0) {
+      const updateData = oldformData?.map((item) => item.id === updateRowData.id ? contact : item)
+      
+      dispatch(setContectDataUpdate(updateData))
       onClose()
+
+    } else {
+      if (contact) {
+        dispatch(setContectData(contact));
+        onClose()
+      }
     }
+
   }
+
+  useEffect(() => {
+    if (updateRowData && Object.keys(updateRowData).length > 0) {
+
+      const convertData = {
+        id: updateRowData?.id,
+        businessphone: updateRowData?.busineddPhone,
+        mobilephone: updateRowData?.mobilePhone,
+        alternateemail: updateRowData?.emailAlternate,
+        businessemail: updateRowData?.emailBusiness,
+        homephone: updateRowData?.homePhone,
+        alternatephone: updateRowData?.alternatephone,
+        personalemail: updateRowData?.emailPersonal
+      }
+
+      setcontact(convertData)
+    }
+  }, [updateRowData])
 
   const handleClose = () => {
     onClose()

@@ -38,7 +38,6 @@ const UserManagement = () => {
       userStatus: formData?.userStatus?.value,
     };
 
-    console.log(CreateNewData);
   };
 
   const handleCancleModel = () => {

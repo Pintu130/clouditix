@@ -142,7 +142,6 @@ const GuestDataSearch = () => {
 
   const frameworkComponents = {
     agCheckboxCellRenderer: (params) => {
-      console.log(params);
       return (
         <input
           type="checkbox"

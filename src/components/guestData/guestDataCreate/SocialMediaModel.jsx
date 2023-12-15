@@ -1,11 +1,11 @@
 import CustomButton from "@/components/common/CustomButton";
 import CustomInput from "@/components/common/CustomInput";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from 'next/image';
 import { socialmediaData } from "@/assets/data";
-import { useDispatch } from "react-redux"
-import { setSocialMediaData } from "@/store/guestDataCreateSlice";
+import { useDispatch, useSelector } from "react-redux"
+import { setSocialMediaData, setSocialMediaDataUpdate } from "@/store/guestDataCreateSlice";
 
 const initialValue = {
   socialMediatype: '',
@@ -13,24 +13,53 @@ const initialValue = {
   isActive: ''
 }
 
-const SocialMediaModel = ({ onClose }) => {
+const SocialMediaModel = ({ onClose, updateRowData }) => {
   const [socialMedia, setSocialMedia] = useState({})
   const dispatch = useDispatch()
+  const oldFormData = useSelector(state => state?.createData?.socialMedia)
 
   const handlesocialMediaData = (name, value) => {
+    const dynamicId = generateDynamicId();
     setSocialMedia({
       ...socialMedia,
+      id: dynamicId,
       [name]: value
     })
+
   }
 
+  const generateDynamicId = () => {
+    return Math.floor(Math.random() * 1000) + 1;
+  };
+
   const HandleSave = () => {
-    if (socialMedia) {
-      dispatch(setSocialMediaData(socialMedia))
-      setSocialMedia(initialValue)
+    if (Object.keys(updateRowData).length > 0) {
+      const updatedata = oldFormData?.map((item) => item.id === updateRowData.id ? socialMedia : item)
+
+      dispatch(setSocialMediaDataUpdate(updatedata))
       onClose()
-    };
+    } else {
+      if (socialMedia) {
+        dispatch(setSocialMediaData(socialMedia))
+        setSocialMedia(initialValue)
+        onClose()
+      };
+    }
   }
+
+  useEffect(() => {
+    if (updateRowData && Object.keys(updateRowData).length > 0) {
+
+      const convertData = {
+        id: updateRowData?.id,
+        socialMediatype: { label: updateRowData?.socialMediaApplication, value: updateRowData?.socialMediaApplication },
+        Profile: updateRowData?.socialMediaProfile,
+        isActive: true,
+
+      }
+      setSocialMedia(convertData)
+    }
+  }, [updateRowData])
 
   const handleClose = () => {
     setSocialMedia(initialValue)
@@ -97,9 +126,9 @@ const SocialMediaModel = ({ onClose }) => {
                 <SingleSelectDropDown
                   placeholder="Social Media"
                   options={socialmediaData}
-                  target="socialmedia"
+                  target="socialMediatype"
                   creatableSelect={true}
-                  selectedType={socialMedia?.socialmedia}
+                  selectedType={socialMedia?.socialMediatype}
                   handleSelectChange={(data) => handlesocialMediaData('socialMediatype', data)}
                 />
               </div>

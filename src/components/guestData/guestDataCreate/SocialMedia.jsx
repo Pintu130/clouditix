@@ -8,20 +8,24 @@ import { MdOutlineAdd } from "react-icons/md";
 import SocialMediaModel from "./SocialMediaModel";
 import SmCustomModal from "@/components/common/SmCustomModal";
 import { useSelector } from "react-redux"
+import { BiSolidPencil } from "react-icons/bi";
 
 const SocialMedia = ({ isHideAll, onHandleHide }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState(SocialMediaData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideSocialMedia, setisHideSocialMedia] = useState(true);
+  const [updateRowData, setUpdateRowData] = useState({})
   const socialMedia = useSelector(state => state?.createData?.socialMedia)
 
   const handleSocialModal = () => {
     setIsModalOpen(true);
+    setUpdateRowData({})
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setUpdateRowData({})
   };
 
   const [columnDefs] = useState([
@@ -37,6 +41,21 @@ const SocialMedia = ({ isHideAll, onHandleHide }) => {
       headerName: "Social Media Profile ",
       minWidth: 250,
       filter: true,
+    },
+    {
+
+      field: '', headerName: "Edit", minWidth: 60, maxWidth: 80, cellRenderer: (params) => {
+        const data = params.data;
+        return (
+          <div className="flex items-center justify-center h-full  ">
+            <button
+              onClick={(e) => handleEdit(e, data)}
+            >
+              <BiSolidPencil className="w-6 h-6 text-blue-B40" />
+            </button>
+          </div>
+        );
+      },
     },
   ]);
 
@@ -63,7 +82,6 @@ const SocialMedia = ({ isHideAll, onHandleHide }) => {
 
   const frameworkComponents = {
     agCheckboxCellRenderer: (params) => {
-      console.log(params);
       return (
         <input
           type="checkbox"
@@ -98,7 +116,7 @@ const SocialMedia = ({ isHideAll, onHandleHide }) => {
 
     if (socialMedia?.length > 0) {
       const newData = socialMedia?.map((item) => ({
-        id: rowData.length + 1,
+        id: item.id,
         socialMediaApplication: item?.socialMediatype?.value,
         socialMediaProfile: item?.Profile,
       }));
@@ -113,15 +131,21 @@ const SocialMedia = ({ isHideAll, onHandleHide }) => {
 
   const handleHide = (e) => {
     e.stopPropagation();
-      setisHideSocialMedia(!isHideSocialMedia);
-      onHandleHide(!isHideSocialMedia);
+    setisHideSocialMedia(!isHideSocialMedia);
+    onHandleHide(!isHideSocialMedia);
+  }
+
+  const handleEdit = (e, data) => {
+    e.stopPropagation();
+    setUpdateRowData(data);
+    setIsModalOpen(true);
   }
 
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll">
 
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <SocialMediaModel onClose={closeModal} />
+        <SocialMediaModel onClose={closeModal} updateRowData={updateRowData} />
       </SmCustomModal>
 
       <div className="flex items-center gap-3">

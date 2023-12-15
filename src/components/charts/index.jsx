@@ -10,6 +10,7 @@ import RolesAndPermissions from '../Configuration/RolesAndPermissions/RolesAndPe
 import UserManagement from '../Configuration/UserManagement/UserManagement';
 import GuestDataSearch from '../guestData/guestDataSearch/GuestDataSearch';
 import GuestDataCreate from '../guestData/guestDataCreate/GuestDataCreate';
+import GuestDataCrossRef from '../guestData/GuestDataCrossRef/GuestDataCrossRef';
 
 function ChartsPage({ handlelogout }) {
   const [subSelectedTab, setSubSelectedTab] = useState('');
@@ -100,6 +101,11 @@ function ChartsPage({ handlelogout }) {
                                 subSelectedTab === "guest-data-create" ?
                                   <div className='h-full'>
                                     <GuestDataCreate />
+                                  </div>
+                                :
+                                subSelectedTab === "guest-data-cross-ref" ?
+                                  <div className='h-full'>
+                                    <GuestDataCrossRef />
                                   </div>
                                   :
                                   (

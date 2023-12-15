@@ -8,6 +8,7 @@ import { MdOutlineAdd } from "react-icons/md";
 import IdentificationModel from "./IdentificationModel";
 import SmCustomModal from "@/components/common/SmCustomModal";
 import { useSelector } from "react-redux";
+import { BiSolidPencil } from "react-icons/bi";
 
 const GuestIdentification = ({ isHideAll, onHandleHide }) => {
   const tableRef = useRef(null);
@@ -15,14 +16,18 @@ const GuestIdentification = ({ isHideAll, onHandleHide }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideIdentification, setisHideIdentification] = useState(true);
+  const [updateRowData, setUpdateRowData] = useState({})
+
   const identification = useSelector(state => state?.createData?.identification);
 
   const handleIdentificationModal = () => {
     setIsModalOpen(true);
+    setUpdateRowData({})
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setUpdateRowData({})
   };
   const [columnDefs] = useState([
     {
@@ -57,6 +62,21 @@ const GuestIdentification = ({ isHideAll, onHandleHide }) => {
       headerName: "Expiry Date ",
       minWidth: 200,
       maxWidth: 250,
+    },
+    {
+
+      field: '', headerName: "Edit", minWidth: 60, maxWidth: 80, cellRenderer: (params) => {
+        const data = params.data;
+        return (
+          <div className="flex items-center justify-center h-full  ">
+            <button
+              onClick={(e) => handleEdit(e, data)}
+            >
+              <BiSolidPencil className="w-6 h-6 text-blue-B40" />
+            </button>
+          </div>
+        );
+      },
     },
   ]);
 
@@ -118,7 +138,7 @@ const GuestIdentification = ({ isHideAll, onHandleHide }) => {
 
     if (identification.length > 0) {
       const newData = identification?.map((item) => ({
-        id: rowData.length + 1,
+        id: item.id,
         identificationType: item?.identificationtype?.value,
         identificationValue: item?.identificationvalue,
         issuingCountry: item?.issuingcountry?.value,
@@ -142,11 +162,17 @@ const GuestIdentification = ({ isHideAll, onHandleHide }) => {
       onHandleHide(!isHideIdentification);
   }
 
+  const handleEdit = (e, data) => {
+    e.stopPropagation();
+    setUpdateRowData(data);
+    setIsModalOpen(true);
+  }
+
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full  custom-scroll">
 
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <IdentificationModel onClose={closeModal} />
+        <IdentificationModel onClose={closeModal} updateRowData={updateRowData} />
       </SmCustomModal>
 
       <div className="flex items-center gap-3">

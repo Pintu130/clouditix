@@ -1,35 +1,80 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from 'next/image';
 import CustomInput from "@/components/common/CustomInput";
 import CustomButton from "@/components/common/CustomButton";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
 import { identificationtype, issuingcountry } from "@/assets/data";
-import { useDispatch } from "react-redux"
-import { setIdentificationData } from "@/store/guestDataCreateSlice";
+import { useDispatch, useSelector } from "react-redux"
+import { setIdentificationData, setIdentificationDataUpdate } from "@/store/guestDataCreateSlice";
 
-const IdentificationModel = ({ onClose }) => {
+const IdentificationModel = ({ onClose, updateRowData }) => {
 
   const [identification, setIdentification] = useState({})
   const dispatch = useDispatch()
+  const oldFormData = useSelector(state => state?.createData?.identification)
 
   const handleidentificationData = (name, value) => {
-    setIdentification({
-      ...identification,
-      [name]: value
-    })
-  }
-  const HandleSave = () => {
-    if (identification) {
-      dispatch(setIdentificationData(identification))
-      onClose()
-      setIdentification({})
+    const dynamicId = generateDynamicId();
+
+    if (updateRowData && Object.keys(updateRowData).length > 0) {
+      setIdentification({
+        ...identification,
+        [name]: value
+      })
+    } else {
+      setIdentification({
+        ...identification,
+        id: dynamicId,
+        [name]: value
+      })
     }
+
+  }
+
+  const generateDynamicId = () => {
+    return Math.floor(Math.random() * 1000) + 1;
+  };
+
+  const HandleSave = () => {
+
+    if (Object.keys(updateRowData).length > 0) {
+      const updatedata = oldFormData?.map((item) => item.id === updateRowData.id ? identification : item)
+      
+      dispatch(setIdentificationDataUpdate(updatedata))
+      onClose()
+    } else {
+      if (identification) {
+        dispatch(setIdentificationData(identification))
+        onClose()
+        setIdentification({})
+      }
+    }
+
+
   }
 
   const handleClose = () => {
     onClose()
     setIdentification({})
   }
+
+  useEffect(() => {
+    if (updateRowData && Object.keys(updateRowData).length > 0) {
+
+      const convertData = {
+
+        id: updateRowData?.id,
+        expirydate: updateRowData?.expiryDate,
+        identificationvalue: updateRowData?.identificationValue,
+        issuingdate: updateRowData?.issueDate,
+        isActive: true,
+        issuingcountry: { label: updateRowData?.issuingCountry, value: updateRowData?.issuingCountry },
+        identificationtype: { label: updateRowData?.identificationType, value: updateRowData?.identificationType }
+      }
+
+      setIdentification(convertData)
+    }
+  }, [updateRowData])
 
   return <>
     <div className='w-full h-full '>

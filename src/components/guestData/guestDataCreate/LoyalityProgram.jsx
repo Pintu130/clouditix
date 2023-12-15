@@ -8,6 +8,7 @@ import LoyalityModel from "./LoyalityModel";
 import { LoyalityData } from "@/assets/data";
 import SmCustomModal from "@/components/common/SmCustomModal";
 import { useSelector } from "react-redux"
+import { BiSolidPencil } from "react-icons/bi";
 
 const LoyalityProgram = ({ isHideAll, onHandleHide }) => {
   const tableRef = useRef(null);
@@ -15,6 +16,7 @@ const LoyalityProgram = ({ isHideAll, onHandleHide }) => {
   const loyality = useSelector(state => state?.createData?.loyality)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideLoyalityProgram, setisHideLoyalityProgram] = useState(true);
+  const [updateRowData, setUpdateRowData] = useState({})
 
   const handleLoyalityModal = () => {
     setIsModalOpen(true);
@@ -77,7 +79,23 @@ const LoyalityProgram = ({ isHideAll, onHandleHide }) => {
       cellRenderer: "agCheckboxCellRenderer",
       editable: true,
     },
+    {
+
+      field: '', headerName: "Edit", minWidth: 60, maxWidth: 80, cellRenderer: (params) => {
+        const data = params.data;
+        return (
+          <div className="flex items-center justify-center h-full  ">
+            <button
+              onClick={(e) => handleEdit(e, data)}
+            >
+              <BiSolidPencil className="w-6 h-6 text-blue-B40" />
+            </button>
+          </div>
+        );
+      },
+    },
   ]);
+
   const defaultColDef = {
     filter: true,
     sortable: true,
@@ -101,7 +119,7 @@ const LoyalityProgram = ({ isHideAll, onHandleHide }) => {
 
   const frameworkComponents = {
     agCheckboxCellRenderer: (params) => {
-      console.log(params);
+
       return (
         <input
           type="checkbox"
@@ -131,7 +149,7 @@ const LoyalityProgram = ({ isHideAll, onHandleHide }) => {
   useEffect(() => {
     if (loyality?.length > 0) {
       const newData = loyality?.map((item) => ({
-        id: rowData?.length + 1,
+        id: item?.id,
         loyalityProgramMembership: item?.loyaltyprogrammembership?.value,
         tierLevel: item?.tierlevel?.value,
         startDate: item?.membershipstartdate,
@@ -155,11 +173,17 @@ const LoyalityProgram = ({ isHideAll, onHandleHide }) => {
     onHandleHide(!isHideLoyalityProgram);
   }
 
+  const handleEdit = (e, data) => {
+    e.stopPropagation();
+    setUpdateRowData(data);
+    setIsModalOpen(true);
+  }
+
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll">
 
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <LoyalityModel onClose={closeModal} />
+        <LoyalityModel onClose={closeModal} updateRowData={updateRowData} />
       </SmCustomModal>
 
       <div className="flex items-center gap-3">

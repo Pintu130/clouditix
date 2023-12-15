@@ -85,22 +85,23 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
     {
 
       field: '', headerName: "Edit", minWidth: 60, maxWidth: 80, cellRenderer: (params) => {
-          const data = params.data;
-          return (
-              <div className="flex items-center justify-center h-full  ">
-                  <button
-                      onClick={(e) => handleEdit(e, data)}
-                  >
-                      <BiSolidPencil className="w-6 h-6 text-blue-B40" />
-                  </button>
-              </div>
-          );
+        const data = params.data;
+        return (
+          <div className="flex items-center justify-center h-full  ">
+            <button
+              onClick={(e) => handleEdit(e, data)}
+            >
+              <BiSolidPencil className="w-6 h-6 text-blue-B40" />
+            </button>
+          </div>
+        );
       },
-  },
+    },
   ]);
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setUpdateRowData({})
   };
 
   const defaultColDef = {
@@ -126,7 +127,7 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
 
   const frameworkComponents = {
     agCheckboxCellRenderer: (params) => {
-      console.log(params);
+      
       return (
         <input
           type="checkbox"
@@ -156,13 +157,12 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
     rowClass: "custom-row-hover",
     // domLayout: 'autoHeight',
   };
-
   useEffect(() => {
 
     if (CreatedAddressData.length > 0) {
 
       const newAddress = CreatedAddressData?.map((CreatedAddressData) => ({
-        id: rowData?.length + 1,
+        id: CreatedAddressData?.id,
         addressType: CreatedAddressData?.address?.label,
         addressLine1: CreatedAddressData?.line,
         addressLine2: CreatedAddressData?.line1,
@@ -190,11 +190,8 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
     onHandleHide(!isHideAddress);
   }
 
-  console.log(updateRowData, "setUpdateRowData");
   const handleEdit = (e, data) => {
     e.stopPropagation();
-    console.log(e);
-    console.log(data);
     setUpdateRowData(data);
     setIsModalOpen(true);
   }
@@ -210,7 +207,7 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
         <div className=" w-[150px] flex gap-2   ">
           <CustomButton
             name="Address"
-            handleClick={() => setIsModalOpen(true)}
+            handleClick={() => { setIsModalOpen(true), setUpdateRowData({}) }}
             isDisable={false}
             isLoading={false}
             icon={<MdOutlineAdd className="h-6 w-6  " />}

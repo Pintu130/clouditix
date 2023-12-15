@@ -30,7 +30,6 @@ const LoginPage = ({ handlelogin }) => {
     const handleChange = (e) => {
         const name = e.target.name
         const value = name === 'solution' ? e.target.value : e.target.value.trim();
-        console.log(name, value);
         setFormData({
             ...formData,
             [name]: value
