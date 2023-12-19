@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { ChartTabData, intakeSubTabs, medicalRecordsTabs } from '@/assets/data';
+import { ChartTabData } from '@/assets/data';
 import Header from '../Header'
 import DataQualityRules from '../Configuration/DataQualityRules';
 import Dashboard from '../Dashboard/Dashboard';
@@ -11,6 +11,7 @@ import UserManagement from '../Configuration/UserManagement/UserManagement';
 import GuestDataSearch from '../guestData/guestDataSearch/GuestDataSearch';
 import GuestDataCreate from '../guestData/guestDataCreate/GuestDataCreate';
 import GuestDataCrossRef from '../guestData/GuestDataCrossRef/GuestDataCrossRef';
+import GuestDataManual from '../guestData/GuestDataCrossRefManual/GuestDataManual';
 
 function ChartsPage({ handlelogout }) {
   const [subSelectedTab, setSubSelectedTab] = useState('');
@@ -106,6 +107,11 @@ function ChartsPage({ handlelogout }) {
                                 subSelectedTab === "guest-data-cross-ref" ?
                                   <div className='h-full'>
                                     <GuestDataCrossRef />
+                                  </div>
+                                  :
+                                subSelectedTab === "guest-data-cross-ref-manual" ?
+                                  <div className='h-full'>
+                                    <GuestDataManual />
                                   </div>
                                   :
                                   (

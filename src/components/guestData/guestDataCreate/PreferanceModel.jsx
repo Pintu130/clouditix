@@ -5,8 +5,33 @@ import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
 import { airporttransfer, bathslippers, bedtype, celebratoryoccasion, conceirgeservices, connectivityreg, dietaryallergy, donotdisturb, favouritecuisine, floorlevel, genderDate, housekeepingschedule, modeofcommunication, pillowtype, preferreddiningtimes, promotionalmaterials, roomtemppref, roomviewpref, spatreatments } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
 
+
+const preferanceInitialData = {
+  bedtype: "",
+  floorlevel: "",
+  roomviewpref: "",
+  bathslippers: "",
+  favouritecuisine: "",
+  airporttransfer: "",
+  conceirgeservices: "",
+  connectivityreg: "",
+  promotionalmaterials: "",
+  pillowtype: "",
+  roomtemppref: "",
+  dietaryallergy: "",
+  preferreddiningtimes: "",
+  celebratoryoccasion: "",
+  spatreatments: "",
+  housekeepingschedule: "",
+  donotdisturb: "",
+  modeofcommunication: "",
+  isActive: false
+}
+
+
 const PreferanceModel = ({ onClose }) => {
   const [preferance, setPreferance] = useState({})
+  const [isEdit, setIsEdit] = useState(true)
 
   const handlepreferanceData = (name, value) => {
     setPreferance({
@@ -16,10 +41,19 @@ const PreferanceModel = ({ onClose }) => {
   }
   const HandleSave = () => {
     console.log(preferance);
+    if (preferance) {
+      handleCancel()
+    }
   }
 
-  const handlCancel = () => {
+  const handleCancel = () => {
     onClose()
+    setPreferance(preferanceInitialData)
+    setIsEdit(true)
+  }
+
+  const HandleEdit = () => {
+    setIsEdit(!isEdit)
   }
 
   return <>
@@ -84,8 +118,9 @@ const PreferanceModel = ({ onClose }) => {
                   options={bedtype}
                   target="bedtype"
                   creatableSelect={true}
-                  selectedType={preferance?.gender}
+                  selectedType={preferance?.bedtype}
                   handleSelectChange={(data) => handlepreferanceData('bedtype', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -98,8 +133,9 @@ const PreferanceModel = ({ onClose }) => {
                   options={floorlevel}
                   target="floorlevel"
                   creatableSelect={true}
-                  selectedType={preferance?.gender}
+                  selectedType={preferance?.floorlevel}
                   handleSelectChange={(data) => handlepreferanceData('floorlevel', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -114,6 +150,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.roomviewpref}
                   handleSelectChange={(data) => handlepreferanceData('roomviewpref', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -128,6 +165,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.bathslippers}
                   handleSelectChange={(data) => handlepreferanceData('bathslippers', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -142,6 +180,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.favouritecuisine}
                   handleSelectChange={(data) => handlepreferanceData('favouritecuisine', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -156,6 +195,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.airporttransfer}
                   handleSelectChange={(data) => handlepreferanceData('airporttransfer', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -170,6 +210,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.conceirgeservices}
                   handleSelectChange={(data) => handlepreferanceData('conceirgeservices', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -184,6 +225,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.connectivityreg}
                   handleSelectChange={(data) => handlepreferanceData('connectivityreg', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -198,6 +240,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.promotionalmaterials}
                   handleSelectChange={(data) => handlepreferanceData('promotionalmaterials', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -216,6 +259,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.pillowtype}
                   handleSelectChange={(data) => handlepreferanceData('pillowtype', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -230,6 +274,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.roomtemppref}
                   handleSelectChange={(data) => handlepreferanceData('roomtemppref', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -244,6 +289,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.dietaryallergy}
                   handleSelectChange={(data) => handlepreferanceData('dietaryallergy', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -258,6 +304,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.preferreddiningtimes}
                   handleSelectChange={(data) => handlepreferanceData('preferreddiningtimes', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -272,13 +319,14 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.celebratoryoccasion}
                   handleSelectChange={(data) => handlepreferanceData('celebratoryoccasion', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
 
             <div className=" w-full flex items-start justify-start flex-col xl:flex-row  gap-2 xl:gap-4">
               <label className="flex items-center w-full  xl:max-w-[160px]">Spa Treatments</label>
-              <div className=" w-full md:w-[250px] lg:w-full xl:w-[300px] ]">
+              <div className=" w-full md:w-[250px] lg:w-full xl:w-[300px] cur">
                 <SingleSelectDropDown
                   placeholder="Spa Treatments"
                   options={spatreatments}
@@ -286,6 +334,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.spatreatments}
                   handleSelectChange={(data) => handlepreferanceData('spatreatments', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -300,6 +349,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.housekeepingschedule}
                   handleSelectChange={(data) => handlepreferanceData('housekeepingschedule', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -314,6 +364,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.donotdisturb}
                   handleSelectChange={(data) => handlepreferanceData('donotdisturb', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -328,6 +379,7 @@ const PreferanceModel = ({ onClose }) => {
                   creatableSelect={true}
                   selectedType={preferance?.modeofcommunication}
                   handleSelectChange={(data) => handlepreferanceData('modeofcommunication', data)}
+                  isDisabled={isEdit}
                 />
               </div>
             </div>
@@ -341,6 +393,7 @@ const PreferanceModel = ({ onClose }) => {
             <label className="flex items-center xl:max-w-[160px] ">Is Active</label>
             <input
               type='checkbox'
+              disabled={isEdit}
               placeholder=""
               autoComplete='false'
               id='date'
@@ -352,19 +405,19 @@ const PreferanceModel = ({ onClose }) => {
           </div>
 
           <div className="flex  gap-4">
-            <div className="w-full max-w-[150px]  ">
+            <div className="w-full min-w-[100px]  ">
               <CustomButton
-                name="Save"
-                handleClick={() => HandleSave()}
+                name={isEdit ? "Edit" : "Cancel"}
+                handleClick={() => HandleEdit()}
                 isDisable={false}
                 isLoading={false}
               />
             </div>
-            <div className="w-full max-w-[150px]  ">
+            <div className="w-full min-w-[100px]  ">
               <CustomButton
-                name="Cancel"
-                handleClick={() => handlCancel()}
-                isDisable={false}
+                name="Save"
+                handleClick={() => HandleSave()}
+                isDisable={isEdit}
                 isLoading={false}
               />
             </div>

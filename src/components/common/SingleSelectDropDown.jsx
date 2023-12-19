@@ -51,7 +51,7 @@ function SingleSelectDropDown({ handleSelectChange, selectedType, options, place
                 onChange={handleChange}
                 components={animatedComponents}
                 className='capitalize'
-                isDisabled={false}
+                isDisabled={isDisabled}
             /> : <Select
                 placeholder={placeholder}
                 isClearable={isClearable}

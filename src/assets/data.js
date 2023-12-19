@@ -126,13 +126,18 @@ export const staticMenuItems = [
         icon: ''
       },
       {
-        text: "Guest Data - Update",
-        linkTo: "guest-data-update",
+        text: "Guest Data - Cross Ref",
+        linkTo: "guest-data-cross-ref",
         icon: ''
       },
       {
-        text: "Guest Data - Cross Ref",
-        linkTo: "guest-data-cross-ref",
+        text: "Guest Data - Cross Ref - Manual",
+        linkTo: "guest-data-cross-ref-manual",
+        icon: ''
+      },
+      {
+        text: "Guest Data - Merge/Unmerge",
+        linkTo: "guest-data-merge/unmerge",
         icon: ''
       },
     ],
@@ -1440,6 +1445,300 @@ export const CrossTableData = [
       crm: "https://www.facebook.com/Arjun_sharma",
       pms: "https://www.facebook.com/Arjun_sharma",
       crs: "https://www.facebook.com/Arjun_sharma",
+  },
+
+]
+export const CrossManualTableData = [
+  {
+      tableName: "Generic",
+      recoedName: "Source System ID",
+      sourcerecord: '10021',
+      targetecord: '10021'
+
+  },
+  {
+      tableName: "Generic",
+      recoedName: "Batch Process ID",
+      sourcerecord: '10234',
+      targetecord: '10234'
+  },
+  {
+      tableName: "Generic",
+      recoedName: "Created Date",
+      sourcerecord: '2020-01-15',
+      targetecord: '2020-01-15'
+  },
+  {
+      tableName: "Generic",
+      recoedName: "Last Updated Date",
+      sourcerecord: '2020-01-15',
+      targetecord: '2020-01-15'
+  },
+  {
+      tableName: "Generic Details",
+      recoedName: "",
+      sourcerecord: '',
+      targetecord: ''
+  },
+
+  {
+      id: 0,
+      tableName: "Generic Details",
+      recoedName: "First Name",
+      sourcerecord: 'Arjun',
+      targetecord: 'Arjun'
+  },
+  {
+      id: 1,
+      tableName: "Generic Details",
+      recoedName: "Middie Name",
+      sourcerecord: 'Kumar',
+      targetecord: 'Kumar'
+  },
+  {
+      id: 2,
+      tableName: "Generic Details",
+      recoedName: "LastName",
+      sourcerecord: 'Sharma',
+      targetecord: 'Sharma'
+  },
+  {
+      id: 3,
+      tableName: "Generic Details",
+      recoedName: "Date Of Birth",
+      sourcerecord: "2023-01-01",
+      targetecord: "2023-01-01"
+  },
+  {
+      id: 4,
+      tableName: "Generic Details",
+      recoedName: "Gender",
+      sourcerecord: "Male",
+      targetecord: "Male",
+  },
+  {
+      id: 5,
+      tableName: "Generic Details",
+      recoedName: "Marital Status",
+      sourcerecord: "Married",
+      targetecord: "Married",
+  },
+  {
+      id: 6,
+      tableName: "Generic Details",
+      recoedName: "Income Level",
+      sourcerecord: "Middle",
+      targetecord: "Middle",
+  },
+  {
+      id: 7,
+      tableName: "Generic Details",
+      recoedName: "Nationality",
+      sourcerecord: "Indian",
+      targetecord: "Indian",
+  },
+  {
+      id: 8,
+      tableName: "Generic Details",
+      recoedName: "company name",
+      sourcerecord: "Tech Solution Pvt Ltd",
+      targetecord: "Tech Solution Pvt Ltd",
+  },
+  {
+      id: 9,
+      tableName: "Generic Contact Details",
+      recoedName: "",
+      sourcerecord: "",
+      targetecord: "",
+  },
+  {
+      id: 10,
+      tableName: "Generic Contact Details",
+      recoedName: "business_mobile_phone_country_code ",
+      sourcerecord: "91",
+      targetecord: "91"
+  },
+  {
+      id: 11,
+      tableName: "Generic Contact Details",
+      recoedName: "business_phone",
+      sourcerecord: "22-1234567",
+      targetecord: "22-1234567",
+  },
+  {
+      id: 12,
+      tableName: "Generic Contact Details",
+      recoedName: "home_phone_country_code",
+      sourcerecord: "91",
+      targetecord: "91",
+  },
+  {
+      id: 13,
+      tableName: "Generic Contact Details",
+      recoedName: "home_phone",
+      sourcerecord: "22-9876543",
+      targetecord: "22-9876543",
+  },
+  {
+      id: 14,
+      tableName: "Generic Contact Details",
+      recoedName: "mobile_phone_country_code",
+      sourcerecord: "91",
+      targetecord: "91",
+  },
+  {
+      id: 15,
+      tableName: "Generic Contact Details",
+      recoedName: "mobile_phone",
+      sourcerecord: "9876543210",
+      targetecord: "9876543210",
+  },
+  {
+      id: 16,
+      tableName: "Generic Contact Details",
+      recoedName: "alternate_phone_country_code",
+      sourcerecord: "91",
+      targetecord: "91",
+  },
+  {
+      id: 17,
+      tableName: "Generic Contact Details",
+      recoedName: "alternate_phone",
+      sourcerecord: "9870012345",
+      targetecord: "9870012345",
+  },
+  {
+      id: 18,
+      tableName: "Generic Contact Details",
+      recoedName: "business_email",
+      sourcerecord: "arjun_sharma@company1.com",
+      targetecord: "arjun_sharma@company1.com",
+  },
+  {
+      id: 19,
+      tableName: "Generic Contact Details",
+      recoedName: "personal_email",
+      sourcerecord: "arjun_sharma@gmail.com",
+      targetecord: "arjun_sharma@gmail.com",
+  },
+  {
+      id: 20,
+      tableName: "Generic Contact Details",
+      recoedName: "alternate_email",
+      sourcerecord: "arjun_sharma@yahoo.com",
+      targetecord: "arjun_sharma@yahoo.com",
+  },
+  {
+      id: 21,
+      tableName: "Generic Address",
+      recoedName: "",
+      sourcerecord: "",
+      targetecord: "",
+  },
+  {
+      id: 22,
+      tableName: "Generic Address",
+      recoedName: "Address Type",
+      sourcerecord: "123 Main Street",
+      targetecord: "123 Main Street",
+  },
+  {
+      id: 23,
+      tableName: "Generic Address",
+      recoedName: "adress line 1",
+      sourcerecord: "Apariment 101",
+      targetecord: "Apariment 101",
+  },
+  {
+      id: 24,
+      tableName: "Generic Address",
+      recoedName: "adress line 2",
+      sourcerecord: "XYZ Towers",
+      targetecord: "XYZ Towers",
+  },
+  {
+      id: 25,
+      tableName: "Generic Address",
+      recoedName: "City",
+      goldensourcerecordRecord: "Mumbai",
+      targetecord: "Mumbai",
+  },
+  {
+      id: 26,
+      tableName: "Generic Address",
+      recoedName: "Country",
+      sourcerecord: "india",
+      targetecord: "india",
+  },
+  {
+      id: 27,
+      tableName: "Generic Address",
+      recoedName: "Zip_code",
+      sourcerecord: "400001",
+      targetecord: "400001",
+  },
+  {
+      id: 28,
+      tableName: "Generic Identification",
+      recoedName: "",
+      sourcerecord: "",
+      targetecord: "",
+  },
+  {
+      id: 29,
+      tableName: "Generic Identification",
+      recoedName: "identification type",
+      sourcerecord: "Aadhar_Card",
+      targetecord: "Aadhar_Card",
+  },
+  {
+      id: 30,
+      tableName: "Generic Identification",
+      recoedName: "identification_value",
+      sourcerecord: "1234567890",
+      targetecord: "1234567890",
+  },
+  {
+      id: 31,
+      tableName: "Generic Identification",
+      recoedName: "issuing_country",
+      sourcerecord: "india",
+      targetecord: "india",
+  },
+  {
+      id: 32,
+      tableName: "Generic Identification",
+      recoedName: "issue_date",
+      sourcerecord: "2020-01-15",
+      targetecord: "2020-01-15",
+  },
+  {
+      id: 33,
+      tableName: "Generic Identification",
+      recoedName: "expiry_date",
+      sourcerecord: "2020-01-15",
+      targetecord: "2020-01-15",
+  },
+  {
+      id: 34,
+      tableName: "Generic Social Media",
+      recoedName: "",
+      sourcerecord: "",
+      targetecord: "",
+  },
+  {
+      id: 35,
+      tableName: "Generic Social Media",
+      recoedName: "social_media_app",
+      sourcerecord: "Facebook",
+      targetecord: "Facebook",
+  },
+  {
+      id: 35,
+      tableName: "Generic Social Media",
+      recoedName: "profile",
+      sourcerecord: "https://www.facebook.com/Arjun_sharma",
+      targetecord: "https://www.facebook.com/Arjun_sharma",
   },
 
 ]
