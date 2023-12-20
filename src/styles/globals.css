@@ -15,14 +15,6 @@
   }
 }
 
-/* 
-#root {
-  transform: scale(var(--custom-scale)) !important;
-  transform-origin: top left !important;
-  width: calc(100% / var(--custom-scale)) !important;
-  height: calc(100% / var(--custom-scale)) !important;
-} */
-
 
 body {
   overflow: auto;
@@ -71,7 +63,6 @@ body {
   box-shadow: 0px 2px 4px 0px rgba(74, 74, 74, 0.15);
 }
 
-/* Add this to your CSS file */
 .animate-fadeIn {
   animation: fadeIn1 0.3s ease-in-out;
 }
@@ -85,8 +76,6 @@ body {
     opacity: 1;
   }
 }
-
-/* ag-grid header css */
 
 .ag-theme-alpine {
   --ag-checkbox-checked-color: #114391 !important;
@@ -448,15 +437,6 @@ input.react-datepicker-ignore-onclickoutside {
   }
 }
 
-/* 
-#root {
-  transform: scale(var(--custom-scale)) !important;
-  transform-origin: top left !important;
-  width: calc(100% / var(--custom-scale)) !important;
-  height: calc(100% / var(--custom-scale)) !important;
-} */
-
-
 body {
   overflow: auto;
 }
@@ -504,7 +484,6 @@ body {
   box-shadow: 0px 2px 4px 0px rgba(74, 74, 74, 0.15);
 }
 
-/* Add this to your CSS file */
 .animate-fadeIn {
   animation: fadeIn1 0.3s ease-in-out;
 }
@@ -519,10 +498,7 @@ body {
   }
 }
 
-/* ag-grid header css */
-
 .ag-theme-alpine {
-  /* --ag-selected-row-background-color: #F9FBFC !important; */
   --ag-checkbox-checked-color: #114391 !important;
   --ag-alpine-active-color: #F9FBFC !important;
   --ag-range-selection-border-color: transparent !important;
@@ -547,7 +523,6 @@ body {
 .ag-row-no-focus.ag-row.ag-row-level-0.custom-row-hover.ag-row-position-absolute {
   background: white;
   border-bottom: 1px solid #A6A6A6;
-  /* border-bottom: 1px solid #A6A6A6; */
 }
 
 .ag-header-row.ag-header-row-column {
@@ -556,7 +531,6 @@ body {
 }
 
 div.ag-header-cell.ag-floating-filter {
-  /* background-color: red; */
   border-top: none !important;
 }
 
@@ -574,7 +548,6 @@ div.ag-header-cell.ag-floating-filter {
 
 span.ag-header-cell-text {
   color: #262626;
-  /* Body/Body Bold */
   font-family: Assistant;
   font-size: 16px;
   font-style: normal;
@@ -619,10 +592,6 @@ span.ag-header-cell-text {
 .document-table .ag-root-wrapper.ag-ltr.ag-layout-normal {
   border: none;
 }
-
-/* .drop-table .ag-header-row.ag-header-row-column {
-  background-color: white;
-} */
 
 .drop-table .ag-root-wrapper.ag-ltr.ag-layout-normal {
   border-radius: 0px;
@@ -773,13 +742,11 @@ iframe[title] {
   outline: none;
   cursor: default;
   text-decoration: none;
-  /* Add more styling as needed */
 }
 
 .custom-select .css-13cymwt-control {
   border: 1px solid black;
   border-radius: 4px;
-  /* height: 40px; */
 }
 
 .custom-select .css-13cymwt-control:hover {

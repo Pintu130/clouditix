@@ -12,6 +12,7 @@ import GuestDataSearch from '../guestData/guestDataSearch/GuestDataSearch';
 import GuestDataCreate from '../guestData/guestDataCreate/GuestDataCreate';
 import GuestDataCrossRef from '../guestData/GuestDataCrossRef/GuestDataCrossRef';
 import GuestDataManual from '../guestData/GuestDataCrossRefManual/GuestDataManual';
+import Batchjobs from '../auditLogs/batchJobs/Batchjobs';
 
 function ChartsPage({ handlelogout }) {
   const [subSelectedTab, setSubSelectedTab] = useState('');
@@ -112,6 +113,11 @@ function ChartsPage({ handlelogout }) {
                                 subSelectedTab === "guest-data-cross-ref-manual" ?
                                   <div className='h-full'>
                                     <GuestDataManual />
+                                  </div>
+                                  :
+                                subSelectedTab === "batch-jobs" ?
+                                  <div className='h-full'>
+                                    <Batchjobs />
                                   </div>
                                   :
                                   (
