@@ -12,33 +12,32 @@ import { setDataQualityCreate } from '@/store/dataQualitySlice';
 import { DataSource, ValidationRule, columnName, fetchDeleteTableData, fetchInsertTableData, fetchTableData, fetchUpdateTableData, tableData, tableName } from '@/assets/data';
 import CustomInput from '../common/CustomInput';
 import DataQualitySearch from './DataQualitySearch';
-import { MdDeleteForever } from 'react-icons/md';
-import DeletePopup from '../common/DeletePopup';
+// import DeletePopup from '../common/DeletePopup';
 
 const DataQualityRules = () => {
     const tableRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [rowData, setRowData] = useState(tableData);
-    const [isDelete, setIsDelete] = useState()
+    // const [isDelete, setIsDelete] = useState()
 
     const [columnDefs] = useState([
         {
-            field: "columnName",
-            headerName: "Column Name",
+            field: "dataSource",
+            headerName: "Data Source",
             minWidth: 100,
             maxWidth: 150,
             filter: true,
         },
         {
             field: "tableName",
-            headerName: "Table Name",
+            headerName: "Entity",
             minWidth: 100,
             maxWidth: 200,
             filter: true,
         },
         {
-            field: "dataSource",
-            headerName: "Data Source",
+            field: "columnName",
+            headerName: "Attribute",
             minWidth: 100,
             maxWidth: 150,
             filter: true,
@@ -71,6 +70,7 @@ const DataQualityRules = () => {
             maxWidth: 100,
             cellRenderer: "agCheckboxCellRenderer",
             editable: true,
+            floatingFilter: false,
         },
         {
             field: "isActive",
@@ -80,10 +80,16 @@ const DataQualityRules = () => {
             maxWidth: 100,
             cellRenderer: "agCheckboxCellRenderer",
             editable: true,
+            floatingFilter: false,
         },
         {
 
-            field: '', headerName: "Edit", minWidth: 60, maxWidth: 80, cellRenderer: (params) => {
+            field: '',
+            headerName: "Edit",
+            minWidth: 60,
+            maxWidth: 80,
+            floatingFilter: false,
+            cellRenderer: (params) => {
                 const data = params.data;
                 return (
                     <div className="flex items-center justify-center h-full  ">
@@ -96,7 +102,7 @@ const DataQualityRules = () => {
                 );
             },
         },
-        {
+        /* {
 
             field: '', headerName: "Delete", minWidth: 60, maxWidth: 80, cellRenderer: (params) => {
                 const data = params.data;
@@ -110,7 +116,7 @@ const DataQualityRules = () => {
                     </div>
                 );
             },
-        },
+        }, */
     ]);
 
 
@@ -147,7 +153,6 @@ const DataQualityRules = () => {
         floatingFilter: true,
         flex: 1,
         headerComponentParams: { placeholder: "Enter Member ID" },
-        resizable: true,
         suppressMovable: true,
         resizable: false,
         cellStyle: {
@@ -167,6 +172,7 @@ const DataQualityRules = () => {
     };
 
     const gridOptions = {
+        paginationPageSize: 10,
         rowClass: "custom-row-hover",
         // domLayout: 'autoHeight',
     };
@@ -194,8 +200,8 @@ const DataQualityRules = () => {
         })
     };
 
-    const dispatch = useDispatch()
-    const dataQualityTable = useSelector(state => state?.dataQuality?.data)
+    /* const dispatch = useDispatch()
+    const dataQualityTable = useSelector(state => state?.dataQuality?.data) */
     const handleFromData = (data, target) => {
         setFormData({
             ...formData,
@@ -203,10 +209,10 @@ const DataQualityRules = () => {
         })
     }
 
-
+/* 
     const generateUniqueId = () => {
         return Math.floor(Math.random() * 1000000);;
-    };
+    }; */
 
     const handleCreateSave = async () => {
 
@@ -264,11 +270,11 @@ const DataQualityRules = () => {
         closeModal()
     }
 
-    const handleDelete = async (e, data) => {
-        if (data?.id) {
-            setIsDelete(data?.id)
-        }
-    }
+    // const handleDelete = async (e, data) => {
+    //     if (data?.id) {
+    //         setIsDelete(data?.id)
+    //     }
+    // }
     const handleEdit = (e, data) => {
         e.stopPropagation();
         const modifyData = {
@@ -287,29 +293,29 @@ const DataQualityRules = () => {
     }
 
     const closePopup = () => {
-        setIsDelete()
+        // setIsDelete()
     }
 
-    const deleteConfirmation = async () => {
-        if (isDelete) {
-            const deleteData = await fetchDeleteTableData(isDelete);
-            if (deleteData?.data?.isSuccess) {
-                const data = await fetchTableData()
-                if (data?.length > 0) {
-                    setRowData(data);
+    /*     const deleteConfirmation = async () => {
+            if (isDelete) {
+                const deleteData = await fetchDeleteTableData(isDelete);
+                if (deleteData?.data?.isSuccess) {
+                    const data = await fetchTableData()
+                    if (data?.length > 0) {
+                        setRowData(data);
+                    }
+                    closePopup()
                 }
-                closePopup()
             }
-        }
-    }
+        } */
     return (
         <div className="w-full flex flex-col  gap-6 p-3 xl:h-full">
 
-            <DeletePopup
+            {/* <DeletePopup
                 isOpen={isDelete}
                 onCancel={closePopup}
                 onDelete={() => deleteConfirmation()}
-            />
+            /> */}
 
             <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
                 <div className='w-full h-full'>
@@ -486,10 +492,10 @@ const DataQualityRules = () => {
             </div>
 
             <div className='border border-[#a6a6a6] rounded-xl p-4'>
-                <DataQualitySearch />
+                <DataQualitySearch rowData={rowData} />
             </div>
 
-            <div className="flex w-full min-h-[50vh] pb-10  xl:max-h-[30%]  mx-auto ag-theme-alpine ">
+            <div className="flex w-full min-h-[70vh] pb-10  xl:max-h-[30%]  mx-auto ag-theme-alpine ">
                 <div className="relative overflow-auto max-h-[500px]" style={{ width: "100%" }}>
                     <AgGridReact
                         ref={tableRef}
@@ -503,10 +509,11 @@ const DataQualityRules = () => {
                         pagination={true}
                         onCellClicked={handleCellClicked}
                         gridOptions={gridOptions}
-                        paginationAutoPageSize={true}
+                        // paginationAutoPageSize={true}
                         onGridReady={onGridReady}
                         suppressCopyRowsToClipboard={true}
                         animateRows={true}
+                        paginationPageSize={10}
                     />
                 </div>
             </div>

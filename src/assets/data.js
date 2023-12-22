@@ -365,26 +365,41 @@ export const barChartsData = [
   }
 ];
 
+export const datasourceData = [
+  { label: "ALL", value: "all" },
+  { label: "cloud_storage", value: "cloud_storage" },
+];
 export const entitySearch = [
-  { label: "guest", value: "guest" },
+  { label: "ALL", value: "all" },
+  { label: "ldg_account_bus_card", value: "ldg_account_bus_card" },
 ];
 
 export const attributeSearch = [
-  { label: "John", value: "john" },
-  { label: "Jack", value: "jack" },
-  { label: "Pitter", value: "pitter" },
-  { label: "Rock", value: "rock" },
+  { label: "ALL", value: "all" },
+  { label: "State", value: "state" },
+  { label: "Country", value: "country" },
+  { label: "street_line_1", value: "street_line_1" },
+  { label: "legacyid", value: "legacyid" },
+  { label: "name", value: "name" },
+  { label: "city", value: "city" },
+  { label: "phone", value: "phone" },
+  { label: "State", value: "State" },
+  { label: "street_line_2", value: "street_line_2" },
 ]
 
 export const rulesearch = [
-  { label: "Rule 1", value: "rule1" },
-  { label: "Rule 2", value: "rule2" },
-  { label: "Rule 3", value: "rule3" },
+  { label: "ALL", value: "all" },
+  { label: "empty_value_check", value: "empty_value_check" },
+  { label: "null_value_check", value: "null_value_check" },
+  { label: "telephone_format_check", value: "telephone_format_check" },
+  { label: "country_check", value: "country_check" },
+  { label: "length_check", value: "length_check" },
+  { label: "special_character_check", value: "special_character_check" },
 ]
 export const statussearch = [
-  { label: "status 1", value: "status1" },
-  { label: "status 2", value: "status2" },
-  { label: "status 3", value: "status3" },
+  { label: "ALL", value: "all" },
+  { label: "Active", value: true },
+  { label: "Inactive", value: false },
 ]
 
 export const survivorshipData = [
