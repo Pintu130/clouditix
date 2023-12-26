@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react'
 import CustomInput from '../common/CustomInput'
 import CustomButton from '../common/CustomButton'
 import SingleSelectDropDown from '../common/SingleSelectDropDown'
-import { attributeSearch, datasourceData, entitySearch, rulesearch, statussearch } from '@/assets/data'
+import {  datasourceData,  statussearch } from '@/assets/data'
 
-const DataQualitySearch = ({ rowData }) => {
+const DataQualitySearch = ({ searchDatas, handleSearchData }) => {
     const [searchData, setSearchData] = useState({})
-    const [entitySearchData, setEntitySearchData] = useState(entitySearch)
-    const [attiributeSearchData, setAttiributeSearchData] = useState(attributeSearch)
-    const [ruleSearchData, setRuleSearchData] = useState(rulesearch)
-
+    const [entitySearchData, setEntitySearchData] = useState([])
+    const [attiributeSearchData, setAttiributeSearchData] = useState([])
+    const [ruleSearchData, setRuleSearchData] = useState([])
 
     const handleSearch = (data, target) => {
 
@@ -20,9 +19,21 @@ const DataQualitySearch = ({ rowData }) => {
 
     }
 
+    const handleSearchClick = () => {
+        console.log(searchData);
+        handleSearchData(searchData)
+        setSearchData({
+            datasource: "",
+            entity: "",
+            attribute: "",
+            rule: "",
+            status: ""
+        })
+    }
+
     useEffect(() => {
-        if (rowData?.length > 0) {
-            const searchentitiData = rowData.filter((item) => item?.dataSource === searchData?.datasource?.value)
+        if (searchDatas?.length > 0) {
+            const searchentitiData = searchDatas.filter((item) => (searchData?.datasource?.value === 'all' || item?.dataSource === searchData?.datasource?.value))
 
             const uniqueValuesSet = new Set();
 
@@ -38,7 +49,7 @@ const DataQualitySearch = ({ rowData }) => {
             setEntitySearchData(addsearchentitiData);
 
             if (searchData?.entity?.value?.length > 0) {
-                const searchattributeData = rowData.filter((item) => item?.tableName === searchData?.entity?.value);
+                const searchattributeData = searchDatas.filter((item) => (searchData?.entity?.value === "all" || item?.tableName === searchData?.entity?.value));
 
                 const uniquAttributeValue = new Set()
 
@@ -54,7 +65,7 @@ const DataQualitySearch = ({ rowData }) => {
             }
 
             if (searchData?.attribute?.value?.length > 0) {
-                const searchruleData = rowData.filter((item) => item.columnName === searchData?.attribute?.value)
+                const searchruleData = searchDatas.filter((item) => (searchData?.attribute?.value === "all" || item.columnName === searchData?.attribute?.value))
 
                 const uniquRuleValue = new Set()
 
@@ -87,7 +98,7 @@ const DataQualitySearch = ({ rowData }) => {
                 </label>
                 <div className="w-full max-w-[300px] lg:max-w-[100%]">
                     <SingleSelectDropDown
-                        placeholder="Enter Entity"
+                        placeholder="Select Data Source"
                         options={datasourceData}
                         target="datasource"
                         creatableSelect={true}
@@ -106,7 +117,7 @@ const DataQualitySearch = ({ rowData }) => {
                 </label>
                 <div className="w-full max-w-[300px] lg:max-w-[100%]">
                     <SingleSelectDropDown
-                        placeholder="Enter Entity"
+                        placeholder="Select Entity"
                         options={entitySearchData}
                         target="entity"
                         creatableSelect={true}
@@ -125,7 +136,7 @@ const DataQualitySearch = ({ rowData }) => {
                 </label>
                 <div className="w-full max-w-[300px] lg:max-w-[100%]">
                     <SingleSelectDropDown
-                        placeholder="Enter Attribute"
+                        placeholder="Select Attribute"
                         options={attiributeSearchData}
                         target="attribute"
                         creatableSelect={true}
@@ -144,7 +155,7 @@ const DataQualitySearch = ({ rowData }) => {
                 </label>
                 <div className="w-full max-w-[300px] lg:max-w-[100%]">
                     <SingleSelectDropDown
-                        placeholder="Enter Rule"
+                        placeholder="Select Rule"
                         options={ruleSearchData}
                         target="rule"
                         creatableSelect={true}
@@ -163,7 +174,7 @@ const DataQualitySearch = ({ rowData }) => {
                 </label>
                 <div className="w-full max-w-[300px] lg:max-w-[100%]">
                     <SingleSelectDropDown
-                        placeholder="Enter Status"
+                        placeholder="Select Status"
                         options={statussearch}
                         target="status"
                         creatableSelect={true}
@@ -177,7 +188,7 @@ const DataQualitySearch = ({ rowData }) => {
                 <div className="w-full max-w-[150px]  " >
                     <CustomButton
                         name="Search"
-                        handleClick={() => { }}
+                        handleClick={() => handleSearchClick()}
                         isDisable={false}
                         isLoading={false}
                     />

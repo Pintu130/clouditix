@@ -8,7 +8,7 @@ import axios from 'axios';
 
 export const fetchTableData = async () => {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GetDQMetaData/cloud_storage/ldg_account_bus_card`)
+    const response = await axios.get("http://13.234.127.72:5000/GetDQMetaData")
     return response?.data
   } catch (error) {
     return error
@@ -368,6 +368,7 @@ export const barChartsData = [
 export const datasourceData = [
   { label: "ALL", value: "all" },
   { label: "cloud_storage", value: "cloud_storage" },
+  { label: "AWS S3", value: "AWS S3" },
 ];
 export const entitySearch = [
   { label: "ALL", value: "all" },

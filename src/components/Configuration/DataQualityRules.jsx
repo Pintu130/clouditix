@@ -18,6 +18,7 @@ const DataQualityRules = () => {
     const tableRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [rowData, setRowData] = useState(tableData);
+    const [searchDatas, setSearchDatas] = useState([])
     // const [isDelete, setIsDelete] = useState()
 
     const [columnDefs] = useState([
@@ -66,8 +67,8 @@ const DataQualityRules = () => {
             field: "isMandatory",
             headerName: "Is Mandatory",
             cellClass: "uppercase",
-            minWidth: 80,
-            maxWidth: 100,
+            minWidth: 100,
+            maxWidth: 110,
             cellRenderer: "agCheckboxCellRenderer",
             editable: true,
             floatingFilter: false,
@@ -120,13 +121,36 @@ const DataQualityRules = () => {
     ]);
 
 
+    const handleSearchData = (data) => {
+        console.log(data);
+        console.log(Object.keys(data).length);
+
+        if (Object.keys(data).length > 0) {
+
+            console.log("enter");
+
+            const searchData = searchDatas?.filter((item) => (data?.datasource?.value === "all" || item?.dataSource === data?.datasource?.value) &&
+                (data?.entity?.value === "all" || item?.tableName === data?.entity?.value) &&
+                (data?.attribute?.value === "all" || item?.columnName === data?.attribute?.value) &&
+                (data?.rule?.value === "all" || item?.validationRule === data?.rule?.value) &&
+                (data?.status?.value === "all" || item?.isActive === data?.status?.value)
+            )
+
+            setRowData(searchData)
+            console.log(searchData);
+        }
+
+
+    }
+
 
     useEffect(() => {
         ; (async () => {
             const data = await fetchTableData()
-
+            console.log(data);
             if (data?.length > 0) {
                 setRowData(data);
+                setSearchDatas(data);
             }
         }
         )()
@@ -209,10 +233,10 @@ const DataQualityRules = () => {
         })
     }
 
-/* 
-    const generateUniqueId = () => {
-        return Math.floor(Math.random() * 1000000);;
-    }; */
+    /* 
+        const generateUniqueId = () => {
+            return Math.floor(Math.random() * 1000000);;
+        }; */
 
     const handleCreateSave = async () => {
 
@@ -492,7 +516,7 @@ const DataQualityRules = () => {
             </div>
 
             <div className='border border-[#a6a6a6] rounded-xl p-4'>
-                <DataQualitySearch rowData={rowData} />
+                <DataQualitySearch searchDatas={searchDatas} handleSearchData={handleSearchData} />
             </div>
 
             <div className="flex w-full min-h-[70vh] pb-10  xl:max-h-[30%]  mx-auto ag-theme-alpine ">
