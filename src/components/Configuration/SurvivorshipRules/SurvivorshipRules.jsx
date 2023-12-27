@@ -103,7 +103,7 @@ const SurvivorshipRules = () => {
           />
         </div>
       </div>
-      <div className="ag-theme-alpine" style={{ height: 700, width: 1550 }}>
+      <div className="ag-theme-alpine" style={{ height: 530, width: 1550 }}>
         <AgGridReact
           ref={tableRef}
           rowData={rowData}
@@ -120,6 +120,7 @@ const SurvivorshipRules = () => {
           onGridReady={onGridReady}
           suppressCopyRowsToClipboard={true}
           animateRows={true}
+          paginationPageSize={10}
         />
       </div>
       <div className="flex items-center w-full justify-end gap-8 p-3 pr-8 ">

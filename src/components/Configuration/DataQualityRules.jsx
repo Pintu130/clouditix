@@ -9,7 +9,7 @@ import SingleSelectDropDown from '../common/SingleSelectDropDown';
 import CustomButton from '../common/CustomButton';
 import CustomModal from '../common/CustomModal';
 import { setDataQualityCreate } from '@/store/dataQualitySlice';
-import { DataSource, ValidationRule, columnName, fetchDeleteTableData, fetchInsertTableData, fetchTableData, fetchUpdateTableData, tableData, tableName } from '@/assets/data';
+import { ValidationRule, columnName, fetchDeleteTableData, fetchInsertTableData, fetchTableData, fetchUpdateTableData, fetchdatasource, fetchentity, fetchvalidationRule, tableData } from '@/assets/data';
 import CustomInput from '../common/CustomInput';
 import DataQualitySearch from './DataQualitySearch';
 // import DeletePopup from '../common/DeletePopup';
@@ -19,7 +19,32 @@ const DataQualityRules = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [rowData, setRowData] = useState(tableData);
     const [searchDatas, setSearchDatas] = useState([])
+    const [datasourceData, setDatasourceData] = useState([])
+    const [entity, setEntity] = useState([])
+    const [rule, setRule] = useState([])
     // const [isDelete, setIsDelete] = useState()
+
+    useEffect(() => {
+        ; (async () => {
+            const data = await fetchdatasource()
+            setDatasourceData(data)
+        })()
+    }, [])
+    useEffect(() => {
+        ; (async () => {
+            const data = await fetchentity()
+            setEntity(data)
+        })()
+    }, [])
+    useEffect(() => {
+        ; (async () => {
+            const data = await fetchvalidationRule()
+            setRule(data)
+        })()
+    }, [])
+
+
+
 
     const [columnDefs] = useState([
         {
@@ -147,7 +172,6 @@ const DataQualityRules = () => {
     useEffect(() => {
         ; (async () => {
             const data = await fetchTableData()
-            console.log(data);
             if (data?.length > 0) {
                 setRowData(data);
                 setSearchDatas(data);
@@ -183,13 +207,15 @@ const DataQualityRules = () => {
             color: "#3B475A",
             fontSize: "16px",
             fontStyle: "normal",
-            fontWeight: "500",
+            fontWeight: "normal",
             fontFamily: "Assistant",
         },
         headerClass: "whitespace-normal",
         wrapText: true,
         autoHeight: true,
     };
+
+
 
     const handleCellClicked = (param) => {
         // console.log(param?.column);
@@ -366,12 +392,12 @@ const DataQualityRules = () => {
                                         htmlFor="speciality"
                                         className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
                                     >
-                                        dataSource
+                                        Data Source
                                     </label>
                                     <div className="w-full max-w-[300px] lg:max-w-[100%]">
                                         <SingleSelectDropDown
-                                            placeholder="Enter Data Source"
-                                            options={DataSource}
+                                            placeholder="Select Data Source"
+                                            options={datasourceData}
                                             target="dataSource"
                                             creatableSelect={true}
                                             selectedType={formData?.dataSource}
@@ -385,30 +411,50 @@ const DataQualityRules = () => {
                                         htmlFor="speciality"
                                         className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
                                     >
-                                        tableName
+                                        Entity Name
                                     </label>
                                     <div className="w-full max-w-[300px] lg:max-w-[100%]">
                                         <SingleSelectDropDown
-                                            placeholder="Enter Table Name"
-                                            options={tableName}
-                                            target="tableName"
+                                            placeholder="Select Entity Name"
+                                            options={entity}
+                                            target="entity"
                                             creatableSelect={true}
-                                            selectedType={formData?.tableName}
+                                            selectedType={formData?.entity}
                                             handleSelectChange={handleFromData}
                                         />
                                     </div>
                                 </div>
+
                                 <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
                                     <label
                                         htmlFor="speciality"
                                         className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
                                     >
-                                        validationRule
+                                        Attribute
                                     </label>
                                     <div className="w-full max-w-[300px] lg:max-w-[100%]">
                                         <SingleSelectDropDown
-                                            placeholder="Enter validationRule"
-                                            options={ValidationRule}
+                                            placeholder="Select Attribute"
+                                            options={columnName}
+                                            target="attribute"
+                                            creatableSelect={true}
+                                            selectedType={formData?.attribute}
+                                            handleSelectChange={handleFromData}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
+                                    <label
+                                        htmlFor="speciality"
+                                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
+                                    >
+                                        Rule
+                                    </label>
+                                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
+                                        <SingleSelectDropDown
+                                            placeholder="Select Rule"
+                                            options={rule}
                                             target="validationRule"
                                             creatableSelect={true}
                                             selectedType={formData?.validationRule}
@@ -416,24 +462,7 @@ const DataQualityRules = () => {
                                         />
                                     </div>
                                 </div>
-                                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
-                                    <label
-                                        htmlFor="speciality"
-                                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
-                                    >
-                                        columnName
-                                    </label>
-                                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
-                                        <SingleSelectDropDown
-                                            placeholder="Enter Column Name"
-                                            options={columnName}
-                                            target="columnName"
-                                            creatableSelect={true}
-                                            selectedType={formData?.columnName}
-                                            handleSelectChange={handleFromData}
-                                        />
-                                    </div>
-                                </div>
+
                                 <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
                                     <label
                                         htmlFor="speciality"
@@ -454,6 +483,7 @@ const DataQualityRules = () => {
                                         />
                                     </div>
                                 </div>
+
                                 <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
                                     <div className='flex items-center w-full gap-2 custom-select '>
                                         <input
@@ -504,7 +534,7 @@ const DataQualityRules = () => {
                 </div>
             </CustomModal>
 
-            <div className='flex items-center justify-end'>
+            <div className='flex items-center justify-end pr-4'>
                 <div className="w-full max-w-[150px]" >
                     <CustomButton
                         name="Create"

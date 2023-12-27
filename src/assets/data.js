@@ -42,6 +42,47 @@ export const fetchDeleteTableData = async (data) => {
   }
 }
 
+export const fetchdatasource = async () => {
+  try {
+    const response = await axios.get("http://13.234.127.72:5000/TableDefinition")
+    const data = response?.data?.map((item) => ({
+      label: item?.dataSource, value: item?.dataSource
+    }))
+    return data
+  } catch (error) {
+    return error
+  }
+}
+export const fetchentity = async () => {
+  try {
+    const response = await axios.get("http://13.234.127.72:5000/TableDefinition")
+    const data = response?.data?.map((item) => ({
+      label: item?.tableName, value: item?.tableName
+    }))
+    return data
+  } catch (error) {
+    return error
+  }
+}
+export const fetchvalidationRule = async () => {
+  try {
+    const response = await axios.get("http://13.234.127.72:5000/DQRules")
+    const data = response?.data?.map((item) => ({
+      label: item?.validationRule, value: item?.validationRule
+    }))
+    return data
+  } catch (error) {
+    return error
+  }
+}
+
+
+export const datasourceData = [
+  { label: "ALL", value: "all" },
+  { label: "cloud_storage", value: "cloud_storage" },
+  { label: "AWS S3", value: "AWS S3" },
+];
+
 export const staticMenuItems = [
   {
     icon: <IoHome className="w-6 h-6" />,
@@ -211,14 +252,14 @@ export const matchdataValue = [
   { label: "0.5", value: "0.5" },
 ];
 
-export const DataSource = [
+/* export const DataSource = [
   { label: "cloud_storage", value: "cloud_storage" },
   { label: "AWS_S3", value: "AWS_S3" },
-];
-export const tableName = [
+]; */
+/* export const tableName = [
   { label: "ldg_account_bus_card", value: "ldg_account_bus_card" },
   { label: "guest", value: "guest" },
-];
+]; */
 export const ruleDescription = [
   { label: "Check if the column(s) conatins duplicate values across rows.", value: "Check if the column(s) conatins duplicate values across rows." },
 ];
@@ -365,11 +406,7 @@ export const barChartsData = [
   }
 ];
 
-export const datasourceData = [
-  { label: "ALL", value: "all" },
-  { label: "cloud_storage", value: "cloud_storage" },
-  { label: "AWS S3", value: "AWS S3" },
-];
+
 export const entitySearch = [
   { label: "ALL", value: "all" },
   { label: "ldg_account_bus_card", value: "ldg_account_bus_card" },

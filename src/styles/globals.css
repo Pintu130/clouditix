@@ -846,3 +846,7 @@ td.rbc-agenda-event-cell {
 .small-date-input input {
   width: 110px;
 }
+
+.ag-input-field-input.ag-text-field-input {
+  font-weight: 400 !important;
+}
