@@ -1,7 +1,7 @@
 import CustomButton from '@/components/common/CustomButton'
 import CustomInput from '@/components/common/CustomInput'
 import SingleSelectDropDown from '@/components/common/SingleSelectDropDown'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GrClose } from 'react-icons/gr';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
@@ -54,9 +54,20 @@ const is = [
     { label: 'is Not', value: 'isnot' }
 ]
 
-const GuestSearchData = () => {
+const GuestSearchData = ({ rowData }) => {
     const animatedComponents = makeAnimated();
     const [searchData, setSearchData] = useState([]);
+/*     const [guestid, setGuestid] = useState([]);
+
+    useEffect(() => {
+        if (rowData?.length > 0) {
+            const guestid = Object.keys(rowData[0])?.map((key) => ({ label: key, value: key }));
+            console.log(guestid);
+            setGuestid(guestid);
+        }
+
+    }, []) */
+
 
     const handleOnchange = (index, field, value) => {
         setSearchData((prevData) =>
@@ -330,7 +341,7 @@ const GuestSearchData = () => {
                             })
                         }
                     </div>
-
+ 
                 </div>
             </div>
 

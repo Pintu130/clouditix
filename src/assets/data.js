@@ -76,6 +76,15 @@ export const fetchvalidationRule = async () => {
   }
 }
 
+export const fetchGuestData = async () => {
+  try {
+    const response = await axios.get("http://13.234.127.72:5000/GuestData")
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
 
 export const datasourceData = [
   { label: "ALL", value: "all" },

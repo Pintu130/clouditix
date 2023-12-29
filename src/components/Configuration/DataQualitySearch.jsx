@@ -20,15 +20,15 @@ const DataQualitySearch = ({ searchDatas, handleSearchData }) => {
     }
 
     const handleSearchClick = () => {
-        console.log(searchData);
+        
         handleSearchData(searchData)
-        setSearchData({
+       /*  setSearchData({
             datasource: "",
             entity: "",
             attribute: "",
             rule: "",
             status: ""
-        })
+        }) */
     }
 
     useEffect(() => {

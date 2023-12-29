@@ -1,8 +1,8 @@
-import { GuestDataSearchData } from "@/assets/data";
+import { GuestDataSearchData, fetchGuestData } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
 import CustomInput from "@/components/common/CustomInput";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -12,9 +12,23 @@ import GuestSearchData from "./GuestSearchData";
 
 const GuestDataSearch = () => {
   const tableRef = useRef({});
-  const [rowData, setRowData] = useState(GuestDataSearchData);
+    const [rowData, setRowData] = useState(GuestDataSearchData);
 
   const handleSearch = () => { };
+
+
+
+
+ /*  useEffect(() => {
+    ; (async () => {
+      const data = await fetchGuestData()
+      console.log(data);
+      if (data.length > 0) {
+        setRowData(data);
+      }
+    })();
+  }, []) */
+
 
   const handleEdit = (e, data) => {
     e.stopPropagation();
@@ -25,8 +39,8 @@ const GuestDataSearch = () => {
     {
       field: "guest_id",
       headerName: "guest_id ",
-      minWidth: 50,
-      maxWidth: 90,
+      minWidth: 100,
+      maxWidth: 100,
     },
     {
       field: "guest_category_type",
@@ -74,8 +88,8 @@ const GuestDataSearch = () => {
       field: "address_line_3",
       headerName: "address_line_3",
 
-      minWidth: 100,
-      maxWidth: 150,
+      minWidth: 150,
+      maxWidth: 200,
       editable: true,
     },
     {
@@ -192,7 +206,7 @@ const GuestDataSearch = () => {
   return (
     <div className="w-full h-full flex flex-col  items-center gap-6 px-6 py-4  ">
 
-      <GuestSearchData />
+      <GuestSearchData rowData={rowData} />
 
       <div className="flex w-full min-h-[62vh] pb-10  mx-auto ag-theme-alpine ">
         <div
