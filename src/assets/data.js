@@ -84,6 +84,14 @@ export const fetchGuestData = async () => {
     return error
   }
 }
+export const fetchDeterministicMatch = async () => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}Deterministic_Config`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
 
 
 export const datasourceData = [
@@ -245,13 +253,14 @@ export const columnName = [
 ];
 
 export const matchdata = [
-  { label: "name", value: "name" },
+  { label: "Name", value: "Name" },
   { label: "date_of_birth", value: "date_of_birth" },
-  { label: "Aadhar", value: "Aadhar" },
+  { label: "gender", value: "gender" },
+  { label: "address", value: "address" },
+  { label: "mobile_phone", value: "mobile_phone" },
+  { label: "Aadhar_Card", value: "Aadhar_Card" },
   { label: "Passport", value: "Passport" },
-  { label: "Driving_License", value: "Driving_License" },
-  { label: "email", value: "email" },
-  { label: "mobile number", value: "mobile_number" },
+  { label: "Driving_License", value: "PassDriving_Licenseport" },
 ];
 export const matchdataValue = [
   { label: "0.1", value: "0.1" },

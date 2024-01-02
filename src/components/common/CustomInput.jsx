@@ -1,6 +1,6 @@
 import React from 'react'
 
-function CustomInput({ label = "", placeholder = "", name = "", value = "", onChange, errors = "", isRequired = false, isIcon = false, isNUmber = false }) {
+function CustomInput({ label = "", placeholder = "", name = "", value = "", onChange, errors = "", isRequired = false, isIcon = false, isNUmber = false, isdisablad=false }) {
     return (
         <div className="relative flex flex-col w-full gap-1">
             {label?.length > 0 && <label htmlFor={name} className="text-[#5A5A5A] text-base font-normal">{label || ""}
@@ -14,6 +14,7 @@ function CustomInput({ label = "", placeholder = "", name = "", value = "", onCh
                 name={name || ""}
                 value={value || ""}
                 onChange={(e) => onChange(e)}
+                disabled={isdisablad}
                 className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none
                 ${isIcon ? "pr-7" : ""}
                 ${errors?.length > 0 ? 'border-Error' : 'border-[#4A4A4A]'}
