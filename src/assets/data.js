@@ -92,6 +92,14 @@ export const fetchDeterministicMatch = async () => {
     return error
   }
 }
+export const fetchsurvivorshipData = async () => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}SurvivorshipRules`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
 
 
 export const datasourceData = [
@@ -457,122 +465,6 @@ export const statussearch = [
   { label: "Active", value: true },
   { label: "Inactive", value: false },
 ]
-
-export const survivorshipData = [
-  {
-    entity: "Guest",
-    attribute: "guest_category_type",
-    priority1: "CRM",
-    priority2: "PMS",
-    priority3: "CRM",
-  },
-  {
-    entity: "",
-    attribute: "middle_name",
-    priority1: "CRM",
-    priority2: "PMS",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "last_name",
-    priority1: "CRM",
-    priority2: "PMS",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "full_name",
-    priority1: "CRM",
-    priority2: "PMS",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "gender",
-    priority1: "PMS",
-    priority2: "CRM",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "marital_status",
-    priority1: "PMS",
-    priority2: "CRM",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "no_of_children",
-    priority1: "PMS",
-    priority2: "CRM",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "income_level",
-    priority1: "CRM",
-    priority2: "PMS",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "company_name",
-    priority1: "CRM",
-    priority2: "PMS",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "notes",
-    priority1: "CRM",
-    priority2: "PMS",
-    priority3: "CRS",
-  },
-
-  {
-    entity: "contact_details",
-    attribute: "business_phone",
-    priority1: "CRM",
-    priority2: "PMS",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "home_phone",
-    priority1: "CRM",
-    priority2: "PMS",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "mobile_phone",
-    priority1: "PMS",
-    priority2: "PMS",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "alternane_phone",
-    priority1: "PMS",
-    priority2: "CRM",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "business_email",
-    priority1: "PMS",
-    priority2: "CRM",
-    priority3: "CRS",
-  },
-  {
-    entity: "",
-    attribute: "personal_email",
-    priority1: "PMS",
-    priority2: "CRM",
-    priority3: "CRS",
-  },
-];
 
 
 export const rolesAndPermissionsTable = [

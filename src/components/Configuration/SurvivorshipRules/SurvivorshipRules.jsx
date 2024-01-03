@@ -1,15 +1,37 @@
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState, useMemo, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import CustomButton from "@/components/common/CustomButton";
-import { survivorshipData } from "@/assets/data";
+import { fetchsurvivorshipData, survivorshipData } from "@/assets/data";
 
 
 
 const SurvivorshipRules = () => {
   const tableRef = useRef(null);
-  const [rowData, setRowData] = useState(survivorshipData);
+  const [rowData, setRowData] = useState([]);
+
+  useEffect(() => {
+
+    ; (async () => {
+      const data = await fetchsurvivorshipData()
+
+      if (data.length > 0) {
+        const tableRowData = data?.map((item) => ({
+          entity: item?.tableName,
+          attribute: item?.columnName,
+          priority1: item?.priority === 1 ? item?.source : "",
+          priority2: item?.priority === 2 ? item?.source : "",
+          priority3: item?.priority === 3 ? item?.source : ""
+        }))
+
+        setRowData(tableRowData);
+      }
+
+    })()
+
+  }, [])
+
 
   const [columnDefs] = useState([
     {
@@ -58,7 +80,7 @@ const SurvivorshipRules = () => {
 
   const frameworkComponents = {
     agCheckboxCellRenderer: (params) => {
-  
+
       return (
         <input
           type="checkbox"
@@ -75,7 +97,7 @@ const SurvivorshipRules = () => {
     },
   };
 
-  const handleCellClicked = (param) => {};
+  const handleCellClicked = (param) => { };
 
   const gridOptions = {
     rowClass: "custom-row-hover",
@@ -85,11 +107,11 @@ const SurvivorshipRules = () => {
     tableRef.current = params.api;
   };
 
-  const handleSaveModal = () => {};
+  const handleSaveModal = () => { };
 
-  const handleCancleModal = () => {};
+  const handleCancleModal = () => { };
 
-  const handleUpdateModal = () => {};
+  const handleUpdateModal = () => { };
 
   return (
     <div className="w-full flex flex-col justify-center items-center gap-2 py-4">

@@ -434,7 +434,7 @@ const DeterministicMatch = () => {
                   <div className='flex flex-col items-start'>
                     <span>Total-threshold </span>
                     {/* <span className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 '>{calculateTotalThreshold(rule.columns)}</span> */}
-                    <span className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 cursor-not-allowed '>0.1</span>
+                    <span className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 cursor-not-allowed '>1.0</span>
                   </div>
                 </div>
 
