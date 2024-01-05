@@ -465,6 +465,13 @@ export const statussearch = [
   { label: "Active", value: true },
   { label: "Inactive", value: false },
 ]
+export const userroledata = [
+  { label: "data_entry", value: "data_entry" },
+  { label: "admin", value: "admin" },
+  { label: "data_steward", value: "data_steward" },
+  { label: "data_owner", value: "data_owner" },
+  { label: "data_entry", value: "data_entry" },
+]
 
 
 export const rolesAndPermissionsTable = [
@@ -636,8 +643,6 @@ export const MfaEnabled = [
 
 export const UserRole = [
   { label: "Manager", value: "manager" },
-
-
 ];
 
 export const Country = [
@@ -1705,9 +1710,6 @@ export const CrossManualTableData = [
   },
 
 ]
-
-
-
 export const batchJobsStatustbleData = [
   {
     batchid: "0ae33fb3-6156-453c-a856-0013fbf82ed1",
@@ -1759,3 +1761,133 @@ export const batchJobsStatustbleData = [
     endedat: "26-11-2023 08:47:02",
   },
 ];
+
+export const userManagementTableData = [
+  {
+    id: 0,
+    firstname: "Arjun",
+    lastname: "Sharma",
+    email: "arjun_sharma@company1.com",
+    phonenumber: "91-22-1234567",
+    username: "asharma",
+    userrole: "data_entry",
+    isactive: true,
+  },
+  {
+    id: 1,
+    firstname: "Simran",
+    lastname: "Kaur",
+    email: "simran_kaur@company2.com",
+    phonenumber: "191-11-9876543",
+    username: "askaur",
+    userrole: "admin",
+    isactive: false,
+  },
+  {
+    id: 2,
+    firstname: "Vikas",
+    lastname: "Jain",
+    email: "vikas_jain@company3.com",
+    phonenumber: "91-33-5555555",
+    username: "vjain",
+    userrole: "data_steward",
+    isactive: false,
+  },
+  {
+    id: 3,
+    firstname: "priya",
+    lastname: "singh",
+    email: "priya_singh@company4.com",
+    phonenumber: "91-44-9876543",
+    username: "psingh",
+    userrole: "data_owner",
+    isactive: false,
+  },
+  {
+    id: 4,
+    firstname: "sunil",
+    lastname: "Gupta",
+    email: "sunil_gupta@company5.com",
+    phonenumber: "9122-2222222",
+    username: "squpta",
+    userrole: "data_entry",
+    isactive: false,
+  },
+  {
+    id: 5,
+    firstname: "Meera",
+    lastname: "Verma",
+    email: "meera_verma@company6.com",
+    phonenumber: "91-11-8765432",
+    username: "mverma",
+    userrole: "data_entry",
+    isactive: false,
+  },
+  {
+    id: 6,
+    firstname: "Rajesh",
+    lastname: "Yadav",
+    email: "rajesh_yadav@company7.com",
+    phonenumber: "91-33-1111111",
+    username: "ryadav",
+    userrole: "data_entry",
+    isactive: false,
+  },
+  {
+    id: 7,
+    firstname: "sunita",
+    lastname: "Rathore",
+    email: "sunita_rathore@company8.com",
+    phonenumber: "91-44-7654321",
+    username: "srathore",
+    userrole: "data_owner",
+    isactive: false,
+  },
+  {
+    id: 8,
+    firstname: "rajat",
+    lastname: "rastogi",
+    email: "rajat_rastogi@company9.com",
+    phonenumber: "01-22-8888888",
+    username: "rrastogi",
+    userrole: "data_steward",
+    isactive: false,
+  },
+  {
+    id: 9,
+    firstname: "megha",
+    lastname: "Mukheriee",
+    email: "megha_mukheriee@company10.com",
+    phonenumber: "91-11-9876543",
+    username: "mmukheriee",
+    userrole: "admin",
+    isactive: false,
+  },
+]
+
+export const RulesTableData = [
+  {
+    id: 0,
+    rolename: "admin",
+    description: "Administrator",
+    isactive: false,
+  },
+  {
+    id: 1,
+    rolename: "Data Steward",
+    description: "Data Steward",
+    isactive: false,
+  },
+  {
+    id: 0,
+    rolename: "Data Owner",
+    description: "Data Owner",
+    isactive: false,
+  },
+  {
+    id: 0,
+    rolename: "Data Entry",
+    description: "Data Entry",
+    isactive: false,
+  },
+]

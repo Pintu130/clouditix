@@ -34,7 +34,7 @@ const customStyles = {
     }),
 };
 
-function SingleSelectDropDown({ handleSelectChange, selectedType, options, placeholder = "", target = "", creatableSelect, isClearable = true, isDisabled = false, iscapitalize=false }) {
+function SingleSelectDropDown({ handleSelectChange, selectedType, options, placeholder = "", target = "", creatableSelect, isClearable = true, isDisabled = false, iscapitalize = false, menuPlacement="bottom" }) {
     const animatedComponents = makeAnimated();
     const handleChange = (data) => {
         handleSelectChange(data, target)
@@ -52,6 +52,7 @@ function SingleSelectDropDown({ handleSelectChange, selectedType, options, place
                 components={animatedComponents}
                 className={iscapitalize ? 'capitalize' : ''}
                 isDisabled={isDisabled}
+                menuPlacement={menuPlacement}
             /> : <Select
                 placeholder={placeholder}
                 isClearable={isClearable}
@@ -63,6 +64,7 @@ function SingleSelectDropDown({ handleSelectChange, selectedType, options, place
                 components={animatedComponents}
                 className={iscapitalize ? 'capitalize' : ''}
                 isDisabled={isDisabled}
+                menuPlacement={menuPlacement}
             />}
         </div>
     )

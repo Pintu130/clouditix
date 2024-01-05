@@ -7,6 +7,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import { rolesAndPermissionsTable, tableData } from '@/assets/data';
 import CustomInput from '@/components/common/CustomInput';
 import CustomButton from '@/components/common/CustomButton';
+import Rules from './Rules';
 
 const RolesAndPermissions = () => {
     const tableRef = useRef(null);
@@ -117,34 +118,14 @@ const RolesAndPermissions = () => {
     }
 
     return (
-        <div className='p-5 flex flex-col items-start gap-5 w-full  '>
-            <div className='flex flex-col items-start gap-5 w-full h-full '>
-                <span className='text-lg font-semibold border-b-2 border-black w-56 '>Create Role</span>
-                <div className="flex flex-col w-full items-start lg:max-w-[20%] 2xl:max-w-[25%]  gap-1 custom-select">
-                    <label
-                        htmlFor="speciality"
-                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
-                    >
-                        User Role
-                    </label>
-                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
-                        <CustomInput
-                            isNUmber={false}
-                            isRequired={true}
-                            isIcon={true}
-                            label=""
-                            placeholder="data_entry"
-                            name="userrole"
-                            value={formData?.userrole}
-                            onChange={(e) => handleFromData(e)}
-                        />
-                    </div>
-                </div>
+        <div className='p-5 flex flex-col items-start gap-5 w-full custom-scroll overflow-auto  '>
+            <div className='w-full h-full border py-3 px-6 border-[#a6a6a6] rounded-xl'>
+                <Rules />
             </div>
-            <div className='flex flex-col  gap-5 w-full h-full'>
-                <span className='text-lg font-semibold border-b-2 border-black w-56 '>Set Permission</span>
-                <div className="flex  w-full min-h-[60vh] pb-10  xl:max-h-[70%]  mx-auto ag-theme-alpine  ">
-                    <div className="relative overflow-auto max-h-[600px]" style={{ width: "100%" }}>
+            <div className='flex flex-col  gap-5 w-full border border-[#a6a6a6] py-3 px-6 h-full max-h-[480px] overflow-auto rounded-xl custom-scroll '>
+                <span className='text-lg font-semibold w-56 '>Set Permission</span>
+                <div className="flex  w-full overflow-auto  min-h-[45vh] pb-10  xl:max-h-[70%]  mx-auto ag-theme-alpine  ">
+                    <div className="relative overflow-auto max-h-[400px]" style={{ width: "100%" }}>
                         <AgGridReact
                             ref={tableRef}
                             rowData={rowData}
@@ -164,25 +145,26 @@ const RolesAndPermissions = () => {
                         />
                     </div>
                 </div>
-            </div>
-            <div className='flex items-center justify-end gap-10 w-full '>
-                <div className="w-full max-w-[150px]" >
-                    <CustomButton
-                        name="Save"
-                        handleClick={() => { }}
-                        isDisable={false}
-                        isLoading={false}
-                    />
+                <div className='flex items-center justify-end gap-10 w-full '>
+                    <div className="w-full max-w-[150px]" >
+                        <CustomButton
+                            name="Save"
+                            handleClick={() => { }}
+                            isDisable={false}
+                            isLoading={false}
+                        />
+                    </div>
+                    <div className="w-full max-w-[150px]" >
+                        <CustomButton
+                            name="Cancel"
+                            handleClick={() => { }}
+                            isDisable={false}
+                            isLoading={false}
+                        />
+                    </div>
                 </div>
-                <div className="w-full max-w-[150px]" >
-                    <CustomButton
-                        name="Cancel"
-                        handleClick={() => { }}
-                        isDisable={false}
-                        isLoading={false}
-                    />
-                </div>
             </div>
+
         </div>
     )
 }
