@@ -27,19 +27,57 @@ const DataQualityRules = () => {
     useEffect(() => {
         ; (async () => {
             const data = await fetchdatasource()
-            setDatasourceData(data)
+
+            console.log(data);
+            const uniqueValues = new Set();
+
+            // Filter out duplicate entries and add unique values to the Set
+            const uniqueData = data.filter((entry) => {
+                if (!uniqueValues.has(entry.value)) {
+                    uniqueValues.add(entry.value);
+                    return true;
+                }
+                return false;
+            });
+
+            console.log(uniqueData);
+            setDatasourceData(uniqueData)
         })()
     }, [])
     useEffect(() => {
         ; (async () => {
             const data = await fetchentity()
-            setEntity(data)
+            const uniqueValues = new Set();
+
+            // Filter out duplicate entries and add unique values to the Set
+            const uniqueData = data.filter((entry) => {
+                if (!uniqueValues.has(entry.value)) {
+                    uniqueValues.add(entry.value);
+                    return true;
+                }
+                return false;
+            });
+
+            console.log(uniqueData);
+            setEntity(uniqueData)
         })()
     }, [])
     useEffect(() => {
         ; (async () => {
             const data = await fetchvalidationRule()
-            setRule(data)
+            const uniqueValues = new Set();
+
+            // Filter out duplicate entries and add unique values to the Set
+            const uniqueData = data.filter((entry) => {
+                if (!uniqueValues.has(entry.value)) {
+                    uniqueValues.add(entry.value);
+                    return true;
+                }
+                return false;
+            });
+
+            console.log(uniqueData);
+            setRule(uniqueData)
         })()
     }, [])
 

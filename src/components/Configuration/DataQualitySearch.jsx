@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react'
 import CustomInput from '../common/CustomInput'
 import CustomButton from '../common/CustomButton'
 import SingleSelectDropDown from '../common/SingleSelectDropDown'
-import {  datasourceData,  statussearch } from '@/assets/data'
+import { datasourceData, statussearch } from '@/assets/data'
 
 const DataQualitySearch = ({ searchDatas, handleSearchData }) => {
     const [searchData, setSearchData] = useState({})
     const [entitySearchData, setEntitySearchData] = useState([])
+    const [datasource, setDatasource] = useState([{ label: 'All', value: 'All' }, { label: 'AWS S3', value: 'AWS S3' }])
     const [attiributeSearchData, setAttiributeSearchData] = useState([])
     const [ruleSearchData, setRuleSearchData] = useState([])
+
+    console.log(datasource);
 
     const handleSearch = (data, target) => {
 
@@ -20,19 +23,41 @@ const DataQualitySearch = ({ searchDatas, handleSearchData }) => {
     }
 
     const handleSearchClick = () => {
-        
+
         handleSearchData(searchData)
-       /*  setSearchData({
-            datasource: "",
-            entity: "",
-            attribute: "",
-            rule: "",
-            status: ""
-        }) */
+        /*  setSearchData({
+             datasource: "",
+             entity: "",
+             attribute: "",
+             rule: "",
+             status: ""
+         }) */
     }
 
     useEffect(() => {
         if (searchDatas?.length > 0) {
+
+            const dataSourceData = searchDatas?.map((item) => ({ label: item?.dataSource, value: item?.dataSource }))
+
+            console.log(dataSourceData);
+            const uniqueValues = new Set();
+            const uniqueData = dataSourceData.filter((entry) => {
+                if (!uniqueValues.has(entry.value)) {
+                    uniqueValues.add(entry.value);
+                    return true;
+                }
+                return false;
+            });
+
+            // Add a new entry with label 'All' and value 'All'
+            const modifiedData = [
+                { label: 'All', value: 'All' },
+                ...uniqueData,
+            ];
+            setDatasource(modifiedData)
+            console.log(modifiedData);
+
+
             const searchentitiData = searchDatas.filter((item) => (searchData?.datasource?.value === 'all' || item?.dataSource === searchData?.datasource?.value))
 
             const uniqueValuesSet = new Set();
@@ -99,7 +124,7 @@ const DataQualitySearch = ({ searchDatas, handleSearchData }) => {
                 <div className="w-full max-w-[300px] lg:max-w-[100%]">
                     <SingleSelectDropDown
                         placeholder="Select Data Source"
-                        options={datasourceData}
+                        options={datasource}
                         target="datasource"
                         creatableSelect={true}
                         selectedType={searchData?.datasource}
