@@ -44,7 +44,7 @@ export const fetchDeleteTableData = async (data) => {
 
 export const fetchdatasource = async () => {
   try {
-    const response = await axios.get("http://13.234.127.72:5000/TableDefinition")
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}ColumnDefinition`)
     const data = response?.data?.map((item) => ({
       label: item?.dataSource, value: item?.dataSource
     }))
@@ -55,7 +55,7 @@ export const fetchdatasource = async () => {
 }
 export const fetchentity = async () => {
   try {
-    const response = await axios.get("http://13.234.127.72:5000/TableDefinition")
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}TableDefinition`)
     const data = response?.data?.map((item) => ({
       label: item?.tableName, value: item?.tableName
     }))
@@ -66,7 +66,7 @@ export const fetchentity = async () => {
 }
 export const fetchvalidationRule = async () => {
   try {
-    const response = await axios.get("http://13.234.127.72:5000/DQRules")
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}DQRules`)
     const data = response?.data?.map((item) => ({
       label: item?.validationRule, value: item?.validationRule
     }))
@@ -78,7 +78,7 @@ export const fetchvalidationRule = async () => {
 
 export const fetchGuestData = async () => {
   try {
-    const response = await axios.get("http://13.234.127.72:5000/GuestData")
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GuestData`)
     return response?.data
   } catch (error) {
     return error

@@ -32,7 +32,7 @@ const DataQualityRules = () => {
             const uniqueValues = new Set();
 
             // Filter out duplicate entries and add unique values to the Set
-            const uniqueData = data.filter((entry) => {
+            const uniqueData = data?.filter((entry) => {
                 if (!uniqueValues.has(entry.value)) {
                     uniqueValues.add(entry.value);
                     return true;

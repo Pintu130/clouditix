@@ -16,57 +16,27 @@ const SurvivorshipRules = () => {
     ; (async () => {
       const data = await fetchsurvivorshipData()
 
-      if (data.length > 0) {
-        const tableRowData = data?.map((item) => ({
-          entity: item?.tableName,
-          attribute: item?.columnName,
-          priority1: item?.priority === 1 ? item?.source : "",
-          priority2: item?.priority === 2 ? item?.source : "",
-          priority3: item?.priority === 3 ? item?.source : ""
-        }))
-
-        setRowData(tableRowData);
+      if (data?.length > 0) {
+        setRowData(data);
       }
-
     })()
-
   }, [])
 
 
-  const [columnDefs] = useState([
-    {
-      field: "entity",
-      headerName: "Entity ",
-      minWidth: 300,
-      maxWidth: 350,
-    },
-    {
-      field: "attribute",
-      headerName: "Attribute",
-      minWidth: 300,
-      maxWidth: 350,
-    },
-    {
-      field: "priority1",
-      headerName: "Priority 1",
-      minWidth: 300,
-      maxWidth: 350,
-    },
-    {
-      field: "priority2",
-      headerName: "Priority 2",
-      minWidth: 300,
-      maxWidth: 350,
-    },
-    {
-      field: "priority3",
-      headerName: "Priority 3",
-      cellClass: "uppercase",
-      minWidth: 300,
-      maxWidth: 350,
-      editable: true,
-    },
-  ]);
+  const [columnDefs, setColumnDefs] = useState([]);
+
+  useEffect(() => {
+    if (rowData.length > 0) {
+      const firstRow = rowData[0] || {}; // Use the first row to extract keys
+      const colDefs = Object.keys(firstRow).map((key) => ({
+        field: key,
+        headerName: key,
+        minWidth: 300,
+        maxWidth: 350,
+      }));
+      setColumnDefs(colDefs)
+    }
+  }, [rowData])
 
   const defaultColDef = useMemo(() => {
     return {
