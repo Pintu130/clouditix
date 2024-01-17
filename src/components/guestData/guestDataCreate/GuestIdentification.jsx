@@ -103,7 +103,7 @@ const GuestIdentification = ({ isHideAll, onHandleHide }) => {
 
   const frameworkComponents = {
     agCheckboxCellRenderer: (params) => {
-      console.log(params);
+
       return (
         <input
           type="checkbox"

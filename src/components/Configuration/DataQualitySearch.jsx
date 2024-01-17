@@ -39,7 +39,6 @@ const DataQualitySearch = ({ searchDatas, handleSearchData }) => {
 
             const dataSourceData = searchDatas?.map((item) => ({ label: item?.dataSource, value: item?.dataSource }))
 
-            console.log(dataSourceData);
             const uniqueValues = new Set();
             const uniqueData = dataSourceData.filter((entry) => {
                 if (!uniqueValues.has(entry.value)) {
@@ -55,7 +54,7 @@ const DataQualitySearch = ({ searchDatas, handleSearchData }) => {
                 ...uniqueData,
             ];
             setDatasource(modifiedData)
-            console.log(modifiedData);
+
 
 
             const searchentitiData = searchDatas.filter((item) => (searchData?.datasource?.value === 'all' || item?.dataSource === searchData?.datasource?.value))

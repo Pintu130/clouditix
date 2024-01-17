@@ -1,19 +1,108 @@
-import { statussearch, userroledata } from '@/assets/data';
+import { fetchGetUsersCreate, fetchGetUsersUpdate, statussearch, userroledata } from '@/assets/data';
 import CustomButton from '@/components/common/CustomButton';
 import CustomInput from '@/components/common/CustomInput'
 import SingleSelectDropDown from '@/components/common/SingleSelectDropDown';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const UserInformation = () => {
+
+
+const UserInformation = ({ editData, updateEdit, removeEditData }) => {
     const [formData, setFormData] = useState({});
+    const [edit, setEdit] = useState(editData);
 
     const handleFromData = (data, target) => {
+
+        if (target === "phoneNumber") {
+            if (/[A-Za-z]/.test(data)) {
+                console.log("Invalid phone number format. Please do not include alphabetical characters.");
+                return;
+            }
+        }
+
         setFormData((prevFormData) => ({
             ...prevFormData,
             [target]: data,
         }));
     };
 
+    useEffect(() => {
+
+        setEdit(editData)
+    }, [editData])
+
+
+    useEffect(() => {
+
+        setFormData({
+            ...edit,
+            roleName: { label: edit?.roleName, value: edit?.roleName }
+        })
+    }, [edit])
+
+    const handleSave = async () => {
+
+        if (Object.keys(edit).length > 0) {
+            updateEdit(formData)
+        } else {
+            const updateformdata = {
+                userId: 0,
+                userName: formData?.userName,
+                password: "134953122",
+                firstName: formData?.firstName,
+                lastName: formData?.lastName,
+                emailId: formData?.emailId,
+                phoneNumber: formData?.phoneNumber,
+                isActive: formData?.isActive?.value,
+                userRoles: [
+                    {
+                        userRoleId: 0,
+                        roleName: formData?.roleName?.label
+                    },
+                ],
+                createdBy: "Sudharsan",
+            }
+
+            const updateData = await fetchGetUsersCreate(updateformdata)
+            if (updateData?.isSuccess) {
+
+                toast.success('Create New User', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    toastId: "toastId"
+                });
+            } else {
+                toast.error('error re try to create User', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    toastId: "toastId"
+                });
+            }
+
+        }
+        setFormData({})
+        setEdit({})
+
+    }
+
+    const handleCancel = () => {
+        removeEditData()
+        setFormData({})
+        setEdit({})
+    }
 
     return (
         <div className='w-full flex flex-col items-center justify-center gap-8'>
@@ -66,9 +155,9 @@ const UserInformation = () => {
                                     isIcon={true}
                                     label="Email"
                                     placeholder="Enter Email"
-                                    name="email"
-                                    value={formData?.email}
-                                    onChange={(e) => handleFromData(e.target.value, "email")}
+                                    name="emailId"
+                                    value={formData?.emailId}
+                                    onChange={(e) => handleFromData(e.target.value, "emailId")}
                                 />
                             </div>
                         </div>
@@ -76,7 +165,7 @@ const UserInformation = () => {
                         <div className=" lg:max-w-[70%] 2xl:max-w-[60%] lg:min-w-[60%] 2xl:min-w-[50%] custom-select">
                             <div className="w-full max-w-[300px] lg:max-w-[100%]">
                                 <CustomInput
-                                    isNUmber={true}
+                                    isNUmber={false}
                                     isRequired={false}
                                     isIcon={true}
                                     label="Phone Number"
@@ -108,10 +197,10 @@ const UserInformation = () => {
                                         isIcon={true}
                                         label="User Name"
                                         placeholder="Enter User Name"
-                                        name="firstName"
-                                        value={formData?.firstName}
+                                        name="userName"
+                                        value={formData?.userName}
                                         onChange={(e) =>
-                                            handleFromData(e.target.value, "firstName")
+                                            handleFromData(e.target.value, "userName")
                                         }
                                     />
                                 </div>
@@ -143,9 +232,9 @@ const UserInformation = () => {
                                     <SingleSelectDropDown
                                         placeholder="Select Status"
                                         options={statussearch}
-                                        target="isactive"
+                                        target="isActive"
                                         creatableSelect={true}
-                                        selectedType={formData?.isactive}
+                                        selectedType={formData?.isActive}
                                         handleSelectChange={handleFromData}
                                         menuPlacement="top"
                                     />
@@ -170,9 +259,9 @@ const UserInformation = () => {
                                 <SingleSelectDropDown
                                     placeholder="Select User Role"
                                     options={userroledata}
-                                    target="userrole"
+                                    target="roleName"
                                     creatableSelect={true}
-                                    selectedType={formData?.userrole}
+                                    selectedType={formData?.roleName}
                                     handleSelectChange={handleFromData}
                                     menuPlacement="top"
                                 />
@@ -182,7 +271,7 @@ const UserInformation = () => {
                             <div className="w-full max-w-[150px]">
                                 <CustomButton
                                     name="Save"
-                                    handleClick={() => { }}
+                                    handleClick={() => handleSave()}
                                     isDisable={false}
                                     isLoading={false}
                                 />
@@ -190,7 +279,7 @@ const UserInformation = () => {
                             <div className="w-full max-w-[150px]">
                                 <CustomButton
                                     name="Cancel"
-                                    handleClick={() => { }}
+                                    handleClick={() => handleCancel()}
                                     isDisable={false}
                                     isLoading={false}
                                 />
@@ -199,8 +288,20 @@ const UserInformation = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </div>
     )
 }
 
-export default UserInformation
+export default UserInformation;

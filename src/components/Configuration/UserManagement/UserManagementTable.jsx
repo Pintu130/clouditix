@@ -1,44 +1,76 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { BiSolidPencil } from 'react-icons/bi';
-import { userManagementTableData } from '@/assets/data';
+import { fetchGetUsers, fetchGetUsersDelete, userManagementTableData } from '@/assets/data';
+import { MdDelete } from 'react-icons/md';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import DeletePopup from '@/components/common/DeletePopup';
 
-const UserManagementTable = () => {
+const UserManagementTable = ({ handleEditData, updateUser }) => {
     const tableRef = useRef(null);
     const [rowData, setRowData] = useState(userManagementTableData);
+    const [deletedata, setDeletedata] = useState();
+    const [isDelete, setIsDelete] = useState(false);
 
     //    User Role Is Active
+
+    useEffect(() => {
+        ; (async () => {
+            const Data = await fetchGetUsers()
+
+            const transformedData = Data.map((user) => {
+                // Extract userRoles from user
+                const { userRoles, ...restUser } = user;
+
+                // Map each userRole to a new object
+                const rolesArray = userRoles.map((role) => ({
+                    ...restUser, // Include properties from the parent user object
+                    ...role,     // Include properties from the role object
+                }));
+
+                return rolesArray;
+            });
+
+            // Flatten the array of arrays into a single array
+            const flattenedData = [].concat(...transformedData);
+
+            setRowData(flattenedData)
+        })()
+    }, [updateUser, deletedata])
+
+
 
 
     const [columnDefs] = useState([
         {
-            field: "firstname",
+            field: "firstName",
             headerName: "First Name",
             minWidth: 130,
             maxWidth: 170,
         },
         {
-            field: "lastname",
+            field: "lastName",
             headerName: "Last Name",
             minWidth: 130,
             maxWidth: 170,
         },
         {
-            field: "email",
+            field: "emailId",
             headerName: "Email",
             minWidth: 310,
             maxWidth: 350,
         },
         {
-            field: "phonenumber",
+            field: "phoneNumber",
             headerName: "Phone Number",
             minWidth: 250,
             maxWidth: 300,
         },
         {
-            field: "username",
+            field: "userId",
             headerName: "User Name",
             cellClass: "uppercase",
             minWidth: 200,
@@ -46,7 +78,7 @@ const UserManagementTable = () => {
             editable: true,
         },
         {
-            field: "userrole",
+            field: "roleName",
             headerName: "User Role",
             cellClass: "uppercase",
             minWidth: 200,
@@ -54,7 +86,7 @@ const UserManagementTable = () => {
             editable: true,
         },
         {
-            field: "isactive",
+            field: "isActive",
             headerName: "Is Active",
             cellClass: "uppercase",
             minWidth: 100,
@@ -62,6 +94,26 @@ const UserManagementTable = () => {
             cellRenderer: "agCheckboxCellRenderer",
             editable: true,
             floatingFilter: false,
+        },
+        {
+
+            field: '',
+            headerName: "Delete",
+            minWidth: 80,
+            maxWidth: 100,
+            floatingFilter: false,
+            cellRenderer: (params) => {
+                const data = params.data;
+                return (
+                    <div className="flex items-center justify-center h-full  ">
+                        <button
+                            onClick={(e) => handleDelete(e, data)}
+                        >
+                            <MdDelete className="w-6 h-6 text-blue-B40" />
+                        </button>
+                    </div>
+                );
+            },
         },
         {
 
@@ -97,7 +149,7 @@ const UserManagementTable = () => {
 
     const frameworkComponents = {
         agCheckboxCellRenderer: (params) => {
-            console.log(params);
+
             return (
                 <input
                     type="checkbox"
@@ -119,9 +171,47 @@ const UserManagementTable = () => {
         tableRef.current = params.api;
     };
 
+    const handleEdit = (e, data) => {
+        handleEditData(data);
+    };
+
+    const handleDelete = async (e, data) => {
+        const deleteUserID = data?.userId;
+        setIsDelete(data?.userId)
+
+    };
+
+    const closePopup = () => {
+        setIsDelete(false);
+    }
+
+    const deleteConfirmation = async () => {
+        const deleteUser = await fetchGetUsersDelete(isDelete)
+
+        setDeletedata(deleteUser)
+        if (deleteUser?.isSuccess) {
+            closePopup()
+            toast.success('Delete User', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                toastId: "toastId"
+            });
+        }
+    }
 
     return (
         <div>
+            <DeletePopup
+                isOpen={isDelete}
+                onCancel={closePopup}
+                onDelete={() => deleteConfirmation()}
+            />
             <div className="ag-theme-alpine overflow-auto" style={{ height: 270, width: 1550 }}>
                 <AgGridReact
                     ref={tableRef}
@@ -142,6 +232,18 @@ const UserManagementTable = () => {
                     paginationPageSize={5}
                 />
             </div>
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </div>
     )
 }

@@ -9,7 +9,7 @@ import SingleSelectDropDown from '../common/SingleSelectDropDown';
 import CustomButton from '../common/CustomButton';
 import CustomModal from '../common/CustomModal';
 import { setDataQualityCreate } from '@/store/dataQualitySlice';
-import { ValidationRule, columnName, fetchDeleteTableData, fetchInsertTableData, fetchTableData, fetchUpdateTableData, fetchdatasource, fetchentity, fetchvalidationRule, tableData } from '@/assets/data';
+import { ValidationRule, fetchDeleteTableData, fetchInsertTableData, fetchTableData, fetchUpdateTableData, fetchdatasource, fetchentity, fetchvalidationRule, tableData } from '@/assets/data';
 import CustomInput from '../common/CustomInput';
 import DataQualitySearch from './DataQualitySearch';
 // import DeletePopup from '../common/DeletePopup';
@@ -21,14 +21,20 @@ const DataQualityRules = () => {
     const [searchDatas, setSearchDatas] = useState([])
     const [datasourceData, setDatasourceData] = useState([])
     const [entity, setEntity] = useState([])
+    const [columnName, setColumnName] = useState([])
     const [rule, setRule] = useState([])
+    const [formData, setFormData] = useState({})
     // const [isDelete, setIsDelete] = useState()
+
 
     useEffect(() => {
         ; (async () => {
-            const data = await fetchdatasource()
+            const response = await fetchdatasource()
+            
+            const data = response?.data?.map((item) => ({
+                label: item?.dataSource, value: item?.dataSource
+            }))
 
-            console.log(data);
             const uniqueValues = new Set();
 
             // Filter out duplicate entries and add unique values to the Set
@@ -40,28 +46,68 @@ const DataQualityRules = () => {
                 return false;
             });
 
-            console.log(uniqueData);
             setDatasourceData(uniqueData)
+
+
         })()
-    }, [])
+    }, [formData])
+
     useEffect(() => {
         ; (async () => {
-            const data = await fetchentity()
-            const uniqueValues = new Set();
+            const respo = await fetchdatasource();
 
-            // Filter out duplicate entries and add unique values to the Set
-            const uniqueData = data.filter((entry) => {
-                if (!uniqueValues.has(entry.value)) {
-                    uniqueValues.add(entry.value);
-                    return true;
-                }
-                return false;
-            });
+            if (respo?.data?.length > 0) {
 
-            console.log(uniqueData);
-            setEntity(uniqueData)
+                const response = respo?.data?.filter((item) => formData?.dataSource?.label === item.dataSource)
+
+                const data = response?.map((item) => ({
+                    label: item?.tableName, value: item?.tableName
+                }))
+
+                const uniqueValues = new Set();
+
+                // Filter out duplicate entries and add unique values to the Set
+                const uniqueData = data.filter((entry) => {
+                    if (!uniqueValues.has(entry.value)) {
+                        uniqueValues.add(entry.value);
+                        return true;
+                    }
+                    return false;
+                });
+
+                setEntity(uniqueData)
+            }
+
+
+            if (respo?.data?.length > 0) {
+
+                const response = respo?.data?.filter((item) => formData?.entity?.label === item.tableName)
+
+                const data = response?.map((item) => ({
+                    label: item?.columnName, value: item?.columnName
+                }))
+
+                const uniqueValues = new Set();
+
+                // Filter out duplicate entries and add unique values to the Set
+                const uniqueData = data.filter((entry) => {
+                    if (!uniqueValues.has(entry.value)) {
+                        uniqueValues.add(entry.value);
+                        return true;
+                    }
+                    return false;
+                });
+
+                setColumnName(uniqueData)
+            }
+
+
         })()
-    }, [])
+    }, [formData])
+
+
+
+
     useEffect(() => {
         ; (async () => {
             const data = await fetchvalidationRule()
@@ -76,10 +122,9 @@ const DataQualityRules = () => {
                 return false;
             });
 
-            console.log(uniqueData);
             setRule(uniqueData)
         })()
-    }, [])
+    }, [formData])
 
 
 
@@ -185,12 +230,8 @@ const DataQualityRules = () => {
 
 
     const handleSearchData = (data) => {
-        console.log(data);
-        console.log(Object.keys(data).length);
 
         if (Object.keys(data).length > 0) {
-
-            console.log("enter");
 
             const searchData = searchDatas?.filter((item) => (data?.datasource?.value === "all" || item?.dataSource === data?.datasource?.value) &&
                 (data?.entity?.value === "all" || item?.tableName === data?.entity?.value) &&
@@ -200,7 +241,6 @@ const DataQualityRules = () => {
             )
 
             setRowData(searchData)
-            console.log(searchData);
         }
 
 
@@ -221,7 +261,6 @@ const DataQualityRules = () => {
 
     const frameworkComponents = {
         agCheckboxCellRenderer: (params) => {
-            console.log(params);
             return (
                 <input
                     type="checkbox"
@@ -273,7 +312,6 @@ const DataQualityRules = () => {
     const handleCreateModal = () => {
         setIsModalOpen(true)
     };
-    const [formData, setFormData] = useState({})
 
     const closeModal = () => {
         setIsModalOpen(false);

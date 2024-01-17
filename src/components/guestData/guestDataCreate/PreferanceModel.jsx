@@ -40,7 +40,6 @@ const PreferanceModel = ({ onClose }) => {
     })
   }
   const HandleSave = () => {
-    console.log(preferance);
     if (preferance) {
       handleCancel()
     }

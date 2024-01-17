@@ -1,42 +1,43 @@
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState, useMemo, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { batchJobsStatustbleData } from "@/assets/data";
+import { batchJobsStatustbleData, fetchGetAllBatchStatus } from "@/assets/data";
 
 
 
 const BatchJobsStatusTable = () => {
     const tableRef = useRef(null);
-    const [rowData, setRowData] = useState(batchJobsStatustbleData);
+    const [rowData, setRowData] = useState([]);
+
 
     const [columnDefs] = useState([
         {
-            field: "batchid",
+            field: "batchId",
             headerName: "Batch_Id ",
             minWidth: 350,
 
         },
         {
-            field: "batchstatus",
+            field: "status",
             headerName: "Batch_Status",
             minWidth: 300,
             maxWidth: 350,
         },
         {
-            field: "batchcomment",
+            field: "batchStep",
             headerName: "Batch_Comment",
             minWidth: 300,
             maxWidth: 350,
         },
         {
-            field: "startedat",
+            field: "startedAt",
             headerName: "Started_At",
             minWidth: 300,
             maxWidth: 350,
         },
         {
-            field: "endedat",
+            field: "endedAt",
             headerName: "Ended_At",
             cellClass: "uppercase",
             minWidth: 300,
@@ -44,6 +45,17 @@ const BatchJobsStatusTable = () => {
             // editable: true,
         },
     ]);
+
+
+    useEffect(() => {
+        ; (async () => {
+            const data = await fetchGetAllBatchStatus()
+            console.log(data);
+            setRowData(data)
+        })()
+    }, [])
+
+
 
     /* const defaultColDef = useMemo(() => {
         return {

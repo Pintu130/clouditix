@@ -5,7 +5,7 @@ import Image from 'next/image';
 import CustomInput from '@/components/common/CustomInput';
 import SmCustomModal from '@/components/common/SmCustomModal';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
-import { fetchDeterministicMatch, matchdata} from '@/assets/data';
+import { fetchDeterministicMatch, matchdata } from '@/assets/data';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { MdClose } from 'react-icons/md';
@@ -107,11 +107,9 @@ const DeterministicMatch = () => {
   };
 
   const handleRemove = (index) => {
-    console.log(index);
-    console.log(dynamicFields.length);
 
     const removeAttribute = dynamicFields.slice(0, index).concat(dynamicFields.slice(index + 1));
-    console.log(removeAttribute);
+
     if (removeAttribute.length > 0) {
       setDynamicFields(removeAttribute)
     } else {
@@ -402,7 +400,6 @@ const DeterministicMatch = () => {
       </div>
 
       <div className='p-3 border-b border-[#a6a6a6] flex justify-center flex-col gap-3 w-full h-full max-h-[680px] overflow-auto custom-scroll'>
-
 
         {rules.map((rule, index) => (
           <div key={index} className='border border-[#a6a6a6] rounded-lg p-2'>

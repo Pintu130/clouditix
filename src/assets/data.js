@@ -45,14 +45,13 @@ export const fetchDeleteTableData = async (data) => {
 export const fetchdatasource = async () => {
   try {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}ColumnDefinition`)
-    const data = response?.data?.map((item) => ({
-      label: item?.dataSource, value: item?.dataSource
-    }))
-    return data
+
+    return response
   } catch (error) {
     return error
   }
 }
+
 export const fetchentity = async () => {
   try {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}TableDefinition`)
@@ -100,6 +99,102 @@ export const fetchsurvivorshipData = async () => {
     return error
   }
 }
+
+export const fetchsurvivorshipDataUpdate = async (data) => {
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}SurvivorshipRules`, data);
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
+export const fetchProbabilisticConfig = async () => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}Probabilistic_Config`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
+
+export const fetchGetUsers = async () => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GetUsers`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+export const fetchGetUsersCreate = async (data) => {
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}InsertUser`, data)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+export const fetchGetUsersUpdate = async (data) => {
+  try {
+    const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}UpdateUser`, data)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+export const fetchGetUsersDelete = async (userId) => {
+  try {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}DeleteUser?userId=${userId}`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
+
+export const fetchGetRoles = async () => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GetRoles`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+export const fetchRuleCreate = async (data) => {
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}InsertRole`, data)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+export const fetchUpdateRole = async (data) => {
+  try {
+    const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}UpdateRole`, data)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+export const fetchDeleteRole = async (userId) => {
+  try {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}DeleteRole?roleId=${userId}`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
+export const fetchGetAllBatchStatus = async () => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GetBatchStatus`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
 
 
 export const datasourceData = [
@@ -278,14 +373,6 @@ export const matchdataValue = [
   { label: "0.5", value: "0.5" },
 ];
 
-/* export const DataSource = [
-  { label: "cloud_storage", value: "cloud_storage" },
-  { label: "AWS_S3", value: "AWS_S3" },
-]; */
-/* export const tableName = [
-  { label: "ldg_account_bus_card", value: "ldg_account_bus_card" },
-  { label: "guest", value: "guest" },
-]; */
 export const ruleDescription = [
   { label: "Check if the column(s) conatins duplicate values across rows.", value: "Check if the column(s) conatins duplicate values across rows." },
 ];

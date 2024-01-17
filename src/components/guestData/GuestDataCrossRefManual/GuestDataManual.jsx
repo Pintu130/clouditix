@@ -13,11 +13,8 @@ const GuestDataManual = () => {
     const handleGuestID = (index, value) => {
 
         const upDateguestValue = [...guestList]
-        console.log(upDateguestValue);
-        console.log(upDateguestValue[index]);
         upDateguestValue[index] = value;
         
-        console.log(upDateguestValue);
         setGuestList(upDateguestValue)
     }
 

@@ -1,14 +1,67 @@
 import CustomButton from '@/components/common/CustomButton'
 import CustomInput from '@/components/common/CustomInput'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 
 const ProbabilisticMore = ({ onClose }) => {
+
+    const [formData, setFormData] = useState()
+
     const MoreData = useSelector(state => state?.ProbMatch?.data)
+
     const handleClose = () => {
         onClose()
     }
+
+    useEffect(() => {
+        ; (() => {
+            if (Object.keys(MoreData).length > 0) {
+                setFormData(MoreData)
+            }
+        })()
+    }, [])
+
+    /* {
+        column: 'Name',
+        general: {
+          'block-size': '10',
+          distances: Array(6) [
+            'JaroWinkler', 'LevenshteinDistanceSet', 'JaroWinklerSet', 'JaccardDistance',
+            'MasiDistance', 'LevenshteinDistance'
+          ],
+          'leading-column': 'true',
+          'min-partition-size': '500',
+          min_char_count: '5',
+          'path-model-input': 'None',
+          'path-model-output': 'None',
+          'path-test-file': 'None',
+          'path-test-result': 'None',
+          'removing-strings': {
+            'common-words': Array(9) [
+              'company', 'inc', 'corp.', 'corp', 'co', 'ltd', 'LTD', 'INC', 'pvt'
+            ]
+          }
+        },
+        model: {
+          general: {
+            'hyper-parameter-tuning': 'false',
+            'model-object': 'LinearDecisionFixedWeights'
+          },
+          'model-params': {
+            JaccardDistance: '0.3',
+            JaroWinkler: '0.3',
+            JaroWinklerSet: '0.3',
+            LevenshteinDistance: '0',
+            LevenshteinDistanceSet: '0.1',
+            MasiDistance: '0',
+            MetaphoneDistance: '0',
+            threshold: '0.5'
+          }
+        }
+      }
+ */
+
 
     return (
         <div className='flex flex-col gap-5 px-5'>
@@ -27,7 +80,7 @@ const ProbabilisticMore = ({ onClose }) => {
                 </div>
             </div>
             <div>
-                <h2 className='text-xl font-bold '> More Details - {MoreData?.attribute} </h2>
+                <h2 className='text-xl font-bold '> More Details - {MoreData?.column} </h2>
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-3'>
                 <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">

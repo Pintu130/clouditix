@@ -5,7 +5,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { BiSolidPencil } from 'react-icons/bi';
 import { IoClose } from 'react-icons/io5'
-import { ProbabilisticMatchtableData } from '@/assets/data';
+import { ProbabilisticMatchtableData, fetchProbabilisticConfig } from '@/assets/data';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import CustomButton from '@/components/common/CustomButton';
 import { FaPlus } from 'react-icons/fa';
@@ -23,16 +23,23 @@ const ProbabilisticMatch = () => {
   const dispatch = useDispatch()
   const addData = useSelector(state => state?.ProbMatch?.add)
 
+  useEffect(() => {
+    ; (async () => {
+      const Data = await fetchProbabilisticConfig()
+      setRowData(Data?.columns)
+    })()
+  }, [])
+
   const [columnDefs] = useState([
     {
-      field: "attribute",
+      field: "column",
       headerName: "Attribute",
       minWidth: 100,
       maxWidth: 215,
       filter: true,
     },
     {
-      field: "colwight",
+      field: "model?.model-params?.threshold",
       headerName: "Col-Weight",
       minWidth: 100,
       maxWidth: 120,
@@ -122,7 +129,7 @@ const ProbabilisticMatch = () => {
 
   const frameworkComponents = {
     agCheckboxCellRenderer: (params) => {
-      console.log(params);
+
       return (
         <input
           type="checkbox"
