@@ -7,7 +7,7 @@ import { datasourceData, statussearch } from '@/assets/data'
 const DataQualitySearch = ({ searchDatas, handleSearchData }) => {
     const [searchData, setSearchData] = useState({})
     const [entitySearchData, setEntitySearchData] = useState([])
-    const [datasource, setDatasource] = useState([{ label: 'All', value: 'All' }, { label: 'AWS S3', value: 'AWS S3' }])
+    const [datasource, setDatasource] = useState([])
     const [attiributeSearchData, setAttiributeSearchData] = useState([])
     const [ruleSearchData, setRuleSearchData] = useState([])
 

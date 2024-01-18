@@ -135,6 +135,7 @@ export const fetchGetUsersCreate = async (data) => {
     return error
   }
 }
+
 export const fetchGetUsersUpdate = async (data) => {
   try {
     const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}UpdateUser`, data)
@@ -143,6 +144,7 @@ export const fetchGetUsersUpdate = async (data) => {
     return error
   }
 }
+
 export const fetchGetUsersDelete = async (userId) => {
   try {
     const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}DeleteUser?userId=${userId}`)
@@ -152,7 +154,6 @@ export const fetchGetUsersDelete = async (userId) => {
   }
 }
 
-
 export const fetchGetRoles = async () => {
   try {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GetRoles`)
@@ -161,6 +162,7 @@ export const fetchGetRoles = async () => {
     return error
   }
 }
+
 export const fetchRuleCreate = async (data) => {
   try {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}InsertRole`, data)
@@ -169,6 +171,7 @@ export const fetchRuleCreate = async (data) => {
     return error
   }
 }
+
 export const fetchUpdateRole = async (data) => {
   try {
     const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}UpdateRole`, data)
@@ -177,6 +180,7 @@ export const fetchUpdateRole = async (data) => {
     return error
   }
 }
+
 export const fetchDeleteRole = async (userId) => {
   try {
     const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}DeleteRole?roleId=${userId}`)

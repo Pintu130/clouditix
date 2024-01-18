@@ -163,7 +163,7 @@ const SurvivorshipRules = () => {
           pagination={true}
           onCellClicked={handleCellClicked}
           gridOptions={gridOptions}
-          paginationAutoPageSize={true}
+          paginationAutoPageSize={false}
           onGridReady={onGridReady}
           suppressCopyRowsToClipboard={true}
           animateRows={true}

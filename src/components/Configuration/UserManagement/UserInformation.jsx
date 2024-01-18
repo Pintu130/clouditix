@@ -1,4 +1,4 @@
-import { fetchGetUsersCreate, fetchGetUsersUpdate, statussearch, userroledata } from '@/assets/data';
+import { fetchGetRoles, fetchGetUsersCreate, fetchGetUsersUpdate, statussearch } from '@/assets/data';
 import CustomButton from '@/components/common/CustomButton';
 import CustomInput from '@/components/common/CustomInput'
 import SingleSelectDropDown from '@/components/common/SingleSelectDropDown';
@@ -11,12 +11,28 @@ import 'react-toastify/dist/ReactToastify.css';
 const UserInformation = ({ editData, updateEdit, removeEditData }) => {
     const [formData, setFormData] = useState({});
     const [edit, setEdit] = useState(editData);
+    const [userroledata, setUserroleData] = useState([])
 
     const handleFromData = (data, target) => {
 
         if (target === "phoneNumber") {
             if (/[A-Za-z]/.test(data)) {
                 console.log("Invalid phone number format. Please do not include alphabetical characters.");
+                return;
+            }
+        } else if (target === "userName" || target === "password") {
+            if (data.length > 20) {
+                toast.error(`${target} should not exceed 20 characters.`, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    toastId: "toastId"
+                });
                 return;
             }
         }
@@ -44,17 +60,19 @@ const UserInformation = ({ editData, updateEdit, removeEditData }) => {
     const handleSave = async () => {
 
         if (Object.keys(edit).length > 0) {
+            setFormData({})
+            setEdit({})
             updateEdit(formData)
         } else {
             const updateformdata = {
                 userId: 0,
                 userName: formData?.userName,
-                password: "134953122",
+                password: formData?.password,
                 firstName: formData?.firstName,
                 lastName: formData?.lastName,
                 emailId: formData?.emailId,
                 phoneNumber: formData?.phoneNumber,
-                isActive: formData?.isActive?.value,
+                isActive: formData?.isActive,
                 userRoles: [
                     {
                         userRoleId: 0,
@@ -66,7 +84,8 @@ const UserInformation = ({ editData, updateEdit, removeEditData }) => {
 
             const updateData = await fetchGetUsersCreate(updateformdata)
             if (updateData?.isSuccess) {
-
+                setFormData({})
+                setEdit({})
                 toast.success('Create New User', {
                     position: "top-center",
                     autoClose: 5000,
@@ -79,7 +98,7 @@ const UserInformation = ({ editData, updateEdit, removeEditData }) => {
                     toastId: "toastId"
                 });
             } else {
-                toast.error('error re try to create User', {
+                toast.error(updateData?.errorMessage, {
                     position: "top-center",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -93,8 +112,6 @@ const UserInformation = ({ editData, updateEdit, removeEditData }) => {
             }
 
         }
-        setFormData({})
-        setEdit({})
 
     }
 
@@ -103,6 +120,21 @@ const UserInformation = ({ editData, updateEdit, removeEditData }) => {
         setFormData({})
         setEdit({})
     }
+
+    useEffect(() => {
+        ; (async () => {
+            const data = await fetchGetRoles();
+
+            if (data.length > 0) {
+                const modifyData = data?.map((item) => ({
+                    label: item?.roleName, value: item?.roleName
+                }))
+                setUserroleData(modifyData);
+            }
+
+        })()
+    }, [])
+
 
     return (
         <div className='w-full flex flex-col items-center justify-center gap-8'>
@@ -214,9 +246,9 @@ const UserInformation = ({ editData, updateEdit, removeEditData }) => {
                                         isIcon={true}
                                         label="Password"
                                         placeholder="Enter Password"
-                                        name="lastName"
+                                        name="password"
                                         value={formData?.password}
-                                        onChange={(e) => handleFromData(e.target.value, "lastName")}
+                                        onChange={(e) => handleFromData(e.target.value, "password")}
                                     />
                                 </div>
                             </div>
@@ -224,23 +256,18 @@ const UserInformation = ({ editData, updateEdit, removeEditData }) => {
                         </div>
                         <div className="  w-full ">
 
-                            <div className=" lg:max-w-[70%] 2xl:max-w-[60%] lg:min-w-[80%] 2xl:min-w-[75%] custom-select">
-                                <div className="w-full max-w-[300px] lg:max-w-[100%] flex flex-col  gap-1">
-
-                                    <label className="text-[#5A5A5A] text-base font-normal">is Active</label>
-
-                                    <SingleSelectDropDown
-                                        placeholder="Select Status"
-                                        options={statussearch}
-                                        target="isActive"
-                                        creatableSelect={true}
-                                        selectedType={formData?.isActive}
-                                        handleSelectChange={handleFromData}
-                                        menuPlacement="top"
+                            <div className="lg:max-w-[70%] 2xl:max-w-[60%] lg:min-w-[60%] 2xl:min-w-[50%] custom-select">
+                                <div className='flex items-center w-full gap-2 custom-select max-w-[300px] lg:max-w-[100%] '>
+                                    <input
+                                        type="checkbox"
+                                        className='h-5 w-5 accent-blue-B40 border-[#4A4A4A] rounded-[4px] hover:border-blue-B40   active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none cursor-pointer'
+                                        checked={formData?.isActive}
+                                        onChange={(e) => handleFromData(e.target.checked, 'isActive')}
                                     />
+                                    <label htmlFor="speciality" className="text-[#5A5A5A] whitespace-nowrap w-full max-w-[145px] inline-block text-base font-normal">Is Active
+                                    </label>
                                 </div>
                             </div>
-
 
                         </div>
                     </div>

@@ -7,13 +7,13 @@ import { fetchGetUsers, fetchGetUsersDelete, userManagementTableData } from '@/a
 import { MdDelete } from 'react-icons/md';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import DeletePopup from '@/components/common/DeletePopup';
+import UserManagementSearch from './UserManagementSearch';
 
 const UserManagementTable = ({ handleEditData, updateUser }) => {
     const tableRef = useRef(null);
-    const [rowData, setRowData] = useState(userManagementTableData);
-    const [deletedata, setDeletedata] = useState();
-    const [isDelete, setIsDelete] = useState(false);
+    const [rowData, setRowData] = useState([]);
+
+    const [searchDatas, setSearchDatas] = useState([])
 
     //    User Role Is Active
 
@@ -38,8 +38,9 @@ const UserManagementTable = ({ handleEditData, updateUser }) => {
             const flattenedData = [].concat(...transformedData);
 
             setRowData(flattenedData)
+            setSearchDatas(flattenedData)
         })()
-    }, [updateUser, deletedata])
+    }, [updateUser])
 
 
 
@@ -70,7 +71,7 @@ const UserManagementTable = ({ handleEditData, updateUser }) => {
             maxWidth: 300,
         },
         {
-            field: "userId",
+            field: "userName",
             headerName: "User Name",
             cellClass: "uppercase",
             minWidth: 200,
@@ -94,26 +95,6 @@ const UserManagementTable = ({ handleEditData, updateUser }) => {
             cellRenderer: "agCheckboxCellRenderer",
             editable: true,
             floatingFilter: false,
-        },
-        {
-
-            field: '',
-            headerName: "Delete",
-            minWidth: 80,
-            maxWidth: 100,
-            floatingFilter: false,
-            cellRenderer: (params) => {
-                const data = params.data;
-                return (
-                    <div className="flex items-center justify-center h-full  ">
-                        <button
-                            onClick={(e) => handleDelete(e, data)}
-                        >
-                            <MdDelete className="w-6 h-6 text-blue-B40" />
-                        </button>
-                    </div>
-                );
-            },
         },
         {
 
@@ -175,43 +156,37 @@ const UserManagementTable = ({ handleEditData, updateUser }) => {
         handleEditData(data);
     };
 
-    const handleDelete = async (e, data) => {
-        const deleteUserID = data?.userId;
-        setIsDelete(data?.userId)
+    const handleSearchData = (data) => {
 
-    };
+        console.log(data);
 
-    const closePopup = () => {
-        setIsDelete(false);
-    }
+        /*  {
+             roleName: { label: 'User', value: 'User' },
+             emailId: { label: 'asmith@example.com', value: 'asmith@example.com' },
+             status: { label: 'ALL', value: 'all' }
+         } */
 
-    const deleteConfirmation = async () => {
-        const deleteUser = await fetchGetUsersDelete(isDelete)
+        if (Object.keys(data).length > 0) {
 
-        setDeletedata(deleteUser)
-        if (deleteUser?.isSuccess) {
-            closePopup()
-            toast.success('Delete User', {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                toastId: "toastId"
-            });
+            const searchData = searchDatas?.filter((item) => (data?.roleName?.value === "All" || item?.roleName === data?.roleName?.value) &&
+                (data?.emailId?.value === "All" || item?.emailId === data?.emailId?.value) &&
+                (data?.status?.value === "all" || item?.isActive === data?.status?.value)
+            )
+
+            setRowData(searchData)
         }
+
+
     }
+
 
     return (
-        <div>
-            <DeletePopup
-                isOpen={isDelete}
-                onCancel={closePopup}
-                onDelete={() => deleteConfirmation()}
-            />
+        <div className="w-full flex flex-col justify-center items-center gap-2 ">
+
+            <div className='border border-[#a6a6a6] rounded-xl p-4 w-full'>
+                <UserManagementSearch searchDatas={searchDatas} handleSearchData={handleSearchData} />
+            </div>
+
             <div className="ag-theme-alpine overflow-auto" style={{ height: 270, width: 1550 }}>
                 <AgGridReact
                     ref={tableRef}
@@ -225,11 +200,12 @@ const UserManagementTable = ({ handleEditData, updateUser }) => {
                     pagination={true}
                     onCellClicked={handleCellClicked}
                     gridOptions={gridOptions}
-                    paginationAutoPageSize={true}
+                    paginationAutoPageSize={false}
                     onGridReady={onGridReady}
                     suppressCopyRowsToClipboard={true}
                     animateRows={true}
                     paginationPageSize={5}
+
                 />
             </div>
             <ToastContainer

@@ -129,26 +129,6 @@ const Rules = () => {
         {
 
             field: '',
-            headerName: "Delete",
-            minWidth: 80,
-            maxWidth: 100,
-            floatingFilter: false,
-            cellRenderer: (params) => {
-                const data = params.data;
-                return (
-                    <div className="flex items-center justify-center h-full  ">
-                        <button
-                            onClick={(e) => handleDelete(e, data)}
-                        >
-                            <MdDelete className="w-6 h-6 text-blue-B40" />
-                        </button>
-                    </div>
-                );
-            },
-        },
-        {
-
-            field: '',
             headerName: "Edit",
             minWidth: 80,
             maxWidth: 100,
@@ -217,47 +197,15 @@ const Rules = () => {
         setEditData({});
     };
 
-    const handleDelete = async (e, data) => {
- 
-        setIsDelete(data?.roleId)
-
-    }
 
     const closeModal = () => {
         setIsNewRuleModal("");
     }
 
-    const closePopup = () => {
-        setIsDelete(false);
-    }
-
-    const deleteConfirmation = async () => {
-        const deleteUser = await fetchDeleteRole(isDelete)
-
-        setDeletedata(deleteUser)
-        if (deleteUser?.isSuccess) {
-            closePopup()
-            toast.success('Delete User', {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                toastId: "toastId"
-            });
-        }
-    }
 
     return (
         <div className='flex flex-col items-start gap-5 w-full h-full '>
-            <DeletePopup
-                isOpen={isDelete}
-                onCancel={closePopup}
-                onDelete={() => deleteConfirmation()}
-            />
+           
             <SmCustomModal type="Create" isopen={isNewRuleModal} onClose={closeModal} >
                 <RulesCreateAndEdit isNewRuleModal={isNewRuleModal} onClose={closeModal} editData={editData} updateRule={updateRule} removeEditData={removeEditData} />
             </SmCustomModal>
@@ -278,7 +226,7 @@ const Rules = () => {
                         pagination={true}
                         onCellClicked={handleCellClicked}
                         gridOptions={gridOptions}
-                        paginationAutoPageSize={true}
+                        paginationAutoPageSize={false}
                         onGridReady={onGridReady}
                         suppressCopyRowsToClipboard={true}
                         animateRows={true}
