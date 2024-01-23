@@ -1,3 +1,4 @@
+import { fetchSearchGeust } from '@/assets/data';
 import CustomButton from '@/components/common/CustomButton'
 import CustomInput from '@/components/common/CustomInput'
 import SingleSelectDropDown from '@/components/common/SingleSelectDropDown'
@@ -37,50 +38,55 @@ const customStyles = {
     }),
 };
 
-const and = [
-    { label: 'AND', value: 'and' },
-    { label: 'OR', value: 'or' },
-]
-const guestid = [
-    { label: 'Guest ID', value: 'guestid' },
-    { label: 'Name', value: 'name' },
-    { label: 'City', value: 'city' },
-    { label: 'Nationality', value: 'Nationality' },
-    { label: 'Address Line 1', value: 'addressline1' },
-    { label: 'Company Name', value: 'companyname' },
-]
+
 const is = [
     { label: 'is', value: 'is' },
     { label: 'is Not', value: 'isnot' }
 ]
 
-const GuestSearchData = ({ rowData }) => {
+const GuestSearchData = ({ handleRoeData }) => {
     const animatedComponents = makeAnimated();
     const [searchData, setSearchData] = useState([]);
-/*     const [guestid, setGuestid] = useState([]);
+    const [guestOption, setGuestOption] = useState([]);
+    const [rowData, setRowData] = useState([])
+
+    useEffect(() => {
+        ; (
+            async () => {
+                const data = await fetchSearchGeust()
+                setRowData(data);
+            }
+        )()
+    }, [])
 
     useEffect(() => {
         if (rowData?.length > 0) {
-            const guestid = Object.keys(rowData[0])?.map((key) => ({ label: key, value: key }));
-            console.log(guestid);
-            setGuestid(guestid);
+            const OptionData = Object.keys(rowData[0])?.map((key) => ({ label: key, value: key }));
+            setGuestOption(OptionData);
         }
 
-    }, []) */
+    }, [searchData, rowData])
 
 
     const handleOnchange = (index, field, value) => {
         setSearchData((prevData) =>
             prevData.map((item, i) => i === index ? { ...item, data: { ...item.data, [field]: value } } : item)
         );
+
+
+        const updateOption = guestOption?.filter((opt) => opt.value !== value.value);
+
+        setGuestOption(updateOption);
+
+
     }
 
     const handleAddRule = () => {
         setSearchData((prevData) => [
             ...prevData,
             {
-                type: 'rule',
-                data: { and: null }
+                type: 'AND',
+                data: { Key: null, is: null, groupName: null }
             }
         ]);
     }
@@ -89,8 +95,8 @@ const GuestSearchData = ({ rowData }) => {
         setSearchData((prevData) => [
             ...prevData,
             {
-                type: 'group',
-                data: { guestid: null, is: null, groupName: null }
+                type: 'OR',
+                data: { Key: null, is: null, groupName: null }
             }
         ])
     }
@@ -99,8 +105,119 @@ const GuestSearchData = ({ rowData }) => {
         setSearchData([]);
     }
 
+
+    /*     searchData =   [
+        {
+          type: 'ADD',
+          data: {
+            Key: { label: 'golden_id', value: 'golden_id' },
+            is: { label: 'is', value: 'is' },
+            groupName: '1'
+          }
+        },
+        {
+          type: 'OR',
+          data: {
+            Key: {  label: 'guest_category_type_desc',  value: 'guest_category_type_desc' },
+            is: { label: 'is', value: 'is' },
+            groupName: 'lei'
+          }
+        }
+      ]
+     */
+
+
+    /* rowData =     [{
+         golden_id: 1,
+         guest_category_type_desc: 'Leisure Travelers',
+         full_name: 'Arjun Kumar Sharma',
+         nationality: 'Indian',
+         company_name: 'Tech Solutions Pvt Ltd',
+         address_line_1: '123 Main Street',
+         address_line_2: 'Apartment 101',
+         address_line_3: 'XYZ Towers',
+         city: 'Mumbai',
+         country: 'India',
+         start_date: '2023-01-01T00:00:00',
+         mobile_phone_country_code: '91',
+         mobile_phone: '9876543210',
+         personal_email: 'arjun_sharma@gmail.com',
+         is_active_flag: true
+       }, ]*/
+
+    const applyFilter = (rowData, condition) => {
+        const { Key, is, groupName } = condition?.data;
+        const operator = is?.value == 'is' ? '==' : '!=';
+
+        return rowData.filter(item => {
+            if (operator == '==') {
+                return item[Key?.value]?.toLowerCase() == groupName?.toLowerCase();
+            } else {
+                return item[Key?.value]?.toLowerCase() != groupName?.toLowerCase();
+            }
+        });
+    };
+
+    // Function to make the array unique based on a specific key
+    const makeArrayUnique = (array, key) => {
+        const seen = new Set();
+        return array.filter(item => {
+            const value = item[key];
+            if (!seen.has(value)) {
+                seen.add(value);
+                return true;
+            }
+            return false;
+        });
+    };
+  
     const handleSave = () => {
-        console.log(searchData);
+
+
+
+        const filterData = (rowData, searchData) => {
+            let filteredData = rowData;
+
+            searchData.forEach(condition => {
+                if (condition.type == 'AND') {
+                    // AND condition
+                    filteredData = applyFilter(filteredData, condition);
+                } else if (condition.type == 'OR') {
+                    // OR condition
+                    filteredData = filteredData.concat(applyFilter(filteredData, condition));
+                }
+            });
+
+            return filteredData;
+        };
+
+        let result = filterData(rowData, searchData);
+        result = makeArrayUnique(result, 'golden_id');
+        
+
+        handleRoeData(result);
+
+
+
+        /* const filteredValue = rowData?.filter(item => {
+            return searchData.every(query => {
+                const keyLabel = query?.data?.Key?.label;
+                const isValue = query?.data?.is?.value;
+                const groupName = query?.data?.groupName;
+
+                switch (isValue) {
+                    case "is":
+                        return item[keyLabel] == groupName;
+                    case "isnot":
+                        return item[keyLabel] != groupName;
+                    default:
+                        return false;
+                }
+            });
+        });
+        handleRoeData(filteredValue);
+        console.log(filteredValue, "FILTEREDDATA"); */
+
     }
 
     const handleClose = (index) => {
@@ -145,24 +262,14 @@ const GuestSearchData = ({ rowData }) => {
             <div className="w-full h-[23vh] flex justify-between gap-3 border border-gray-400 rounded-lg px-4 py-4 overflow-auto ">
                 <div className="flex flex-col gap-3 w-full py-2">
                     <div className="flex gap-4 w-full ">
-                        <div className="w-full max-w-[300px] lg:max-w-[20%]">
-                            <Select
-                                placeholder="AND"
-                                isMulti={false}
-                                styles={customStyles}
-                                name='and'
-                                options={and}
-                                value={searchData?.and}
-                                onChange={handleOnchange}
-                                components={animatedComponents}
-                                className='capitalize'
-                            />
+                        <div className="w-full max-w-[150px] lg:max-w-[15%] border flex items-center px-5 rounded">
+                            AND
                         </div>
                         <div>
                             <div className="w-full max-w-[150px] ">
                                 <CustomButton
                                     name="ADD"
-                                    handleClick={handleAddRule}
+                                    handleClick={() => handleAddRule()}
                                     isDisable={false}
                                     isLoading={false}
                                 />
@@ -176,53 +283,16 @@ const GuestSearchData = ({ rowData }) => {
                                 return (
                                     <div key={index} className=''>
                                         {
-                                            /* item.type === 'rule' ? (
-                                                <div className="flex gap-4 w-full">
-                                                    <div className="w-full max-w-[300px] lg:max-w-[20%]">
-                                                        <Select
-                                                            placeholder="AND"
-                                                            isMulti={false}
-                                                            styles={customStyles}
-                                                            name='and'
-                                                            options={and}
-                                                            value={item.data.and}
-                                                            onChange={(selectedOption) => handleOnchange(index, 'and', selectedOption)}
-                                                            components={animatedComponents}
-                                                            className='capitalize'
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <div className="w-full max-w-[150px]  ">
-                                                            <CustomButton
-                                                                name="Rule"
-                                                                handleClick={() => { }}
-                                                                isDisable={false}
-                                                                isLoading={false}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="w-full max-w-[150px]  ">
-                                                            <CustomButton
-                                                                name="Group"
-                                                                handleClick={() => { }}
-                                                                isDisable={false}
-                                                                isLoading={false}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ) : ( */
-                                            item.type === 'rule' && <div className="flex gap-4 w-full items-center">
+                                            item.type === 'AND' && <div className="flex gap-4 w-full items-center">
                                                 <div className="w-full max-w-[300px] lg:max-w-[20%]">
                                                     <Select
                                                         placeholder="Guest_ID"
                                                         isMulti={false}
                                                         styles={customStyles}
-                                                        name='guestid'
-                                                        options={guestid}
-                                                        value={item.data.guestid}
-                                                        onChange={(selectedOption) => handleOnchange(index, 'guestid', selectedOption)}
+                                                        name='Key'
+                                                        options={guestOption}
+                                                        value={item.data.Key}
+                                                        onChange={(selectedOption) => handleOnchange(index, 'Key', selectedOption)}
                                                         components={animatedComponents}
                                                         className='capitalize'
                                                     />
@@ -254,7 +324,6 @@ const GuestSearchData = ({ rowData }) => {
                                                 </div>
                                                 <GrClose className="w-5 h-5 font-bold cursor-pointer" onClick={() => handleClose(index)} />
                                             </div>
-                                            /* ) */
                                         }
                                     </div>
                                 )
@@ -263,18 +332,8 @@ const GuestSearchData = ({ rowData }) => {
                     </div>
 
                     <div className="flex gap-4 w-full ">
-                        <div className="w-full max-w-[300px] lg:max-w-[20%]">
-                            <Select
-                                placeholder="AND"
-                                isMulti={false}
-                                styles={customStyles}
-                                name='and'
-                                options={and}
-                                value={searchData?.and}
-                                onChange={handleOnchange}
-                                components={animatedComponents}
-                                className='capitalize'
-                            />
+                        <div className="w-full max-w-[150px] lg:max-w-[15%] border flex items-center px-5">
+                            OR
                         </div>
                         <div>
                             <div className="w-full max-w-[150px]  ">
@@ -294,16 +353,16 @@ const GuestSearchData = ({ rowData }) => {
                                 return (
                                     <div key={index} className=''>
                                         {
-                                            item.type === 'group' && <div className="flex gap-4 w-full items-center">
+                                            item.type === 'OR' && <div className="flex gap-4 w-full items-center">
                                                 <div className="w-full max-w-[300px] lg:max-w-[20%]">
                                                     <Select
                                                         placeholder="Guest_ID"
                                                         isMulti={false}
                                                         styles={customStyles}
-                                                        name='guestid'
-                                                        options={guestid}
-                                                        value={item.data.guestid}
-                                                        onChange={(selectedOption) => handleOnchange(index, 'guestid', selectedOption)}
+                                                        name='Key'
+                                                        options={guestOption}
+                                                        value={item.data.Key}
+                                                        onChange={(selectedOption) => handleOnchange(index, 'Key', selectedOption)}
                                                         components={animatedComponents}
                                                         className='capitalize'
                                                     />
@@ -341,7 +400,6 @@ const GuestSearchData = ({ rowData }) => {
                             })
                         }
                     </div>
- 
                 </div>
             </div>
 

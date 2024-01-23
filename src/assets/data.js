@@ -199,6 +199,33 @@ export const fetchGetAllBatchStatus = async () => {
   }
 }
 
+export const fetchGetBatchStatus = async () => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GetBatchStatus/1`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
+export const fetchGetJobStatus = async (batchId) => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GetJobStatus/${batchId}`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
+
+export const fetchSearchGeust = async () => {
+  try {
+    const response = await axios.get(`http://13.234.127.72:5001/GetGuestDataFromDBQry`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
 
 
 export const datasourceData = [

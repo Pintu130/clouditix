@@ -71,6 +71,8 @@ const UserManagement = () => {
       });
     }
 
+    return updateData;
+
   };
 
   return (

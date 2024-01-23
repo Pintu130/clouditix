@@ -1,4 +1,4 @@
-import { GuestDataSearchData, fetchGuestData } from "@/assets/data";
+import { GuestDataSearchData, fetchGuestData, fetchSearchGeust } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
 import CustomInput from "@/components/common/CustomInput";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
@@ -12,22 +12,21 @@ import GuestSearchData from "./GuestSearchData";
 
 const GuestDataSearch = () => {
   const tableRef = useRef({});
-    const [rowData, setRowData] = useState(GuestDataSearchData);
+  const [rowData, setRowData] = useState([]);
 
   const handleSearch = () => { };
 
 
 
 
- /*  useEffect(() => {
-    ; (async () => {
-      const data = await fetchGuestData()
-      console.log(data);
-      if (data.length > 0) {
+  useEffect(() => {
+    ; (
+      async () => {
+        const data = await fetchSearchGeust()
         setRowData(data);
       }
-    })();
-  }, []) */
+    )()
+  }, [])
 
 
   const handleEdit = (e, data) => {
@@ -37,13 +36,13 @@ const GuestDataSearch = () => {
 
   const [columnDefs] = useState([
     {
-      field: "guest_id",
-      headerName: "guest_id ",
+      field: "golden_id",
+      headerName: "golden_id ",
       minWidth: 100,
       maxWidth: 100,
     },
     {
-      field: "guest_category_type",
+      field: "guest_category_type_desc",
       headerName: "guest_category_type",
       minWidth: 180,
       maxWidth: 220,
@@ -117,15 +116,31 @@ const GuestDataSearch = () => {
       editable: true,
     },
     {
-      field: "end_date",
-      headerName: "end_date",
+      field: "mobile_phone_country_code",
+      headerName: "country_code",
 
       minWidth: 150,
       maxWidth: 190,
       editable: true,
     },
     {
-      field: "is_active",
+      field: "mobile_phone",
+      headerName: "mobile_phone",
+
+      minWidth: 150,
+      maxWidth: 190,
+      editable: true,
+    },
+    {
+      field: "personal_email",
+      headerName: "personal_email",
+
+      minWidth: 150,
+      maxWidth: 190,
+      editable: true,
+    },
+    {
+      field: "is_active_flag",
       headerName: "is_active",
 
       minWidth: 100,
@@ -203,10 +218,14 @@ const GuestDataSearch = () => {
     // console.log(param?.column);
   };
 
+  const handleRoeData = (data) => {
+    setRowData(data)
+  }
+
   return (
     <div className="w-full h-full flex flex-col  items-center gap-6 px-6 py-4  ">
 
-      <GuestSearchData rowData={rowData} />
+      <GuestSearchData rowData={rowData} handleRoeData={handleRoeData} />
 
       <div className="flex w-full min-h-[62vh] pb-10  mx-auto ag-theme-alpine ">
         <div

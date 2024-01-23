@@ -1,68 +1,48 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import { fetchGetJobStatus } from '@/assets/data';
 
-const BatchJobsDataTable = () => {
+const BatchJobsDataTable = ({ batchId }) => {
     const tableRef = useRef(null);
-    const containerStyle = useMemo(() => ({ width: '100%', height: '40vh' }), []);
-  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
-    const [rowData, setRowData] = useState([
-        {
-            batchid: "0ae33fb3-6156-453c-a856-0013fbf82ed1",
-            runid: "01307125-2bec-47¢3-802d-fb9eef9a14fa",
-            table1d: "0",
-            jobstatus: "",
-            jobname: "guests",
-            jobparameters: "{'table_name': 'guest'}",
-            dqstatus: "Successful",
-            validationrules: "",
-            sourcelocation: "53://guest360mdm-dev/dq_framework/tables/guest/guest data.csv",
-            destinationlocation: "53://guest360mdm-dev/dq_framework/tables/guest/guest data.csv",
-            archivelocation: "53://guest360mdm-dev/dq_framework/tables/guest/guest data.csv",
-            tablerecordcount: "0",
-            startedat: "26-11-2023 08:47:02",
-            endedat: "26-11-2023 08:47:02",
-            jobcomments: "No DQ rules config",
-            datasource: "AWS S3",
-            errorrecordcount: "",
-            errorfilelocation: ""
-        }
-    ]);
+    const [rowData, setRowData] = useState([]);
+
 
     const [columnDefs] = useState([
         {
-            field: "batchid",
+            field: "batchId",
             headerName: "Batch_Id ",
-            minWidth: 350,
+            minWidth: 100,
+            maxWidth: 110,
 
         },
         {
-            field: "runid",
+            field: "jobId",
             headerName: "run_id",
-            minWidth: 300,
-            maxWidth: 350,
+            minWidth: 100,
+            maxWidth: 110,
         },
         {
-            field: "table1d",
-            headerName: "table 1d",
-            minWidth: 300,
-            maxWidth: 350,
+            field: "tableId",
+            headerName: "table Id",
+            minWidth: 100,
+            maxWidth: 120,
         },
         {
-            field: "jobstatus",
+            field: "status",
             headerName: "job_status",
             minWidth: 300,
             maxWidth: 350,
         },
         {
-            field: "jobname",
+            field: "tableName",
             headerName: "job_name",
             minWidth: 300,
             maxWidth: 350,
         },
         {
-            field: "jobparameters",
+            field: "jobParameters",
             headerName: "job_parameters",
             cellClass: "uppercase",
             minWidth: 300,
@@ -70,23 +50,23 @@ const BatchJobsDataTable = () => {
             // editable: true,
         },
         {
-            field: "dqstatus",
-            headerName: "dq_status",
+            field: "destinationAthenaTableName",
+            headerName: "destination Athena TableName",
             cellClass: "uppercase",
             minWidth: 300,
             maxWidth: 350,
             // editable: true,
         },
         {
-            field: "validationrules",
-            headerName: "validation_rules",
+            field: "errorAthenaTableName",
+            headerName: "error Athena TableName",
             cellClass: "uppercase",
             minWidth: 300,
             maxWidth: 350,
             // editable: true,
         },
         {
-            field: "sourcelocation",
+            field: "sourceLocation",
             headerName: "source_location",
             cellClass: "uppercase",
             minWidth: 300,
@@ -94,7 +74,7 @@ const BatchJobsDataTable = () => {
             // editable: true,
         },
         {
-            field: "destinationlocation",
+            field: "destinationLocation",
             headerName: "destination_location",
             cellClass: "uppercase",
             minWidth: 300,
@@ -102,7 +82,7 @@ const BatchJobsDataTable = () => {
             // editable: true,
         },
         {
-            field: "archivelocation",
+            field: "archiveLocation",
             headerName: "archive_location",
             cellClass: "uppercase",
             minWidth: 300,
@@ -110,7 +90,7 @@ const BatchJobsDataTable = () => {
             // editable: true,
         },
         {
-            field: "tablerecordcount",
+            field: "tableRecordCount",
             headerName: "table_record_count",
             cellClass: "uppercase",
             minWidth: 300,
@@ -118,7 +98,7 @@ const BatchJobsDataTable = () => {
             // editable: true,
         },
         {
-            field: "startedat",
+            field: "startedAt",
             headerName: "started_at",
             cellClass: "uppercase",
             minWidth: 300,
@@ -126,7 +106,7 @@ const BatchJobsDataTable = () => {
             // editable: true,
         },
         {
-            field: "endedat",
+            field: "endedAt",
             headerName: "ended_at",
             cellClass: "uppercase",
             minWidth: 300,
@@ -134,7 +114,7 @@ const BatchJobsDataTable = () => {
             // editable: true,
         },
         {
-            field: "jobcomments",
+            field: "jobComments",
             headerName: "job_comments",
             cellClass: "uppercase",
             minWidth: 300,
@@ -142,7 +122,7 @@ const BatchJobsDataTable = () => {
             // editable: true,
         },
         {
-            field: "datasource",
+            field: "dataSource",
             headerName: "data_source",
             cellClass: "uppercase",
             minWidth: 300,
@@ -150,7 +130,7 @@ const BatchJobsDataTable = () => {
             // editable: true,
         },
         {
-            field: "errorrecordcount",
+            field: "errorRecordCount",
             headerName: "error_record_count",
             cellClass: "uppercase",
             minWidth: 300,
@@ -158,7 +138,7 @@ const BatchJobsDataTable = () => {
             // editable: true,
         },
         {
-            field: "errorfilelocation",
+            field: "errorFileLocation",
             headerName: "error_file_location",
             cellClass: "uppercase",
             minWidth: 300,
@@ -167,29 +147,86 @@ const BatchJobsDataTable = () => {
         },
     ]);
 
-    const autoSizeStrategy = useMemo(() => {
-        return {
-            type: 'fitGridWidth',
-        };
-    }, []);
+    useEffect(() => {
+        ; (async () => {
 
-    const onGridReady = useCallback((params) => {
+            if (batchId > 0) {
+                const data = await fetchGetJobStatus(batchId)
 
-    }, []);
+                console.log(data);
+
+                if (data.length > 0) {
+                    const sortId = data?.sort((a, b) => b.batchId - a.batchId).sort((a, b) => b.jobId - a.jobId).sort((a, b) => new Date(a.startedAt) - new Date(b.startedAt))
+
+                    if (data.length > 0) {
+                        setRowData(sortId);
+                    } else {
+                        setRowData([]);
+                    }
+                }
+            }
+        })()
+    }, [batchId])
+
+    const defaultColDef = {
+        flex: 1,
+        headerComponentParams: { placeholder: 'Enter Member ID' },
+        resizable: true,
+        suppressMovable: true,
+        resizable: true,
+        width: 100,
+        filter: true,
+        flex: 1,
+        minWidth: 100,
+        // cellStyle: {
+        //     color: '#4A4A4A',
+        //     fontFamily: 'Assistant',
+        //     fontSize: '18px',
+        //     fontStyle: 'normal',
+        //     fontWeight: '400',
+        //     lineHeight: "24px",
+        //     paddingTop: "8px",
+        //     paddingBottom: "8px",
+        //     borderRight: '1px solid #a6a6a6',
+        // },
+        wrapText: true,
+        autoHeight: true,
+
+        headerClass: "whitespace-normal",
+        cellClass: "uppercase",
+        flex: 1,
+    }
+
+    const handleCellClicked = (param) => { };
+
+    const gridOptions = {
+        rowClass: "custom-row-hover",
+    };
+
+    const onGridReady = (params) => {
+        tableRef.current = params.api;
+    };
 
     return (
-        <div className='px-10' style={containerStyle}>
-            <div
-                style={gridStyle}
-                className={
-                    "ag-theme-quartz"
-                }
-            >
+        <div className="w-full flex flex-col justify-center items-center gap-2 py-4 px-10">
+            <div className="ag-theme-alpine overflow-auto " style={{ height: 500, width: "100% " }}>
                 <AgGridReact
+                    ref={tableRef}
                     rowData={rowData}
                     columnDefs={columnDefs}
-                    autoSizeStrategy={autoSizeStrategy}
+                    defaultColDef={defaultColDef}
+
+                    enableBrowserTooltips={true}
+                    tooltipShowDelay={{ tooltipShowDelay: 2 }}
+                    rowSelection="multiple"
+                    pagination={true}
+                    onCellClicked={handleCellClicked}
+                    gridOptions={gridOptions}
+                    paginationAutoPageSize={false}
                     onGridReady={onGridReady}
+                    suppressCopyRowsToClipboard={true}
+                    animateRows={true}
+                    paginationPageSize={5}
                 />
             </div>
         </div>

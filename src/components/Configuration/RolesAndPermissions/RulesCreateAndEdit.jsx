@@ -23,7 +23,8 @@ const RulesCreateAndEdit = ({ isNewRuleModal, onClose, editData, updateRule, rem
     const handleCreateRule = async () => {
 
         if (Object.keys(editData).length > 0) {
-           
+            setFormData({})
+            onClose()
             updateRule(formData)
 
         } else {
@@ -44,7 +45,8 @@ const RulesCreateAndEdit = ({ isNewRuleModal, onClose, editData, updateRule, rem
 
             const updateData = await fetchRuleCreate(updatedData)
             if (updateData?.isSuccess) {
-
+                setFormData({})
+                onClose()
                 toast.success('Create New User', {
                     position: "top-center",
                     autoClose: 5000,
@@ -70,7 +72,7 @@ const RulesCreateAndEdit = ({ isNewRuleModal, onClose, editData, updateRule, rem
                 });
             }
 
-            setFormData({})
+
         }
     };
 

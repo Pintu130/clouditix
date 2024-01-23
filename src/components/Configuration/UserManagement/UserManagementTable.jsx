@@ -3,8 +3,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { BiSolidPencil } from 'react-icons/bi';
-import { fetchGetUsers, fetchGetUsersDelete, userManagementTableData } from '@/assets/data';
-import { MdDelete } from 'react-icons/md';
+import { fetchGetUsers } from '@/assets/data';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UserManagementSearch from './UserManagementSearch';
@@ -13,9 +12,7 @@ const UserManagementTable = ({ handleEditData, updateUser }) => {
     const tableRef = useRef(null);
     const [rowData, setRowData] = useState([]);
 
-    const [searchDatas, setSearchDatas] = useState([])
-
-    //    User Role Is Active
+    const [searchDatas, setSearchDatas] = useState([]);
 
     useEffect(() => {
         ; (async () => {
@@ -27,8 +24,8 @@ const UserManagementTable = ({ handleEditData, updateUser }) => {
 
                 // Map each userRole to a new object
                 const rolesArray = userRoles.map((role) => ({
-                    ...restUser, // Include properties from the parent user object
-                    ...role,     // Include properties from the role object
+                    ...restUser, 
+                    ...role,     
                 }));
 
                 return rolesArray;
@@ -37,12 +34,19 @@ const UserManagementTable = ({ handleEditData, updateUser }) => {
             // Flatten the array of arrays into a single array
             const flattenedData = [].concat(...transformedData);
 
-            setRowData(flattenedData)
-            setSearchDatas(flattenedData)
+            const sortedData = flattenedData.sort((a, b) => {
+                return a.roleName.localeCompare(b.roleName);
+            })
+
+
+            const setActiveData = sortedData.sort((a, b) => {
+                return b.isActive - a.isActive;
+            })
+
+            setRowData(setActiveData)
+            setSearchDatas(setActiveData)
         })()
     }, [updateUser])
-
-
 
 
     const [columnDefs] = useState([
@@ -51,6 +55,7 @@ const UserManagementTable = ({ handleEditData, updateUser }) => {
             headerName: "First Name",
             minWidth: 130,
             maxWidth: 170,
+            filter: true,
         },
         {
             field: "lastName",
@@ -125,6 +130,19 @@ const UserManagementTable = ({ handleEditData, updateUser }) => {
             editable: true,
             filter: true,
             sortable: true,
+            floatingFilter: true,
+            resizable: true,
+            suppressMovable: true,
+            cellStyle: {
+                color: "#3B475A",
+                fontSize: "16px",
+                fontStyle: "normal",
+                fontWeight: "500",
+                fontFamily: "Assistant",
+            },
+            headerClass: "whitespace-normal",
+            wrapText: true,
+            autoHeight: true,
         };
     }, []);
 
@@ -158,14 +176,6 @@ const UserManagementTable = ({ handleEditData, updateUser }) => {
 
     const handleSearchData = (data) => {
 
-        console.log(data);
-
-        /*  {
-             roleName: { label: 'User', value: 'User' },
-             emailId: { label: 'asmith@example.com', value: 'asmith@example.com' },
-             status: { label: 'ALL', value: 'all' }
-         } */
-
         if (Object.keys(data).length > 0) {
 
             const searchData = searchDatas?.filter((item) => (data?.roleName?.value === "All" || item?.roleName === data?.roleName?.value) &&
@@ -183,11 +193,11 @@ const UserManagementTable = ({ handleEditData, updateUser }) => {
     return (
         <div className="w-full flex flex-col justify-center items-center gap-2 ">
 
-            <div className='border border-[#a6a6a6] rounded-xl p-4 w-full'>
+            {/* <div className='border border-[#a6a6a6] rounded-xl p-4 w-full'>
                 <UserManagementSearch searchDatas={searchDatas} handleSearchData={handleSearchData} />
-            </div>
+            </div> */}
 
-            <div className="ag-theme-alpine overflow-auto" style={{ height: 270, width: 1550 }}>
+            <div className="ag-theme-alpine overflow-auto" style={{ height: 310, width: 1550 }}>
                 <AgGridReact
                     ref={tableRef}
                     rowData={rowData}

@@ -6,7 +6,7 @@ import { batchJobsStatustbleData, fetchGetAllBatchStatus } from "@/assets/data";
 
 
 
-const BatchJobsStatusTable = () => {
+const BatchJobsStatusTable = ({ getBatchId }) => {
     const tableRef = useRef(null);
     const [rowData, setRowData] = useState([]);
 
@@ -15,7 +15,8 @@ const BatchJobsStatusTable = () => {
         {
             field: "batchId",
             headerName: "Batch_Id ",
-            minWidth: 350,
+            minWidth: 250,
+            maxWidth: 300,
 
         },
         {
@@ -42,31 +43,19 @@ const BatchJobsStatusTable = () => {
             cellClass: "uppercase",
             minWidth: 300,
             maxWidth: 350,
-            // editable: true,
         },
     ]);
 
 
     useEffect(() => {
         ; (async () => {
-            const data = await fetchGetAllBatchStatus()
-            console.log(data);
-            setRowData(data)
+            const data = await fetchGetAllBatchStatus();
+
+            const sortstartedAt = data.sort((a, b) => new Date(a.startedAt) - new Date(b.startedAt));;
+
+            setRowData(sortstartedAt)
         })()
-    }, [])
-
-
-
-    /* const defaultColDef = useMemo(() => {
-        return {
-            flex: 1,
-            // minWidth: 100,
-            // editable: true,
-            filter: true,
-            sortable: true,
-            resizeBy: true,
-        };
-    }, []); */
+    }, []);
 
     const defaultColDef = {
         flex: 1,
@@ -116,7 +105,10 @@ const BatchJobsStatusTable = () => {
         },
     };
 
-    const handleCellClicked = (param) => { };
+    const handleCellClicked = (param) => {
+        const data = param?.data?.batchId;
+        getBatchId(data)
+    };
 
     const gridOptions = {
         rowClass: "custom-row-hover",
@@ -134,7 +126,7 @@ const BatchJobsStatusTable = () => {
 
     return (
         <div className="w-full flex flex-col justify-center items-center gap-2 py-4 px-10">
-            <div className="ag-theme-alpine overflow-auto " style={{ height: 400, width: "100% " }}>
+            <div className="ag-theme-alpine overflow-auto " style={{ height: 300, width: "100% " }}>
                 <AgGridReact
                     ref={tableRef}
                     rowData={rowData}
@@ -147,10 +139,11 @@ const BatchJobsStatusTable = () => {
                     pagination={true}
                     onCellClicked={handleCellClicked}
                     gridOptions={gridOptions}
-                    paginationAutoPageSize={true}
+                    paginationAutoPageSize={false}
                     onGridReady={onGridReady}
                     suppressCopyRowsToClipboard={true}
                     animateRows={true}
+                    paginationPageSize={10}
                 />
             </div>
         </div>

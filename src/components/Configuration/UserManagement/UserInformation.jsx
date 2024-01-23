@@ -6,10 +6,19 @@ import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
+const intialValue = {
+    roleName: "",
+    firstName: '',
+    lastName: '',
+    emailId: '',
+    phoneNumber: '',
+    userName: '',
+    password: '',
+    isActive: false
+}
 
 const UserInformation = ({ editData, updateEdit, removeEditData }) => {
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState(intialValue);
     const [edit, setEdit] = useState(editData);
     const [userroledata, setUserroleData] = useState([])
 
@@ -51,18 +60,82 @@ const UserInformation = ({ editData, updateEdit, removeEditData }) => {
 
     useEffect(() => {
 
-        setFormData({
-            ...edit,
-            roleName: { label: edit?.roleName, value: edit?.roleName }
-        })
+        if (Object.keys(edit).length > 0) {
+            setFormData({
+                ...edit,
+                roleName: { label: edit?.roleName, value: edit?.roleName }
+            })
+        }
+
+
     }, [edit])
+
+    console.log(edit);
+
+    console.log(formData);
+
+
+    const isFieldValid = (field, value) => {
+        switch (field) {
+            case 'firstName':
+            case 'lastName':
+            case 'emailId':
+            case 'phoneNumber':
+            case 'userName':
+            case 'password':
+            case 'roleName':
+                return value !== '';
+
+            case 'isActive':
+                return true; // Assume isActive can be left empty
+
+            default:
+                return true; // Default to true for other fields
+        }
+    };
+
+    const isFormValid = () => {
+        const invalidFields = Object.entries(formData)
+            .filter(([field, value]) => !isFieldValid(field, value))
+            .map(([field]) => field);
+
+        if (invalidFields.length > 0) {
+            const errorMessage = `Please fill in all the fields: ${invalidFields.join(', ')}.`;
+            toast.error(errorMessage, {
+                position: 'top-center',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'light',
+                toastId: 'toastId'
+            });
+            return false;
+        }
+
+        return true;
+    };
+
 
     const handleSave = async () => {
 
+
+        if (!isFormValid()) {
+            return;
+        }
+
+
         if (Object.keys(edit).length > 0) {
-            setFormData({})
-            setEdit({})
-            updateEdit(formData)
+
+            const res = await updateEdit(formData)
+
+            if (res?.isSuccess) {
+                setFormData(intialValue)
+                setEdit({})
+            }
+
         } else {
             const updateformdata = {
                 userId: 0,
@@ -84,7 +157,7 @@ const UserInformation = ({ editData, updateEdit, removeEditData }) => {
 
             const updateData = await fetchGetUsersCreate(updateformdata)
             if (updateData?.isSuccess) {
-                setFormData({})
+                setFormData(intialValue)
                 setEdit({})
                 toast.success('Create New User', {
                     position: "top-center",
@@ -117,7 +190,7 @@ const UserInformation = ({ editData, updateEdit, removeEditData }) => {
 
     const handleCancel = () => {
         removeEditData()
-        setFormData({})
+        setFormData(intialValue)
         setEdit({})
     }
 
