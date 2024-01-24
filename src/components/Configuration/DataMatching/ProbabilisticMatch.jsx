@@ -162,7 +162,8 @@ const ProbabilisticMatch = () => {
 
 
   const handleEdit = () => {
-
+    setIsModalOpen(true);
+    setManagedModal("Edit")
   }
 
   const closeModal = () => {
@@ -172,7 +173,7 @@ const ProbabilisticMatch = () => {
     <div className='flex flex-col gap-3'>
 
       <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        {managedModal === "More" ? <ProbabilisticMore onClose={closeModal} /> : managedModal === "Add" ? <ProbabilisticAdd onClose={closeModal} /> : ""}
+        {managedModal === "More" ? <ProbabilisticMore onClose={closeModal} /> : managedModal === "Add" ? <ProbabilisticAdd onClose={closeModal} /> : <ProbabilisticAdd onClose={closeModal} />}
       </CustomModal>
 
       <div className='flex items-center gap-10 '>

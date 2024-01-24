@@ -44,7 +44,7 @@ const is = [
     { label: 'is Not', value: 'isnot' }
 ]
 
-const GuestSearchData = ({ handleRoeData }) => {
+const GuestSearchData = ({ handleRoeData, handleRestart }) => {
     const animatedComponents = makeAnimated();
     const [searchData, setSearchData] = useState([]);
     const [guestOption, setGuestOption] = useState([]);
@@ -103,57 +103,33 @@ const GuestSearchData = ({ handleRoeData }) => {
 
     const handleReset = () => {
         setSearchData([]);
+        handleRestart();
     }
-
-
-    /*     searchData =   [
-        {
-          type: 'ADD',
-          data: {
-            Key: { label: 'golden_id', value: 'golden_id' },
-            is: { label: 'is', value: 'is' },
-            groupName: '1'
-          }
-        },
-        {
-          type: 'OR',
-          data: {
-            Key: {  label: 'guest_category_type_desc',  value: 'guest_category_type_desc' },
-            is: { label: 'is', value: 'is' },
-            groupName: 'lei'
-          }
-        }
-      ]
-     */
-
-
-    /* rowData =     [{
-         golden_id: 1,
-         guest_category_type_desc: 'Leisure Travelers',
-         full_name: 'Arjun Kumar Sharma',
-         nationality: 'Indian',
-         company_name: 'Tech Solutions Pvt Ltd',
-         address_line_1: '123 Main Street',
-         address_line_2: 'Apartment 101',
-         address_line_3: 'XYZ Towers',
-         city: 'Mumbai',
-         country: 'India',
-         start_date: '2023-01-01T00:00:00',
-         mobile_phone_country_code: '91',
-         mobile_phone: '9876543210',
-         personal_email: 'arjun_sharma@gmail.com',
-         is_active_flag: true
-       }, ]*/
 
     const applyFilter = (rowData, condition) => {
         const { Key, is, groupName } = condition?.data;
         const operator = is?.value == 'is' ? '==' : '!=';
 
         return rowData.filter(item => {
-            if (operator == '==') {
-                return item[Key?.value]?.toLowerCase() == groupName?.toLowerCase();
+
+            if (Key?.value == 'golden_id') {
+                if (operator == '==') {
+                    return item[Key?.value] == groupName;
+                } else {
+                    return item[Key?.value] != groupName;
+                }
+            } else if (Key?.value == "is_active_flag") {
+                if (operator == '==') {
+                    return item[Key?.value] == (groupName?.toLowerCase() === 'true');
+                } else {
+                    return item[Key?.value] != (groupName?.toLowerCase() === 'true');
+                }
             } else {
-                return item[Key?.value]?.toLowerCase() != groupName?.toLowerCase();
+                if (operator == '==') {
+                    return item[Key?.value]?.toLowerCase() == groupName?.toLowerCase();
+                } else {
+                    return item[Key?.value]?.toLowerCase() != groupName?.toLowerCase();
+                }
             }
         });
     };
@@ -170,7 +146,7 @@ const GuestSearchData = ({ handleRoeData }) => {
             return false;
         });
     };
-  
+
     const handleSave = () => {
 
 
@@ -193,7 +169,7 @@ const GuestSearchData = ({ handleRoeData }) => {
 
         let result = filterData(rowData, searchData);
         result = makeArrayUnique(result, 'golden_id');
-        
+
 
         handleRoeData(result);
 
@@ -286,7 +262,7 @@ const GuestSearchData = ({ handleRoeData }) => {
                                             item.type === 'AND' && <div className="flex gap-4 w-full items-center">
                                                 <div className="w-full max-w-[300px] lg:max-w-[20%]">
                                                     <Select
-                                                        placeholder="Guest_ID"
+                                                        placeholder="Select a rule"
                                                         isMulti={false}
                                                         styles={customStyles}
                                                         name='Key'
@@ -299,7 +275,7 @@ const GuestSearchData = ({ handleRoeData }) => {
                                                 </div>
                                                 <div className="w-full max-w-[300px] lg:max-w-[10%]">
                                                     <Select
-                                                        placeholder="IS"
+                                                        placeholder="Select Type "
                                                         isMulti={false}
                                                         styles={customStyles}
                                                         name='is'
@@ -331,7 +307,7 @@ const GuestSearchData = ({ handleRoeData }) => {
                         }
                     </div>
 
-                    <div className="flex gap-4 w-full ">
+                    {/*   <div className="flex gap-4 w-full ">
                         <div className="w-full max-w-[150px] lg:max-w-[15%] border flex items-center px-5">
                             OR
                         </div>
@@ -345,9 +321,9 @@ const GuestSearchData = ({ handleRoeData }) => {
                                 />
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
-                    <div className='py-2 flex justify-center gap-2 flex-col'>
+                    {/*  <div className='py-2 flex justify-center gap-2 flex-col'>
                         {
                             searchData.map((item, index) => {
                                 return (
@@ -399,7 +375,7 @@ const GuestSearchData = ({ handleRoeData }) => {
                                 )
                             })
                         }
-                    </div>
+                    </div> */}
                 </div>
             </div>
 

@@ -1,8 +1,6 @@
-import { GuestDataSearchData, fetchGuestData, fetchSearchGeust } from "@/assets/data";
-import CustomButton from "@/components/common/CustomButton";
-import CustomInput from "@/components/common/CustomInput";
-import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { fetchSearchGeust } from "@/assets/data";
+
+import { useEffect, useRef, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -28,6 +26,10 @@ const GuestDataSearch = () => {
     )()
   }, [])
 
+  const handleRestart = async () => {
+    const data = await fetchSearchGeust()
+    setRowData(data);
+  };
 
   const handleEdit = (e, data) => {
     e.stopPropagation();
@@ -225,7 +227,7 @@ const GuestDataSearch = () => {
   return (
     <div className="w-full h-full flex flex-col  items-center gap-6 px-6 py-4  ">
 
-      <GuestSearchData rowData={rowData} handleRoeData={handleRoeData} />
+      <GuestSearchData rowData={rowData} handleRoeData={handleRoeData} handleRestart={handleRestart} />
 
       <div className="flex w-full min-h-[62vh] pb-10  mx-auto ag-theme-alpine ">
         <div

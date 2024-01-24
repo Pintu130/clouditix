@@ -117,16 +117,102 @@ const DeterministicMatch = () => {
     }
   }
 
-  const handleSaveRule = () => {
-    const newRule = {
-      dynamicFields: dynamicFields.map(field => ({
-        name: field?.name?.value,
-        value: field?.value?.value,
-      })),
-    };
+  console.log(rules, "rule");
 
-    setRules([...rules, newRule]);
-    closeModal();
+
+
+  console.log(dynamicFields, "dynamicFields");
+  console.log(editRule, "dynamicFields");
+
+  const handleSaveRule = () => {
+    /*  const newRule = {
+       dynamicFields: dynamicFields.map(field => ({
+         name: field?.name?.value,
+         value: field?.value?.value,
+       })),
+     };
+ 
+     setRules([...rules, newRule]);
+     closeModal(); */
+
+
+
+
+
+    /*     const updatedRowData = editRule.map(rule => {
+          const updatedColumns = rule.columns.map(column => {
+            const matchingColumnInfo = dynamicFields.find(info => info.name.value === column.column);
+            if (matchingColumnInfo) {
+              // Update column properties based on matchingColumnInfo
+              column.column = matchingColumnInfo.name.value;
+              // Additional properties can be updated similarly
+            }
+            return column;
+          });
+    
+          return {
+            ...rule,
+            columns: updatedColumns,
+          };
+        });
+    
+        console.log(updatedRowData);
+     */
+
+
+
+    const updatedRowData = { ...editRule };
+
+    updatedRowData.columns.forEach((column) => {
+      const columnName = dynamicFields.find((name) => name.name.label === column.column);
+      if (columnName) {
+        column.column = columnName.name.value;
+      }
+    });
+
+    // Add extra columns if needed
+    dynamicFields.forEach((columnName) => {
+      const existingColumn = updatedRowData.columns.find((column) => column.column === columnName.name.label);
+      if (!existingColumn) {
+        const newColumn = {
+          column: columnName.name.value,
+          general: {
+            'block-size': '10',
+            distances: Array(6).fill('JaroWinkler'),
+            'leading-column': 'false',
+            'min-partition-size': '500',
+            min_char_count: '5',
+            'path-model-input': 'None',
+            'path-model-output': 'None',
+            'path-test-file': 'None',
+            'path-test-result': 'None',
+            'removing-strings': null,
+          },
+          model: {
+            general: {
+              'hyper-parameter-tuning': 'false',
+              'model-object': 'LinearDecisionFixedWeights',
+            },
+            'model-params': {
+              JaccardDistance: '0',
+              JaroWinkler: '0.5',
+              JaroWinklerSet: '0',
+              LevenshteinDistance: '0.5',
+              LevenshteinDistanceSet: '0',
+              MasiDistance: '0',
+              MetaphoneDistance: '0',
+              threshold: '0.5',
+            },
+          },
+        };
+        updatedRowData.columns.push(newColumn);
+      }
+    });
+
+    console?.log(updatedRowData);
+
+
+
   };
 
 
@@ -265,7 +351,7 @@ const DeterministicMatch = () => {
             <div className="w-full max-w-[150px]" >
               <CustomButton
                 name="Save"
-                // handleClick={() => handleSaveRule()}
+                handleClick={() => handleSaveRule()}
                 isDisable={false}
                 isLoading={false}
               />
@@ -358,7 +444,7 @@ const DeterministicMatch = () => {
             <div className="w-full max-w-[150px]" >
               <CustomButton
                 name="Save"
-                // handleClick={() => handleSaveRule()}
+                handleClick={() => handleSaveRule()}
                 isDisable={false}
                 isLoading={false}
               />

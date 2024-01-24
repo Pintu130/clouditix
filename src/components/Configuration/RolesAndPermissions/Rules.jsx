@@ -160,7 +160,6 @@ const Rules = () => {
 
     const frameworkComponents = {
         agCheckboxCellRenderer: (params) => {
-
             return (
                 <input
                     type="checkbox"
