@@ -5,7 +5,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { BiSolidPencil } from 'react-icons/bi';
 import { IoClose } from 'react-icons/io5'
-import { ProbabilisticMatchtableData, fetchProbabilisticConfig } from '@/assets/data';
+import { ProbabilisticMatchtableData, fetchProbabilisticConfig, fetchProbabilistic_Config } from '@/assets/data';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import CustomButton from '@/components/common/CustomButton';
 import { FaPlus } from 'react-icons/fa';
@@ -14,21 +14,35 @@ import ProbabilisticAdd from './ProbabilisticAdd';
 import ProbabilisticMore from './ProbabilisticMore';
 import { useDispatch, useSelector } from 'react-redux';
 import { setProbMatchMore } from '@/store/ProbMatchSlice';
+import ProbabilisticEdit from './ProbabilisticEdit';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProbabilisticMatch = () => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState(ProbabilisticMatchtableData);
+  const [rowEditData, setRowEditData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [managedModal, setManagedModal] = useState();
   const dispatch = useDispatch()
   const addData = useSelector(state => state?.ProbMatch?.add)
 
+
+
+
   useEffect(() => {
     ; (async () => {
       const Data = await fetchProbabilisticConfig()
       setRowData(Data?.columns)
+      setRowEditData(Data)
     })()
   }, [])
+
+
+  const getColumnValue = (data, field) => {
+    const fieldKeys = field.split(".");
+    return fieldKeys.reduce((obj, key) => (obj && obj[key] !== 'undefined' ? obj[key] : undefined), data);
+  };
 
   const [columnDefs] = useState([
     {
@@ -44,6 +58,7 @@ const ProbabilisticMatch = () => {
       minWidth: 100,
       maxWidth: 120,
       filter: true,
+      valueGetter: (params) => getColumnValue(params.data, "model.model-params.threshold"),
     },
     {
       field: "minmatch",
@@ -161,19 +176,95 @@ const ProbabilisticMatch = () => {
   }, [addData])
 
 
-  const handleEdit = () => {
+  const handleEdit = (e, data) => {
     setIsModalOpen(true);
     setManagedModal("Edit")
+    dispatch(setProbMatchMore(data));
   }
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+
+  console.log(rowEditData);
+
+  const handleEditInApi = async (data) => {
+
+
+    const hasMatchingColumn = rowData?.some(item => item.column === data.column);
+
+    if (hasMatchingColumn) {
+      const handleeditedData = rowData?.map((item) => {
+        return item.column === data.column ? data : item
+      })
+
+
+      const upEdit = {
+        columns: handleeditedData,
+        rules: rowEditData?.rules,
+        "total-threshold": rowEditData?.["total-threshold"]
+
+      }
+
+      const editApi = await fetchProbabilistic_Config(upEdit)
+
+      console.log(editApi);
+
+      if (editApi.isSuccess) {
+        toast.success('Data Update', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          toastId: "toastId"
+        });
+      }
+
+    } else {
+
+
+
+      const newData = [...rowData, data];
+
+      const upEdit = {
+        columns: newData,
+        rules: rowEditData?.rules,
+        "total-threshold": rowEditData?.["total-threshold"]
+      }
+
+      const editApi = await fetchProbabilistic_Config(upEdit)
+
+      if (editApi.isSuccess) {
+        toast.success('Data Update', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          toastId: "toastId"
+        });
+      }
+    }
+
+
+
+
+
+  }
+
   return (
     <div className='flex flex-col gap-3'>
 
       <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        {managedModal === "More" ? <ProbabilisticMore onClose={closeModal} /> : managedModal === "Add" ? <ProbabilisticAdd onClose={closeModal} /> : <ProbabilisticAdd onClose={closeModal} />}
+        {managedModal === "More" ? <ProbabilisticMore onClose={closeModal} /> : managedModal === "Add" ? <ProbabilisticAdd onClose={closeModal} /> : <ProbabilisticEdit onClose={closeModal} handleEditInApi={handleEditInApi} />}
       </CustomModal>
 
       <div className='flex items-center gap-10 '>
@@ -239,6 +330,18 @@ const ProbabilisticMatch = () => {
           icon={<FaPlus />}
         />
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   )
 }

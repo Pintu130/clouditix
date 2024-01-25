@@ -1,31 +1,171 @@
-import CustomButton from '@/components/common/CustomButton'
-import CustomInput from '@/components/common/CustomInput'
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
-import { useDispatch, useSelector } from 'react-redux';
+import CustomInput from '@/components/common/CustomInput';
+import CustomButton from '@/components/common/CustomButton';
+import { useDispatch, useSelector } from 'react-redux'
+import { setProbMatchAdd } from '@/store/ProbMatchSlice';
+import CustomSwitch from '@/components/common/CustomSwitch';
 
-const ProbabilisticMore = ({ onClose }) => {
-
+const ProbabilisticEdit = ({ onClose, handleEditInApi }) => {
     const [formData, setFormData] = useState({})
+    const dispatch = useDispatch()
 
     const MoreData = useSelector(state => state?.ProbMatch?.data);
 
-
-    const handleClose = () => {
-        onClose()
-    }
+    console.log(MoreData);
 
     useEffect(() => {
         ; (() => {
-            if (Object.keys(MoreData).length > 0) {
-                setFormData(MoreData)
+            if (MoreData?.column?.length > 0) {
+
+
+                const data = {
+                    attribute: MoreData?.column,
+                    minmatch: '',
+                    blocksize: MoreData?.general?.hasOwnProperty("block-size") ? MoreData?.general["block-size"] : "",
+                    pathmodelinput: MoreData?.general?.hasOwnProperty("path-model-input") ? MoreData?.general["path-model-input"] : "",
+                    hyperparametertuning: MoreData?.model?.general?.hasOwnProperty("hyper-parameter-tuning") ? MoreData?.model?.general["hyper-parameter-tuning"] : "",
+                    levenshteinDistance: MoreData?.model?.hasOwnProperty("model-params") ? MoreData?.model?.["model-params"]?.LevenshteinDistance : "",
+                    distances: MoreData?.general?.hasOwnProperty("distances") ? MoreData?.general["distances"] : "",
+                    pathmodeloutput: MoreData?.general?.hasOwnProperty("path-model-output") ? MoreData?.general["path-model-output"] : "",
+                    modelobject: MoreData?.model?.general?.hasOwnProperty("model-object") ? MoreData?.model?.general["model-object"] : "",
+                    levenshteinDistanceSet: MoreData?.model?.hasOwnProperty("model-params") ? MoreData?.model["model-params"]?.LevenshteinDistanceSet : "",
+                    leadingcolumn: MoreData?.general?.hasOwnProperty("leading-column") ? MoreData?.general["leading-column"] : "",
+                    pathtestfile: MoreData?.general?.hasOwnProperty("path-test-file") ? MoreData?.general["path-test-file"] : "",
+                    jaccardDistance: MoreData?.model?.hasOwnProperty("model-params") ? MoreData?.model["model-params"]?.JaccardDistance : "",
+                    masidistance: MoreData?.model?.hasOwnProperty("model-params") ? MoreData?.model["model-params"]?.MasiDistance : "",
+                    minpartitionsize: MoreData?.general?.hasOwnProperty("min-partition-size") ? MoreData?.general["min-partition-size"] : "",
+                    pathtestresult: MoreData?.general?.hasOwnProperty("path-test-result") ? MoreData?.general["path-test-result"] : "",
+                    jarowinkler: MoreData?.model?.hasOwnProperty("model-params") ? MoreData?.model["model-params"]?.JaroWinkler : "",
+                    metaphonedistance: MoreData?.model?.hasOwnProperty("model-params") ? MoreData?.model["model-params"]?.MetaphoneDistance : "",
+                    mincharcount: MoreData?.general?.hasOwnProperty("min_char_count") ? MoreData?.general["min_char_count"] : "",
+                    removingstrings: MoreData?.general?.["removing-strings"]?.["common-words"] || "",
+                    jarowinklerset: MoreData?.model?.hasOwnProperty("model-params") ? MoreData?.model["model-params"]?.JaroWinklerSet : "",
+                    colwight: MoreData?.model?.hasOwnProperty("model-params") ? MoreData?.model["model-params"]?.threshold : ""
+                }
+
+                setFormData(data)
+
             }
         })()
     }, [MoreData])
 
+    const handleClose = () => {
+        onClose()
 
+        setFormData({
+            attribute: '',
+            minmatch: '',
+            blocksize: '',
+            pathmodelinput: '',
+            hyperparametertuning: '',
+            levenshteinDistance: '',
+            distances: [
+                ''
+            ],
+            pathmodeloutput: '',
+            modelobject: '',
+            levenshteinDistanceSet: '',
+            leadingcolumn: '',
+            pathtestfile: '',
+            jaccardDistance: '',
+            masidistance: '',
+            minpartitionsize: '',
+            pathtestresult: '',
+            jarowinkler: '',
+            metaphonedistance: '',
+            mincharcount: '',
+            removingstrings: '',
+            jarowinklerset: '',
+            colwight: ''
+        })
+    }
 
     console.log(formData);
+
+
+    const handleFromData = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+
+        setFormData({
+            ...formData,
+            [name]: value
+        })
+
+    }
+
+    const handleSave = () => {
+        console.log(formData);
+
+        const data = {
+            column: formData?.attribute,
+            general: {
+                block_size: formData?.blocksize,
+                distances: formData?.distances,
+                leading_column: formData?.leadingcolumn,
+                min_partition_size: formData,
+                min_char_count: formData?.mincharcount,
+                path_model_input: formData?.pathmodelinput,
+                path_model_output: formData?.pathmodeloutput,
+                path_test_file: formData?.pathtestfile,
+                path_test_result: formData?.pathtestresult,
+                removing_strings: {
+                    common_words: [
+                        formData?.removingstrings
+                    ]
+                }
+            },
+            model: {
+                general: {
+                    hyper_parameter_tuning: formData?.hyperparametertuning,
+                    model_object: formData?.modelobject
+                },
+                model_params: {
+                    JaccardDistance: formData?.jaccardDistance,
+                    JaroWinkler: formData?.jarowinkler,
+                    JaroWinklerSet: formData?.jarowinklerset,
+                    LevenshteinDistance: formData?.levenshteinDistance,
+                    LevenshteinDistanceSet: formData?.levenshteinDistanceSet,
+                    MasiDistance: formData?.masidistance,
+                    MetaphoneDistance: formData?.metaphonedistance,
+                    threshold: formData?.colwight
+                }
+
+            }
+
+        }
+
+        handleEditInApi(data);
+        onClose()
+        setFormData({
+            attribute: '',
+            minmatch: '',
+            blocksize: '',
+            pathmodelinput: '',
+            hyperparametertuning: '',
+            levenshteinDistance: '',
+            distances: [
+                ''
+            ],
+            pathmodeloutput: '',
+            modelobject: '',
+            levenshteinDistanceSet: '',
+            leadingcolumn: '',
+            pathtestfile: '',
+            jaccardDistance: '',
+            masidistance: '',
+            minpartitionsize: '',
+            pathtestresult: '',
+            jarowinkler: '',
+            metaphonedistance: '',
+            mincharcount: '',
+            removingstrings: '',
+            jarowinklerset: '',
+            colwight: ''
+        })
+    }
+
 
     return (
         <div className='flex flex-col gap-5 px-5'>
@@ -44,7 +184,50 @@ const ProbabilisticMore = ({ onClose }) => {
                 </div>
             </div>
             <div>
-                <h2 className='text-xl font-bold '> More Details - {MoreData?.column} </h2>
+                <h2 className='text-xl font-bold '> Add new attribute for - Rule 1 </h2>
+                {/* <CustomSwitch id="mySwitch" onChange={(e) => handleFromDatass(e)} name="ndgsddsbvdsame"  /> */}
+            </div>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-3'>
+                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
+                    <label
+                        htmlFor="speciality"
+                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
+                    >
+                        Attribute
+                    </label>
+                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
+                        <CustomInput
+                            isNUmber={false}
+                            isRequired={true}
+                            isIcon={true}
+                            label=""
+                            placeholder=""
+                            name="attribute"
+                            value={formData?.attribute}
+                            onChange={(e) => handleFromData(e)}
+                        />
+                    </div>
+                </div>
+                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
+                    <label
+                        htmlFor="speciality"
+                        className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
+                    >
+                        Min-match
+                    </label>
+                    <div className="w-full max-w-[300px] lg:max-w-[100%]">
+                        <CustomInput
+                            isNUmber={false}
+                            isRequired={true}
+                            isIcon={true}
+                            label=""
+                            placeholder=""
+                            name="minmatch"
+                            value={formData?.minmatch}
+                            onChange={(e) => handleFromData(e)}
+                        />
+                    </div>
+                </div>
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-3'>
                 <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%] gap-1 custom-select">
@@ -61,13 +244,13 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.general?.hasOwnProperty("block-size") ? formData?.general["block-size"] : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="blocksize"
+                            value={formData?.blocksize}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
-                <div className="flex flex-col w-full items-start  lg:max-w-[70%] 2xl:max-w-[80%]  gap-1 custom-select">
+                <div className="flex flex-col w-full items-start lg:max-w-[70%] 2xl:max-w-[80%]  gap-1 custom-select">
                     <label
                         htmlFor="speciality"
                         className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
@@ -81,9 +264,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.general?.hasOwnProperty("path-model-input") ? formData?.general["path-model-input"] : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="pathmodelinput"
+                            value={formData?.pathmodelinput}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -101,9 +284,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.model?.general?.hasOwnProperty("hyper-parameter-tuning") ? formData?.model?.general["hyper-parameter-tuning"] : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="hyperparametertuning"
+                            value={formData?.hyperparametertuning}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -121,9 +304,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.model?.hasOwnProperty("model-params") ? formData?.model?.["model-params"]?.LevenshteinDistance : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="levenshteinDistance"
+                            value={formData?.levenshteinDistance}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -141,9 +324,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.general?.hasOwnProperty("distances") ? formData?.general["distances"] : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="distances"
+                            value={formData?.distances}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -161,9 +344,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.general?.hasOwnProperty("path-model-output") ? formData?.general["path-model-output"] : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="pathmodeloutput"
+                            value={formData?.pathmodeloutput}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -181,9 +364,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.model?.general?.hasOwnProperty("model-object") ? formData?.model?.general["model-object"] : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="modelobject"
+                            value={formData?.modelobject}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -201,9 +384,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.model?.hasOwnProperty("model-params") ? formData?.model["model-params"]?.LevenshteinDistanceSet : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="levenshteinDistanceSet"
+                            value={formData?.levenshteinDistanceSet}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -221,9 +404,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.general?.hasOwnProperty("leading-column") ? formData?.general["leading-column"] : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="leadingcolumn"
+                            value={formData?.leadingcolumn}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -242,9 +425,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.general?.hasOwnProperty("path-test-file") ? formData?.general["path-test-file"] : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="pathtestfile"
+                            value={formData?.pathtestfile}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -262,9 +445,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.model?.hasOwnProperty("model-params") ? formData?.model["model-params"]?.JaccardDistance : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="jaccardDistance"
+                            value={formData?.jaccardDistance}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -282,9 +465,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.model?.hasOwnProperty("model-params") ? formData?.model["model-params"]?.MasiDistance : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="masidistance"
+                            value={formData?.masidistance}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -302,9 +485,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.general?.hasOwnProperty("min-partition-size") ? formData?.general["min-partition-size"] : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="minpartitionsize"
+                            value={formData?.minpartitionsize}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -322,9 +505,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.general?.hasOwnProperty("path-test-result") ? formData?.general["path-test-result"] : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="pathtestresult"
+                            value={formData?.pathtestresult}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -342,9 +525,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.model?.hasOwnProperty("model-params") ? formData?.model["model-params"]?.JaroWinkler : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="jarowinkler"
+                            value={formData?.jarowinkler}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -362,9 +545,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.model?.hasOwnProperty("model-params") ? formData?.model["model-params"]?.MetaphoneDistance : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="metaphonedistance"
+                            value={formData?.metaphonedistance}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -382,9 +565,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.general?.hasOwnProperty("min_char_count") ? formData?.general["min_char_count"] : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="mincharcount"
+                            value={formData?.mincharcount}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -402,9 +585,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.general?.["removing-strings"]?.["common-words"] || ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="removingstrings"
+                            value={formData?.removingstrings}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -422,9 +605,9 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.model?.hasOwnProperty("model-params") ? formData?.model["model-params"]?.JaroWinklerSet : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="jarowinklerset"
+                            value={formData?.jarowinklerset}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
@@ -433,7 +616,7 @@ const ProbabilisticMore = ({ onClose }) => {
                         htmlFor="speciality"
                         className="text-[#5A5A5A] text-base w-[140px] lg:w-auto font-Inter font-normal whitespace-nowrap"
                     >
-                        Col_weighr
+                        Col_weight
                     </label>
                     <div className="w-full max-w-[300px] lg:max-w-[100%]">
                         <CustomInput
@@ -442,14 +625,22 @@ const ProbabilisticMore = ({ onClose }) => {
                             isIcon={true}
                             label=""
                             placeholder=""
-                            name="ruleParameters"
-                            value={formData?.model?.hasOwnProperty("model-params") ? formData?.model["model-params"]?.threshold : ""}
-                            onChange={(e) => handleFromData(e.target.value, 'ruleParameters')}
+                            name="colwight"
+                            value={formData?.colwight}
+                            onChange={(e) => handleFromData(e)}
                         />
                     </div>
                 </div>
             </div>
-            <div className='flex items-center justify-end'>
+            <div className='flex items-center justify-end gap-5 pb-5'>
+                <div className="w-full max-w-[150px]" >
+                    <CustomButton
+                        name="Save"
+                        handleClick={() => handleSave()}
+                        isDisable={false}
+                        isLoading={false}
+                    />
+                </div>
                 <div className="w-full max-w-[150px]" >
                     <CustomButton
                         name="Close"
@@ -463,4 +654,4 @@ const ProbabilisticMore = ({ onClose }) => {
     )
 }
 
-export default ProbabilisticMore
+export default ProbabilisticEdit

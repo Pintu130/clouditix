@@ -118,6 +118,16 @@ export const fetchProbabilisticConfig = async () => {
   }
 }
 
+export const fetchProbabilistic_Config = async (data) => {
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}Probabilistic_Config`, data)
+    console.log(response, "idbbdsvsnvisdnvnosfnsvnsdnvlnadvn");
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
 
 export const fetchGetUsers = async () => {
   try {
