@@ -2,17 +2,13 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import CustomInput from '@/components/common/CustomInput';
 import CustomButton from '@/components/common/CustomButton';
-import { useDispatch, useSelector } from 'react-redux'
-import { setProbMatchAdd } from '@/store/ProbMatchSlice';
-import CustomSwitch from '@/components/common/CustomSwitch';
+import { useSelector } from 'react-redux'
+
 
 const ProbabilisticEdit = ({ onClose, handleEditInApi }) => {
-    const [formData, setFormData] = useState({})
-    const dispatch = useDispatch()
+    const [formData, setFormData] = useState({});
 
     const MoreData = useSelector(state => state?.ProbMatch?.data);
-
-    console.log(MoreData);
 
     useEffect(() => {
         ; (() => {
@@ -81,8 +77,6 @@ const ProbabilisticEdit = ({ onClose, handleEditInApi }) => {
         })
     }
 
-    console.log(formData);
-
 
     const handleFromData = (e) => {
         const name = e.target.name;
@@ -96,32 +90,29 @@ const ProbabilisticEdit = ({ onClose, handleEditInApi }) => {
     }
 
     const handleSave = () => {
-        console.log(formData);
 
         const data = {
             column: formData?.attribute,
             general: {
-                block_size: formData?.blocksize,
+                "block-size": formData?.blocksize,
                 distances: formData?.distances,
-                leading_column: formData?.leadingcolumn,
-                min_partition_size: formData,
-                min_char_count: formData?.mincharcount,
-                path_model_input: formData?.pathmodelinput,
-                path_model_output: formData?.pathmodeloutput,
-                path_test_file: formData?.pathtestfile,
-                path_test_result: formData?.pathtestresult,
-                removing_strings: {
-                    common_words: [
-                        formData?.removingstrings
-                    ]
+                "leading-column": formData?.leadingcolumn,
+                "min-partition-size": formData?.minpartitionsize,
+                "min-char-count": formData?.mincharcount,
+                "path-model-input": formData?.pathmodelinput,
+                "path-model-output": formData?.pathmodeloutput,
+                "path-test-file": formData?.pathtestfile,
+                "path-test-result": formData?.pathtestresult,
+                "removing-strings": {
+                    "common-words": Array.isArray(formData?.removingstrings) ? formData?.removingstrings : [formData?.removingstrings]
                 }
             },
             model: {
                 general: {
-                    hyper_parameter_tuning: formData?.hyperparametertuning,
-                    model_object: formData?.modelobject
+                    "hyper-parameter-tuning": formData?.hyperparametertuning,
+                    "model-object": formData?.modelobject
                 },
-                model_params: {
+                "model-params": {
                     JaccardDistance: formData?.jaccardDistance,
                     JaroWinkler: formData?.jarowinkler,
                     JaroWinklerSet: formData?.jarowinklerset,

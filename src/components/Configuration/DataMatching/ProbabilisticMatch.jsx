@@ -17,13 +17,18 @@ import { setProbMatchMore } from '@/store/ProbMatchSlice';
 import ProbabilisticEdit from './ProbabilisticEdit';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { MdDelete } from 'react-icons/md';
+import DeletePopup from '@/components/common/DeletePopup';
 
 const ProbabilisticMatch = () => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState(ProbabilisticMatchtableData);
   const [rowEditData, setRowEditData] = useState([]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [managedModal, setManagedModal] = useState();
+  const [isDelete, setIsDelete] = useState(false);
+  const [postProbabilistic_Config, setPostProbabilistic_Config] = useState({})
   const dispatch = useDispatch()
   const addData = useSelector(state => state?.ProbMatch?.add)
 
@@ -36,7 +41,7 @@ const ProbabilisticMatch = () => {
       setRowData(Data?.columns)
       setRowEditData(Data)
     })()
-  }, [])
+  }, [postProbabilistic_Config])
 
 
   const getColumnValue = (data, field) => {
@@ -68,14 +73,6 @@ const ProbabilisticMatch = () => {
       filter: true,
     },
     {
-      field: "delete",
-      headerName: " Delete",
-      minWidth: 80,
-      maxWidth: 100,
-      cellRenderer: "agCheckboxCellRenderer",
-      editable: true,
-    },
-    {
 
       field: '', headerName: "More Details", minWidth: 80, maxWidth: 130, cellRenderer: (params) => {
         const data = params.data;
@@ -91,8 +88,7 @@ const ProbabilisticMatch = () => {
       },
     },
     {
-
-      field: '', headerName: "", minWidth: 80, maxWidth: 100, cellRenderer: (params) => {
+      field: '', headerName: "Edit", minWidth: 80, maxWidth: 100, cellRenderer: (params) => {
         const data = params.data;
         return (
           <div className="flex items-center justify-center h-full  ">
@@ -100,6 +96,21 @@ const ProbabilisticMatch = () => {
               onClick={(e) => handleEdit(e, data)}
             >
               <BiSolidPencil className="w-6 h-6 text-blue-B40" />
+            </button>
+          </div>
+        );
+      },
+    },
+    {
+      field: '', headerName: "Delete", minWidth: 80, maxWidth: 100, cellRenderer: (params) => {
+        const data = params.data;
+        return (
+          <div className="flex items-center justify-center h-full  ">
+            <button
+              onClick={(e) => handleDelete(e, data)}
+            >
+
+              <MdDelete className="w-6 h-6 text-blue-B40" />
             </button>
           </div>
         );
@@ -177,6 +188,7 @@ const ProbabilisticMatch = () => {
 
 
   const handleEdit = (e, data) => {
+
     setIsModalOpen(true);
     setManagedModal("Edit")
     dispatch(setProbMatchMore(data));
@@ -187,10 +199,71 @@ const ProbabilisticMatch = () => {
   };
 
 
-  console.log(rowEditData);
+  const handleDelete = async (e, data) => {
+    e.preventDefault()
+
+    setIsDelete(data);
+
+    /*  const deleteRowData = await fetchProbabilisticConfig();
+ 
+     const DeleteData = deleteRowData?.columns?.filter((item) => item?.column !== data?.column)
+ 
+     const upEdit = {
+       columns: DeleteData,
+       rules: deleteRowData?.rules,
+       "total-threshold": deleteRowData?.["total-threshold"]
+     }
+ 
+     const editApi = await fetchProbabilistic_Config(upEdit)
+     setPostProbabilistic_Config(editApi);
+ 
+     if (editApi.isSuccess) {
+       toast.error('Delete Data', {
+         position: "top-center",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "light",
+         toastId: "toastId"
+       });
+     } */
+
+  };
+
+  const deleteConfirmation = async () => {
+    const deleteRowData = await fetchProbabilisticConfig();
+
+    const DeleteData = deleteRowData?.columns?.filter((item) => item?.column !== isDelete?.column)
+
+    const upEdit = {
+      columns: DeleteData,
+      rules: deleteRowData?.rules,
+      "total-threshold": deleteRowData?.["total-threshold"]
+    }
+
+    const editApi = await fetchProbabilistic_Config(upEdit)
+    setPostProbabilistic_Config(editApi);
+
+    if (editApi.isSuccess) {
+      setIsDelete("");
+      toast.error('Delete Data', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        toastId: "toastId"
+      });
+    }
+  }
 
   const handleEditInApi = async (data) => {
-
 
     const hasMatchingColumn = rowData?.some(item => item.column === data.column);
 
@@ -200,16 +273,17 @@ const ProbabilisticMatch = () => {
       })
 
 
+
       const upEdit = {
         columns: handleeditedData,
         rules: rowEditData?.rules,
         "total-threshold": rowEditData?.["total-threshold"]
-
       }
 
-      const editApi = await fetchProbabilistic_Config(upEdit)
 
-      console.log(editApi);
+
+      const editApi = await fetchProbabilistic_Config(upEdit)
+      setPostProbabilistic_Config(editApi);
 
       if (editApi.isSuccess) {
         toast.success('Data Update', {
@@ -227,18 +301,33 @@ const ProbabilisticMatch = () => {
 
     } else {
 
-
-
       const newData = [...rowData, data];
+
+
+      const addValue = {
+        "col_weight": null,
+        "min_match": null,
+        "name": null
+      }
+
+      /* const upEdit = {
+        columns: newData,
+        rules: rowEditData?.rules,
+        "total-threshold": rowEditData?.["total-threshold"]
+      } */
 
       const upEdit = {
         columns: newData,
-        rules: rowEditData?.rules,
+        rules: [
+          {
+            "column_rule": [...rowEditData.rules[0].column_rule, addValue],
+          }
+        ],
         "total-threshold": rowEditData?.["total-threshold"]
       }
 
       const editApi = await fetchProbabilistic_Config(upEdit)
-
+      setPostProbabilistic_Config(editApi);
       if (editApi.isSuccess) {
         toast.success('Data Update', {
           position: "top-center",
@@ -254,18 +343,24 @@ const ProbabilisticMatch = () => {
       }
     }
 
-
-
-
-
   }
+
+  const closePopup = () => {
+    setIsDelete("");
+  };
 
   return (
     <div className='flex flex-col gap-3'>
 
       <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        {managedModal === "More" ? <ProbabilisticMore onClose={closeModal} /> : managedModal === "Add" ? <ProbabilisticAdd onClose={closeModal} /> : <ProbabilisticEdit onClose={closeModal} handleEditInApi={handleEditInApi} />}
+        {managedModal === "More" ? <ProbabilisticMore onClose={closeModal} /> : managedModal === "Add" ? <ProbabilisticAdd onClose={closeModal} handleEditInApi={handleEditInApi} /> : <ProbabilisticEdit onClose={closeModal} handleEditInApi={handleEditInApi} />}
       </CustomModal>
+
+      <DeletePopup
+        isOpen={isDelete}
+        onCancel={closePopup}
+        onDelete={() => deleteConfirmation()}
+      />
 
       <div className='flex items-center gap-10 '>
         <fieldset className='border pl-3 rounded-lg'>
@@ -300,7 +395,7 @@ const ProbabilisticMatch = () => {
       </div>
 
       <div className="flex w-full min-h-[50vh] pb-10  xl:max-h-[30%]  mx-auto ag-theme-alpine ">
-        <div className="relative overflow-auto max-h-[500px]" style={{ width: "50%" }}>
+        <div className="relative overflow-auto max-h-[500px]" style={{ width: "60%" }}>
           <AgGridReact
             ref={tableRef}
             rowData={rowData}

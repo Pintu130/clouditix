@@ -57,7 +57,7 @@ const DeterministicMatch = () => {
   const [rules, setRules] = useState([]);
   const [openRules, setOpenRules] = useState({});
   const [areAllRulesVisible, setAreAllRulesVisible] = useState(true);
-
+  const [createRuleData, setCreateRuleData] = useState([])
   const [isOption, setIsOption] = useState(matchdata)
 
 
@@ -93,6 +93,7 @@ const DeterministicMatch = () => {
 
       if (data?.match_rules?.length > 0) {
         setRules(data?.match_rules)
+        setCreateRuleData(data)
       }
     })()
   }, [])
@@ -117,14 +118,26 @@ const DeterministicMatch = () => {
     }
   }
 
-  console.log(rules, "rule");
 
+ /*  console.log(dynamicFields);
+  const CreateRowData = { ...createRuleData };
 
+  console.log(CreateRowData, "CreateRowData");
+  console.log(CreateRowData?.match_rules, "CreateRowData");
+  console.log(CreateRowData?.match_rules?.map(item => item?.columns), "CreateRowData");
 
-  console.log(dynamicFields, "dynamicFields");
-  console.log(editRule, "dynamicFields");
+  const data = CreateRowData?.match_rules?.map(item => [item, { label: 'Name', value: 'Name' }])
+  console.log(data, "hanle"); */
+
 
   const handleSaveRule = () => {
+    const CreateRowData = { ...createRuleData };
+
+    console.log(CreateRowData);
+
+    const data = CreateRowData?.match_rules?.map(item => item?.columns)
+
+
     /*  const newRule = {
        dynamicFields: dynamicFields.map(field => ({
          name: field?.name?.value,
@@ -181,7 +194,7 @@ const DeterministicMatch = () => {
             distances: Array(6).fill('JaroWinkler'),
             'leading-column': 'false',
             'min-partition-size': '500',
-            min_char_count: '5',
+            "min-char-count": '5',
             'path-model-input': 'None',
             'path-model-output': 'None',
             'path-test-file': 'None',

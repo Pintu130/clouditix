@@ -91,6 +91,20 @@ export const fetchDeterministicMatch = async () => {
     return error
   }
 }
+
+
+export const fetchDeterministic_Config = async (data) => {
+
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}Deterministic_Config`, data);
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
+
+
 export const fetchsurvivorshipData = async () => {
   try {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}SurvivorshipRules`)
@@ -99,6 +113,8 @@ export const fetchsurvivorshipData = async () => {
     return error
   }
 }
+
+
 
 export const fetchsurvivorshipDataUpdate = async (data) => {
   try {
@@ -119,9 +135,9 @@ export const fetchProbabilisticConfig = async () => {
 }
 
 export const fetchProbabilistic_Config = async (data) => {
+
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}Probabilistic_Config`, data)
-    console.log(response, "idbbdsvsnvisdnvnosfnsvnsdnvlnadvn");
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}Probabilistic_Config`, data);
     return response?.data
   } catch (error) {
     return error

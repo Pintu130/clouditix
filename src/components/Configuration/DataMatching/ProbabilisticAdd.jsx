@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { setProbMatchAdd } from '@/store/ProbMatchSlice';
 import CustomSwitch from '@/components/common/CustomSwitch';
 
-const ProbabilisticAdd = ({ onClose }) => {
+const ProbabilisticAdd = ({ onClose, handleEditInApi }) => {
     const [formData, setFormData] = useState({})
     const dispatch = useDispatch()
 
@@ -28,80 +28,43 @@ const ProbabilisticAdd = ({ onClose }) => {
     const handleSave = () => {
         console.log(formData);
 
-        /*  const data =   {
-           columns: [
-             {
-               column: formData?.attribute,
-               general: {
-                 block_size: formData?.blocksize,
-                 distances: formData?.distances,
-                 leading_column: formData?.leadingcolumn,
-                 min_partition_size: formData,
-                 min_char_count: formData?.mincharcount,
-                 path_model_input: formData?.pathmodelinput,
-                 path_model_output: formData?.pathmodeloutput,
-                 path_test_file: formData?.pathtestfile,
-                 path_test_result: formData?.pathtestresult,
-                 removing_strings: {
-                   common_words: [
-                    formData?.removingstrings
-                   ]
-                 }
-               },
-               model: {
-                 general: {
-                   hyper_parameter_tuning: formData?.hyperparametertuning,
-                   model_object: formData?.modelobject
-                 },
-                 model_params: {
-                   JaccardDistance: formData?.jaccardDistance,
-                   JaroWinkler: formData?.jarowinkler,
-                   JaroWinklerSet: formData?.jarowinklerset,
-                   LevenshteinDistance: formData?.levenshteinDistance,
-                   LevenshteinDistanceSet: formData?.levenshteinDistanceSet,
-                   MasiDistance: formData?.masidistance,
-                   MetaphoneDistance: formData?.metaphonedistance,
-                   threshold: formData?.colwight
-                 }
-               }
-             },
-           ],
-           rules: [
-             {
-               column_rule: [
-                 {
-                   col_weight: null,
-                   min_match: null,
-                   name: null
-                 },
-                 {
-                   col_weight: null,
-                   min_match: null,
-                   name: null
-                 },
-                 {
-                   col_weight: null,
-                   min_match: null,
-                   name: null
-                 },
-                 {
-                   col_weight: null,
-                   min_match: null,
-                   name: null
-                 },
-                 {
-                   col_weight: null,
-                   min_match: null,
-                   name: null
-                 }
-               ]
-             }
-           ],
-           total_threshold: 0.7
-         } */
+        const data = {
+            column: formData?.attribute,
+            general: {
+                "block-size": formData?.blocksize,
+                distances: [formData?.distances],
+                "leading-column": formData?.leadingcolumn,
+                "min-partition-size": formData?.minpartitionsize,
+                "min-char-count": formData?.mincharcount,
+                "path-model-input": formData?.pathmodelinput,
+                "path-model-output": formData?.pathmodeloutput,
+                "path-test-file": formData?.pathtestfile,
+                "path-test-result": formData?.pathtestresult,
+                "removing-strings": {
+                    "common-words": Array.isArray(formData?.removingstrings) ? formData?.removingstrings : [formData?.removingstrings]
 
+                }
+            },
+            model: {
+                general: {
+                    "hyper-parameter-tuning": formData?.hyperparametertuning,
+                    "model-object": formData?.modelobject
+                },
+                "model-params": {
+                    JaccardDistance: formData?.jaccardDistance,
+                    JaroWinkler: formData?.jarowinkler,
+                    JaroWinklerSet: formData?.jarowinklerset,
+                    LevenshteinDistance: formData?.levenshteinDistance,
+                    LevenshteinDistanceSet: formData?.levenshteinDistanceSet,
+                    MasiDistance: formData?.masidistance,
+                    MetaphoneDistance: formData?.metaphonedistance,
+                    threshold: formData?.colwight
+                }
 
+            }
 
+        }
+        handleEditInApi(data)
         dispatch(setProbMatchAdd(formData))
         setFormData({})
         onClose()
