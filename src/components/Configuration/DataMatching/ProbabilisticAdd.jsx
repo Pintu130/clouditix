@@ -26,7 +26,6 @@ const ProbabilisticAdd = ({ onClose, handleEditInApi }) => {
     }
 
     const handleSave = () => {
-        console.log(formData);
 
         const data = {
             column: formData?.attribute,
@@ -40,10 +39,9 @@ const ProbabilisticAdd = ({ onClose, handleEditInApi }) => {
                 "path-model-output": formData?.pathmodeloutput,
                 "path-test-file": formData?.pathtestfile,
                 "path-test-result": formData?.pathtestresult,
-                "removing-strings": {
+                "removing-strings": formData?.removingstrings?.length > 1 ? {
                     "common-words": Array.isArray(formData?.removingstrings) ? formData?.removingstrings : [formData?.removingstrings]
-
-                }
+                } : null
             },
             model: {
                 general: {

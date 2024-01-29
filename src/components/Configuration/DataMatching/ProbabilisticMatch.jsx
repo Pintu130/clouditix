@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Image from 'next/image';
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -54,7 +53,7 @@ const ProbabilisticMatch = () => {
       field: "column",
       headerName: "Attribute",
       minWidth: 100,
-      maxWidth: 215,
+      // maxWidth: 215,
       filter: true,
     },
     {

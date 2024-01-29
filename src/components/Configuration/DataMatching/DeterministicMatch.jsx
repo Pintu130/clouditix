@@ -5,10 +5,12 @@ import Image from 'next/image';
 import CustomInput from '@/components/common/CustomInput';
 import SmCustomModal from '@/components/common/SmCustomModal';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
-import { fetchDeterministicMatch, matchdata } from '@/assets/data';
+import { fetchDeterministicMatch, fetchDeterministic_Config, matchdata } from '@/assets/data';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { MdClose } from 'react-icons/md';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const customStyles = {
@@ -53,12 +55,13 @@ const DeterministicMatch = () => {
   const [dynamicFields, setDynamicFields] = useState([
     { name: '', value: "" }
   ]);
-
+  const [editMatchRules, setEditMatchRules] = useState('')
   const [rules, setRules] = useState([]);
   const [openRules, setOpenRules] = useState({});
   const [areAllRulesVisible, setAreAllRulesVisible] = useState(true);
   const [createRuleData, setCreateRuleData] = useState([])
   const [isOption, setIsOption] = useState(matchdata)
+  const [forUpdate, setForUpdate] = useState({})
 
 
 
@@ -78,6 +81,7 @@ const DeterministicMatch = () => {
 
   const handleNewRuleModal = () => {
     setIsNewRuleModal(true)
+    setEditMatchRules("Create")
   }
 
   const closeModal = () => {
@@ -85,6 +89,7 @@ const DeterministicMatch = () => {
     setDynamicFields([{ name: '', value: "" }])
     setIsEditruleModal()
     setIsOption(matchdata)
+    setEditMatchRules('')
   };
 
   useEffect(() => {
@@ -96,7 +101,7 @@ const DeterministicMatch = () => {
         setCreateRuleData(data)
       }
     })()
-  }, [])
+  }, [forUpdate])
 
 
   const handleFromData = (selectedOption, index, fieldKey) => {
@@ -119,112 +124,194 @@ const DeterministicMatch = () => {
   }
 
 
- /*  console.log(dynamicFields);
-  const CreateRowData = { ...createRuleData };
+  const handleSaveRule = async () => {
 
-  console.log(CreateRowData, "CreateRowData");
-  console.log(CreateRowData?.match_rules, "CreateRowData");
-  console.log(CreateRowData?.match_rules?.map(item => item?.columns), "CreateRowData");
+    if (editMatchRules === 'Create') {
+      const matchRule = `rule_${createRuleData?.match_rules?.length + 1}`
 
-  const data = CreateRowData?.match_rules?.map(item => [item, { label: 'Name', value: 'Name' }])
-  console.log(data, "hanle"); */
-
-
-  const handleSaveRule = () => {
-    const CreateRowData = { ...createRuleData };
-
-    console.log(CreateRowData);
-
-    const data = CreateRowData?.match_rules?.map(item => item?.columns)
-
-
-    /*  const newRule = {
-       dynamicFields: dynamicFields.map(field => ({
-         name: field?.name?.value,
-         value: field?.value?.value,
-       })),
-     };
- 
-     setRules([...rules, newRule]);
-     closeModal(); */
-
-
-
-
-
-    /*     const updatedRowData = editRule.map(rule => {
-          const updatedColumns = rule.columns.map(column => {
-            const matchingColumnInfo = dynamicFields.find(info => info.name.value === column.column);
-            if (matchingColumnInfo) {
-              // Update column properties based on matchingColumnInfo
-              column.column = matchingColumnInfo.name.value;
-              // Additional properties can be updated similarly
+      const upDateDynamicFields = {
+        "match_rule": matchRule,
+        "columns": dynamicFields?.map((columnItem) => ({
+          "column": columnItem?.name?.value,
+          "general": {
+            "block-size": "10",
+            "distances": [
+              "JaroWinkler",
+              "LevenshteinDistanceSet",
+              "JaroWinklerSet",
+              "JaccardDistance",
+              "MasiDistance",
+              "LevenshteinDistance"
+            ],
+            "leading-column": "true",
+            "min-partition-size": "500",
+            "min_char_count": "5",
+            "path-model-input": "None",
+            "path-model-output": "None",
+            "path-test-file": "None",
+            "path-test-result": "None",
+            "removing-strings": {
+              "common-words": [
+                "company",
+                "inc",
+                "corp.",
+                "corp",
+                "co",
+                "ltd",
+                "LTD",
+                "INC",
+                "pvt"
+              ]
             }
-            return column;
+          },
+          "model": {
+            "general": {
+              "hyper-parameter-tuning": "false",
+              "model-object": "LinearDecisionFixedWeights"
+            },
+            "model-params": {
+              "JaccardDistance": "0.3",
+              "JaroWinkler": "0.3",
+              "JaroWinklerSet": "0.3",
+              "LevenshteinDistance": "0",
+              "LevenshteinDistanceSet": "0.1",
+              "MasiDistance": "0",
+              "MetaphoneDistance": "0",
+              "threshold": "0.5"
+            }
+          }
+        })),
+        "rules": [
+          {
+            "column_rule": Array(dynamicFields?.length).fill({
+              "col_weight": null,
+              "min_match": null,
+              "name": null
+            })
+          }
+        ],
+        "total-threshold": "0.8"
+      };
+
+      if (createRuleData?.match_rules?.length > 0) {
+        const CreateJson = {
+          "match_rules": [...createRuleData?.match_rules, upDateDynamicFields]
+        }
+
+        const CreateApi = await fetchDeterministic_Config(CreateJson)
+
+        if (CreateApi?.isSuccess) {
+          toast.success('Create New Rulls', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            toastId: "toastId"
           });
-    
-          return {
-            ...rule,
-            columns: updatedColumns,
-          };
+          closeModal();
+          setForUpdate(CreateApi)
+        }
+
+      }
+    } else {
+
+
+      const matchRule = editMatchRules;
+
+      const upDateDynamicFields = {
+        "match_rule": matchRule,
+        "columns": dynamicFields?.map((columnItem) => ({
+          "column": columnItem?.name?.value,
+          "general": {
+            "block-size": "10",
+            "distances": [
+              "JaroWinkler",
+              "LevenshteinDistanceSet",
+              "JaroWinklerSet",
+              "JaccardDistance",
+              "MasiDistance",
+              "LevenshteinDistance"
+            ],
+            "leading-column": "true",
+            "min-partition-size": "500",
+            "min_char_count": "5",
+            "path-model-input": "None",
+            "path-model-output": "None",
+            "path-test-file": "None",
+            "path-test-result": "None",
+            "removing-strings": {
+              "common-words": [
+                "company",
+                "inc",
+                "corp.",
+                "corp",
+                "co",
+                "ltd",
+                "LTD",
+                "INC",
+                "pvt"
+              ]
+            }
+          },
+          "model": {
+            "general": {
+              "hyper-parameter-tuning": "false",
+              "model-object": "LinearDecisionFixedWeights"
+            },
+            "model-params": {
+              "JaccardDistance": "0.3",
+              "JaroWinkler": "0.3",
+              "JaroWinklerSet": "0.3",
+              "LevenshteinDistance": "0",
+              "LevenshteinDistanceSet": "0.1",
+              "MasiDistance": "0",
+              "MetaphoneDistance": "0",
+              "threshold": "0.5"
+            }
+          }
+        })),
+        "rules": [
+          {
+            "column_rule": Array(dynamicFields?.length).fill({
+              "col_weight": null,
+              "min_match": null,
+              "name": null
+            })
+          }
+        ],
+        "total-threshold": "0.8"
+      };
+
+
+      const EditRule = createRuleData?.match_rules?.map((item) => item?.match_rule === editMatchRules ? upDateDynamicFields : item)
+
+      const EditJson = {
+        "match_rules": EditRule,
+      }
+
+      const EditApi = await fetchDeterministic_Config(EditJson)
+
+      if (EditApi?.isSuccess) {
+        toast.success('Edits Rulls', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          toastId: "toastId"
         });
-    
-        console.log(updatedRowData);
-     */
-
-
-
-    const updatedRowData = { ...editRule };
-
-    updatedRowData.columns.forEach((column) => {
-      const columnName = dynamicFields.find((name) => name.name.label === column.column);
-      if (columnName) {
-        column.column = columnName.name.value;
+        closeModal();
+        setForUpdate(EditApi)
       }
-    });
 
-    // Add extra columns if needed
-    dynamicFields.forEach((columnName) => {
-      const existingColumn = updatedRowData.columns.find((column) => column.column === columnName.name.label);
-      if (!existingColumn) {
-        const newColumn = {
-          column: columnName.name.value,
-          general: {
-            'block-size': '10',
-            distances: Array(6).fill('JaroWinkler'),
-            'leading-column': 'false',
-            'min-partition-size': '500',
-            "min-char-count": '5',
-            'path-model-input': 'None',
-            'path-model-output': 'None',
-            'path-test-file': 'None',
-            'path-test-result': 'None',
-            'removing-strings': null,
-          },
-          model: {
-            general: {
-              'hyper-parameter-tuning': 'false',
-              'model-object': 'LinearDecisionFixedWeights',
-            },
-            'model-params': {
-              JaccardDistance: '0',
-              JaroWinkler: '0.5',
-              JaroWinklerSet: '0',
-              LevenshteinDistance: '0.5',
-              LevenshteinDistanceSet: '0',
-              MasiDistance: '0',
-              MetaphoneDistance: '0',
-              threshold: '0.5',
-            },
-          },
-        };
-        updatedRowData.columns.push(newColumn);
-      }
-    });
-
-    console?.log(updatedRowData);
-
-
+    }
 
   };
 
@@ -237,7 +324,7 @@ const DeterministicMatch = () => {
         if (updatedRules[ruleIndex].dynamicFields.length === 0) {
           updatedRules.splice(ruleIndex, 1);
         }
-  
+   
         return updatedRules;
       });
     }; */
@@ -276,7 +363,10 @@ const DeterministicMatch = () => {
 
   }
 
+
+
   const handleEditRules = (data) => {
+
     setIsEditruleModal(true)
 
     setEditRule(data)
@@ -286,6 +376,7 @@ const DeterministicMatch = () => {
       ))
 
       setDynamicFields(modifydata);
+      setEditMatchRules(data?.match_rule)
     }
   }
 
@@ -477,7 +568,7 @@ const DeterministicMatch = () => {
 
 
 
-      <div className='flex items-center justify-between p-3 border-b border-[#a6a6a6]'>
+      <div className='flex items-center justify-between p-3 border-b border-[#a6a6a6] h-full'>
         <div className="w-full max-w-[150px]" >
           <CustomButton
             name={areAllRulesVisible ? "Hide All Rules" : "Show All Rules"}
@@ -498,58 +589,60 @@ const DeterministicMatch = () => {
         </div>
       </div>
 
-      <div className='p-3 border-b border-[#a6a6a6] flex justify-center flex-col gap-3 w-full h-full max-h-[680px] overflow-auto custom-scroll'>
 
-        {rules.map((rule, index) => (
-          <div key={index} className='border border-[#a6a6a6] rounded-lg p-2'>
-            <div className='w-full max-w-[150px]'>
-              <CustomButton
-                name={rule?.match_rule}
-                handleClick={() => handleToggleRule(index)}
-                isDisable={false}
-                isLoading={false}
-                icon={areAllRulesVisible && openRules[index] ? <FaAngleUp /> : <FaAngleDown />}
-              />
-            </div>
-            {areAllRulesVisible && openRules[index] &&
-              <div className='flex items-center justify-between gap-5'>
-                <div className='flex items-center gap-10 '>
-                  <fieldset className='border pl-3 rounded-lg'>
-                    <legend className=''>Select Attribute</legend>
-                    <div className='flex items-center justify-start gap-5 p-3'>
-                      {rule.columns.map((field, fieldIndex) => (
-                        field?.column && <div key={fieldIndex} className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 '>
-                          <span>{field?.column}</span>
-                          <IoClose className='w-5 h-5 flex-shrink-0 cursor-pointer'
-                          // onClick={() => handleRemoveField(index, fieldIndex)}
-                          />
-                        </div>
-                      ))}
+      <div className='w-full h-full max-h-[680px] overflow-auto custom-scroll'>
+
+        <div className='p-3 border-b border-[#a6a6a6] flex justify-center flex-col gap-3 w-full h-full '>
+
+          {rules.map((rule, index) => (
+            <div key={index} className='border border-[#a6a6a6] rounded-lg p-2'>
+              <div className='w-full max-w-[150px]'>
+                <CustomButton
+                  name={rule?.match_rule}
+                  handleClick={() => handleToggleRule(index)}
+                  isDisable={false}
+                  isLoading={false}
+                  icon={areAllRulesVisible && openRules[index] ? <FaAngleUp /> : <FaAngleDown />}
+                />
+              </div>
+              {areAllRulesVisible && openRules[index] &&
+                <div className='flex items-center justify-between gap-5'>
+                  <div className='flex items-center gap-10 '>
+                    <fieldset className='border pl-3 rounded-lg'>
+                      <legend className=''>Select Attribute</legend>
+                      <div className='flex items-center justify-start gap-5 p-3'>
+                        {rule.columns.map((field, fieldIndex) => (
+                          field?.column && <div key={fieldIndex} className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 '>
+                            <span>{field?.column}</span>
+                            <IoClose className='w-5 h-5 flex-shrink-0 cursor-pointer'
+                            // onClick={() => handleRemoveField(index, fieldIndex)}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </fieldset>
+                    <div className='flex flex-col items-start'>
+                      <span>Total-threshold </span>
+                      {/* <span className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 '>{calculateTotalThreshold(rule.columns)}</span> */}
+                      <span className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 cursor-not-allowed '>1.0</span>
                     </div>
-                  </fieldset>
-                  <div className='flex flex-col items-start'>
-                    <span>Total-threshold </span>
-                    {/* <span className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 '>{calculateTotalThreshold(rule.columns)}</span> */}
-                    <span className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 cursor-not-allowed '>1.0</span>
+                  </div>
+
+                  <div className='w-full max-w-[100px] pr-5'>
+                    <CustomButton
+                      name="Edit"
+                      handleClick={() => handleEditRules(rule)}
+                      isDisable={false}
+                      isLoading={false}
+                      icon=""
+                    />
                   </div>
                 </div>
+              }
+            </div>
+          ))}
 
-                <div className='w-full max-w-[100px] pr-5'>
-                  <CustomButton
-                    name="Edit"
-                    handleClick={() => handleEditRules(rule)}
-                    isDisable={false}
-                    isLoading={false}
-                    icon=""
-                  />
-                </div>
-              </div>
-
-
-            }
-          </div>
-        ))}
-
+        </div>
       </div>
 
       <div className=' flex items-center justify-end gap-8 p-3 border-b border-[#a6a6a6]'>
@@ -570,6 +663,18 @@ const DeterministicMatch = () => {
           />
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   )
 }

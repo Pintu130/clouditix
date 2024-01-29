@@ -9,7 +9,7 @@ const ProbabilisticEdit = ({ onClose, handleEditInApi }) => {
     const [formData, setFormData] = useState({});
 
     const MoreData = useSelector(state => state?.ProbMatch?.data);
-
+    
     useEffect(() => {
         ; (() => {
             if (MoreData?.column?.length > 0) {
@@ -35,7 +35,7 @@ const ProbabilisticEdit = ({ onClose, handleEditInApi }) => {
                     jarowinkler: MoreData?.model?.hasOwnProperty("model-params") ? MoreData?.model["model-params"]?.JaroWinkler : "",
                     metaphonedistance: MoreData?.model?.hasOwnProperty("model-params") ? MoreData?.model["model-params"]?.MetaphoneDistance : "",
                     mincharcount: MoreData?.general?.hasOwnProperty("min_char_count") ? MoreData?.general["min_char_count"] : "",
-                    removingstrings: MoreData?.general?.["removing-strings"]?.["common-words"] || "",
+                    removingstrings: MoreData?.general?.["removing-strings"]?.["common-words"].length > 0 ? MoreData?.general?.["removing-strings"]?.["common-words"] : "",
                     jarowinklerset: MoreData?.model?.hasOwnProperty("model-params") ? MoreData?.model["model-params"]?.JaroWinklerSet : "",
                     colwight: MoreData?.model?.hasOwnProperty("model-params") ? MoreData?.model["model-params"]?.threshold : ""
                 }
@@ -103,9 +103,9 @@ const ProbabilisticEdit = ({ onClose, handleEditInApi }) => {
                 "path-model-output": formData?.pathmodeloutput,
                 "path-test-file": formData?.pathtestfile,
                 "path-test-result": formData?.pathtestresult,
-                "removing-strings": {
+                "removing-strings": formData?.removingstrings.length > 1 ? {
                     "common-words": Array.isArray(formData?.removingstrings) ? formData?.removingstrings : [formData?.removingstrings]
-                }
+                } : null
             },
             model: {
                 general: {
@@ -156,6 +156,9 @@ const ProbabilisticEdit = ({ onClose, handleEditInApi }) => {
             colwight: ''
         })
     }
+
+
+    console.log(formData?.removingstrings);
 
 
     return (

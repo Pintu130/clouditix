@@ -54,7 +54,9 @@ const GuestSearchData = ({ handleRoeData, handleRestart }) => {
         ; (
             async () => {
                 const data = await fetchSearchGeust()
-                setRowData(data);
+                if (data?.length > 0) {
+                    setRowData(data);
+                }
             }
         )()
     }, [])
@@ -112,13 +114,13 @@ const GuestSearchData = ({ handleRoeData, handleRestart }) => {
 
         return rowData.filter(item => {
 
-            if (Key?.value == 'golden_id') {
+            if (Key?.value == 'goldenId') {
                 if (operator == '==') {
                     return item[Key?.value] == groupName;
                 } else {
                     return item[Key?.value] != groupName;
                 }
-            } else if (Key?.value == "is_active_flag") {
+            } else if (Key?.value == "isActiveFlag") {
                 if (operator == '==') {
                     return item[Key?.value] == (groupName?.toLowerCase() === 'true');
                 } else {

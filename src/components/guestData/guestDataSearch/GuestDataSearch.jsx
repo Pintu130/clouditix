@@ -21,14 +21,19 @@ const GuestDataSearch = () => {
     ; (
       async () => {
         const data = await fetchSearchGeust()
-        setRowData(data);
+        console.log(data );
+        if (data?.length > 0) {
+          setRowData(data);
+        }
       }
     )()
   }, [])
 
   const handleRestart = async () => {
     const data = await fetchSearchGeust()
-    setRowData(data);
+    if (data?.length > 0) {
+      setRowData(data);
+    }
   };
 
   const handleEdit = (e, data) => {
@@ -38,19 +43,19 @@ const GuestDataSearch = () => {
 
   const [columnDefs] = useState([
     {
-      field: "golden_id",
+      field: "goldenId",
       headerName: "golden_id ",
       minWidth: 100,
       maxWidth: 100,
     },
     {
-      field: "guest_category_type_desc",
+      field: "guestCategoryTypeDesc",
       headerName: "guest_category_type",
       minWidth: 180,
       maxWidth: 220,
     },
     {
-      field: "full_name",
+      field: "fullName",
       headerName: "full_name",
       minWidth: 150,
       maxWidth: 200,
@@ -62,7 +67,7 @@ const GuestDataSearch = () => {
       maxWidth: 200,
     },
     {
-      field: "company_name",
+      field: "companyName",
       headerName: "company_name",
 
       minWidth: 150,
@@ -70,7 +75,7 @@ const GuestDataSearch = () => {
       editable: true,
     },
     {
-      field: "address_line_1",
+      field: "addressLine1",
       headerName: "address_line_1",
 
       minWidth: 150,
@@ -78,7 +83,7 @@ const GuestDataSearch = () => {
       editable: true,
     },
     {
-      field: "address_line_2",
+      field: "addressLine2",
       headerName: "address_line_2",
 
       minWidth: 150,
@@ -86,7 +91,7 @@ const GuestDataSearch = () => {
       editable: true,
     },
     {
-      field: "address_line_3",
+      field: "addressLine3",
       headerName: "address_line_3",
 
       minWidth: 150,
@@ -110,7 +115,7 @@ const GuestDataSearch = () => {
       editable: true,
     },
     {
-      field: "start_date",
+      field: "startDate",
       headerName: "start_date",
 
       minWidth: 150,
@@ -118,7 +123,7 @@ const GuestDataSearch = () => {
       editable: true,
     },
     {
-      field: "mobile_phone_country_code",
+      field: "mobilePhoneCountryCode",
       headerName: "country_code",
 
       minWidth: 150,
@@ -126,7 +131,7 @@ const GuestDataSearch = () => {
       editable: true,
     },
     {
-      field: "mobile_phone",
+      field: "mobilePhone",
       headerName: "mobile_phone",
 
       minWidth: 150,
@@ -134,7 +139,7 @@ const GuestDataSearch = () => {
       editable: true,
     },
     {
-      field: "personal_email",
+      field: "personalEmail",
       headerName: "personal_email",
 
       minWidth: 150,
@@ -142,7 +147,7 @@ const GuestDataSearch = () => {
       editable: true,
     },
     {
-      field: "is_active_flag",
+      field: "isActiveFlag",
       headerName: "is_active",
 
       minWidth: 100,

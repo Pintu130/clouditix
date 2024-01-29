@@ -246,7 +246,7 @@ export const fetchGetJobStatus = async (batchId) => {
 
 export const fetchSearchGeust = async () => {
   try {
-    const response = await axios.get(`http://13.234.127.72:5001/GetGuestDataFromDBQry`)
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GuestDataForSearch`)
     return response?.data
   } catch (error) {
     return error
@@ -420,7 +420,7 @@ export const matchdata = [
   { label: "mobile_phone", value: "mobile_phone" },
   { label: "Aadhar_Card", value: "Aadhar_Card" },
   { label: "Passport", value: "Passport" },
-  { label: "Driving_License", value: "PassDriving_Licenseport" },
+  { label: "Driving_License", value: "Driving_Licenseport" },
 ];
 export const matchdataValue = [
   { label: "0.1", value: "0.1" },
