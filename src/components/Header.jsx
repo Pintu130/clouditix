@@ -141,7 +141,7 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
           <button className='flex items-center flex-shrink-0 gap-3 '>
               {!isSidebarOpen ? <AiOutlineMenu className='w-4 h-4 cursor-pointer sm:h-6 sm:w-6' onClick={toggleSidebar} /> : <GrClose className='w-4 h-4 cursor-pointer sm:h-6 sm:w-6 ' onClick={toggleSidebar} />}
             <Image
-              src="/images/icon/logo.png"
+              src="/images/logo.png"
               alt='HOM-logo'
               width="163"
               priority
@@ -151,7 +151,7 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
             <span className='text-xl font-bold'>Guest 360</span>
           </button>
           <div className='flex gap-4 items-center '>
-            <Image src="/images/icon/Notification.svg" alt='Notification'
+            <Image src="/images/Notification.svg" alt='Notification'
               width="40"
               height="40"
               className='cursor-pointer'

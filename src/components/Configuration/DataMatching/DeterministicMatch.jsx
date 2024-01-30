@@ -62,8 +62,8 @@ const DeterministicMatch = () => {
   const [createRuleData, setCreateRuleData] = useState([])
   const [isOption, setIsOption] = useState(matchdata)
   const [forUpdate, setForUpdate] = useState({})
-
-
+  const [fieldErrors, setFieldErrors] = useState([]);
+  const [saveButtonDisabled, setSaveButtonDisabled] = useState(false);
 
   useEffect(() => {
 
@@ -75,9 +75,32 @@ const DeterministicMatch = () => {
   }, [dynamicFields]);
 
 
-  const handleAddField = () => [
+  const handleAddField = () => {
+
+    const isAnyFieldEmpty = dynamicFields.some((field, index) => {
+      if (!field.name) {
+        console.log("inside This");
+        // Set error message for the empty field
+        setFieldErrors((prevErrors) => {
+          const newErrors = [...prevErrors];
+          newErrors[index] = "Please select Attribute";
+          return newErrors;
+        });
+        return true;
+      }
+      return false;
+    });
+
+    if (isAnyFieldEmpty) {
+      setSaveButtonDisabled(true);
+      return;
+    }
+
+
     setDynamicFields((prevFields) => [...prevFields, { name: '', value: "" }])
-  ]
+    setFieldErrors([]);
+    setSaveButtonDisabled(false);
+  }
 
   const handleNewRuleModal = () => {
     setIsNewRuleModal(true)
@@ -105,11 +128,16 @@ const DeterministicMatch = () => {
 
 
   const handleFromData = (selectedOption, index, fieldKey) => {
-    setDynamicFields((prevFields) => {
-      const newFields = [...prevFields];
-      newFields[index][fieldKey] = selectedOption;
-      return newFields;
-    });
+    console.log(selectedOption?.value);
+    if (selectedOption?.value) {
+      setDynamicFields((prevFields) => {
+        const newFields = [...prevFields];
+        newFields[index][fieldKey] = selectedOption;
+        return newFields;
+      });
+    }
+    setFieldErrors([]);
+    setSaveButtonDisabled(false);
   };
 
   const handleRemove = (index) => {
@@ -123,64 +151,93 @@ const DeterministicMatch = () => {
     }
   }
 
+  console.log(dynamicFields);
+
+
+
 
   const handleSaveRule = async () => {
 
-    if (editMatchRules === 'Create') {
-      const matchRule = `rule_${createRuleData?.match_rules?.length + 1}`
+    const isAnyFieldEmpty = dynamicFields.some((field, index) => {
+      if (!field.name) {
+        console.log("inside This");
+        // Set error message for the empty field
+        setFieldErrors((prevErrors) => {
+          const newErrors = [...prevErrors];
+          newErrors[index] = "Please select Attribute";
+          return newErrors;
+        });
+        return true;
+      }
+      return false;
+    });
 
+    if (isAnyFieldEmpty) {
+      setSaveButtonDisabled(true);
+      return;
+    }
+
+
+    if (editMatchRules === 'Create') {
+
+      const matchRule = `rule_${createRuleData?.match_rules?.length + 1}`
       const upDateDynamicFields = {
         "match_rule": matchRule,
-        "columns": dynamicFields?.map((columnItem) => ({
-          "column": columnItem?.name?.value,
-          "general": {
-            "block-size": "10",
-            "distances": [
-              "JaroWinkler",
-              "LevenshteinDistanceSet",
-              "JaroWinklerSet",
-              "JaccardDistance",
-              "MasiDistance",
-              "LevenshteinDistance"
-            ],
-            "leading-column": "true",
-            "min-partition-size": "500",
-            "min_char_count": "5",
-            "path-model-input": "None",
-            "path-model-output": "None",
-            "path-test-file": "None",
-            "path-test-result": "None",
-            "removing-strings": {
-              "common-words": [
-                "company",
-                "inc",
-                "corp.",
-                "corp",
-                "co",
-                "ltd",
-                "LTD",
-                "INC",
-                "pvt"
-              ]
-            }
-          },
-          "model": {
-            "general": {
-              "hyper-parameter-tuning": "false",
-              "model-object": "LinearDecisionFixedWeights"
-            },
-            "model-params": {
-              "JaccardDistance": "0.3",
-              "JaroWinkler": "0.3",
-              "JaroWinklerSet": "0.3",
-              "LevenshteinDistance": "0",
-              "LevenshteinDistanceSet": "0.1",
-              "MasiDistance": "0",
-              "MetaphoneDistance": "0",
-              "threshold": "0.5"
+        "columns": dynamicFields?.map((columnItem) => {
+          if (columnItem?.name?.value?.length > 0) {
+            return {
+              "column": columnItem?.name?.value,
+              "general": {
+                "block-size": "10",
+                "distances": [
+                  "JaroWinkler",
+                  "LevenshteinDistanceSet",
+                  "JaroWinklerSet",
+                  "JaccardDistance",
+                  "MasiDistance",
+                  "LevenshteinDistance"
+                ],
+                "leading-column": "true",
+                "min-partition-size": "500",
+                "min_char_count": "5",
+                "path-model-input": "None",
+                "path-model-output": "None",
+                "path-test-file": "None",
+                "path-test-result": "None",
+                "removing-strings": {
+                  "common-words": [
+                    "company",
+                    "inc",
+                    "corp.",
+                    "corp",
+                    "co",
+                    "ltd",
+                    "LTD",
+                    "INC",
+                    "pvt"
+                  ]
+                }
+              },
+              "model": {
+                "general": {
+                  "hyper-parameter-tuning": "false",
+                  "model-object": "LinearDecisionFixedWeights"
+                },
+                "model-params": {
+                  "JaccardDistance": "0.3",
+                  "JaroWinkler": "0.3",
+                  "JaroWinklerSet": "0.3",
+                  "LevenshteinDistance": "0",
+                  "LevenshteinDistanceSet": "0.1",
+                  "MasiDistance": "0",
+                  "MetaphoneDistance": "0",
+                  "threshold": "0.5"
+                }
+              }
             }
           }
-        })),
+
+        }),
         "rules": [
           {
             "column_rule": Array(dynamicFields?.length).fill({
@@ -195,88 +252,97 @@ const DeterministicMatch = () => {
 
       if (createRuleData?.match_rules?.length > 0) {
         const CreateJson = {
-          "match_rules": [...createRuleData?.match_rules, upDateDynamicFields]
+          "match_rules": dynamicFields[0]?.name?.value.length > 0 ? [...createRuleData?.match_rules, upDateDynamicFields] : [...createRuleData?.match_rules]
         }
 
-        const CreateApi = await fetchDeterministic_Config(CreateJson)
+        if (dynamicFields[0]?.name?.value.length > 0) {
 
-        if (CreateApi?.isSuccess) {
-          toast.success('Create New Rulls', {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            toastId: "toastId"
-          });
+          const CreateApi = await fetchDeterministic_Config(CreateJson)
+
+          if (CreateApi?.isSuccess) {
+            toast.success('Create New Rulls', {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              toastId: "toastId"
+            });
+            closeModal();
+            setForUpdate(CreateApi)
+          }
+        } else {
           closeModal();
-          setForUpdate(CreateApi)
         }
 
       }
     } else {
 
-
+      const filteredDynamicFields = dynamicFields.filter(field => field.name !== '');
       const matchRule = editMatchRules;
 
       const upDateDynamicFields = {
         "match_rule": matchRule,
-        "columns": dynamicFields?.map((columnItem) => ({
-          "column": columnItem?.name?.value,
-          "general": {
-            "block-size": "10",
-            "distances": [
-              "JaroWinkler",
-              "LevenshteinDistanceSet",
-              "JaroWinklerSet",
-              "JaccardDistance",
-              "MasiDistance",
-              "LevenshteinDistance"
-            ],
-            "leading-column": "true",
-            "min-partition-size": "500",
-            "min_char_count": "5",
-            "path-model-input": "None",
-            "path-model-output": "None",
-            "path-test-file": "None",
-            "path-test-result": "None",
-            "removing-strings": {
-              "common-words": [
-                "company",
-                "inc",
-                "corp.",
-                "corp",
-                "co",
-                "ltd",
-                "LTD",
-                "INC",
-                "pvt"
-              ]
-            }
-          },
-          "model": {
-            "general": {
-              "hyper-parameter-tuning": "false",
-              "model-object": "LinearDecisionFixedWeights"
-            },
-            "model-params": {
-              "JaccardDistance": "0.3",
-              "JaroWinkler": "0.3",
-              "JaroWinklerSet": "0.3",
-              "LevenshteinDistance": "0",
-              "LevenshteinDistanceSet": "0.1",
-              "MasiDistance": "0",
-              "MetaphoneDistance": "0",
-              "threshold": "0.5"
+        "columns": dynamicFields?.map((columnItem) => {
+          if (columnItem?.name?.value?.length > 0) {
+            return {
+              "column": columnItem?.name?.value,
+              "general": {
+                "block-size": "10",
+                "distances": [
+                  "JaroWinkler",
+                  "LevenshteinDistanceSet",
+                  "JaroWinklerSet",
+                  "JaccardDistance",
+                  "MasiDistance",
+                  "LevenshteinDistance"
+                ],
+                "leading-column": "true",
+                "min-partition-size": "500",
+                "min_char_count": "5",
+                "path-model-input": "None",
+                "path-model-output": "None",
+                "path-test-file": "None",
+                "path-test-result": "None",
+                "removing-strings": {
+                  "common-words": [
+                    "company",
+                    "inc",
+                    "corp.",
+                    "corp",
+                    "co",
+                    "ltd",
+                    "LTD",
+                    "INC",
+                    "pvt"
+                  ]
+                }
+              },
+              "model": {
+                "general": {
+                  "hyper-parameter-tuning": "false",
+                  "model-object": "LinearDecisionFixedWeights"
+                },
+                "model-params": {
+                  "JaccardDistance": "0.3",
+                  "JaroWinkler": "0.3",
+                  "JaroWinklerSet": "0.3",
+                  "LevenshteinDistance": "0",
+                  "LevenshteinDistanceSet": "0.1",
+                  "MasiDistance": "0",
+                  "MetaphoneDistance": "0",
+                  "threshold": "0.5"
+                }
+              }
             }
           }
-        })),
+        }),
         "rules": [
           {
-            "column_rule": Array(dynamicFields?.length).fill({
+            "column_rule": Array(filteredDynamicFields?.length).fill({
               "col_weight": null,
               "min_match": null,
               "name": null
@@ -285,7 +351,6 @@ const DeterministicMatch = () => {
         ],
         "total-threshold": "0.8"
       };
-
 
       const EditRule = createRuleData?.match_rules?.map((item) => item?.match_rule === editMatchRules ? upDateDynamicFields : item)
 
@@ -313,6 +378,9 @@ const DeterministicMatch = () => {
 
     }
 
+
+    setFieldErrors([]);
+    setSaveButtonDisabled(false);
   };
 
 
@@ -372,7 +440,7 @@ const DeterministicMatch = () => {
     setEditRule(data)
     if (Object.keys(data)?.length > 0) {
       const modifydata = data?.columns?.map((item) => (
-        { name: { label: item.column, value: item?.column } }
+        { name: { label: item?.column, value: item?.column } }
       ))
 
       setDynamicFields(modifydata);
@@ -387,7 +455,7 @@ const DeterministicMatch = () => {
           <div className='flex justify-between border-b '>
             <button className='flex items-center flex-shrink-0 gap-6 px-6 '>
               <Image
-                src="/images/icon/logo.png"
+                src="/images/logo.png"
                 alt='HOM-logo'
                 width="212"
                 priority
@@ -409,7 +477,7 @@ const DeterministicMatch = () => {
                 <div className='flex flex-col gap-2'>
                   {dynamicFields?.map((field, index) => {
                     return (
-                      <div key={index} className='flex items-center gap-10'>
+                      <div key={index} className='flex items-start gap-10'>
                         <div className='w-52'>
                           <Select
                             placeholder="Select Attribute"
@@ -424,6 +492,9 @@ const DeterministicMatch = () => {
                             components={animatedComponents}
                             className='capitalize'
                           />
+                          {fieldErrors[index] && (
+                            <span className='text-red-500 text-sm'>{fieldErrors[index]}</span>
+                          )}
                         </div>
                         <div className='w-24'>
                           <CustomInput
@@ -456,7 +527,7 @@ const DeterministicMatch = () => {
               <CustomButton
                 name="Save"
                 handleClick={() => handleSaveRule()}
-                isDisable={false}
+                isDisable={saveButtonDisabled}
                 isLoading={false}
               />
             </div>
@@ -480,7 +551,7 @@ const DeterministicMatch = () => {
           <div className='flex justify-between border-b '>
             <button className='flex items-center flex-shrink-0 gap-6 px-6 '>
               <Image
-                src="/images/icon/logo.png"
+                src="/images/logo.png"
                 alt='HOM-logo'
                 width="212"
                 priority
@@ -502,7 +573,7 @@ const DeterministicMatch = () => {
                 <div className='flex flex-col gap-2'>
                   {dynamicFields?.map((field, index) => {
                     return (
-                      <div key={index} className='flex items-center gap-10'>
+                      <div key={index} className='flex items-start gap-10'>
                         <div className='w-52'>
                           <Select
                             placeholder="Select Attribute"
@@ -517,6 +588,9 @@ const DeterministicMatch = () => {
                             components={animatedComponents}
                             className='capitalize'
                           />
+                          {fieldErrors[index] && (
+                            <span className='text-red-500 text-sm'>{fieldErrors[index]}</span>
+                          )}
                         </div>
                         <div className='w-24'>
                           <CustomInput
@@ -549,7 +623,7 @@ const DeterministicMatch = () => {
               <CustomButton
                 name="Save"
                 handleClick={() => handleSaveRule()}
-                isDisable={false}
+                isDisable={saveButtonDisabled}
                 isLoading={false}
               />
             </div>
@@ -565,8 +639,6 @@ const DeterministicMatch = () => {
 
         </div>
       </SmCustomModal>
-
-
 
       <div className='flex items-center justify-between p-3 border-b border-[#a6a6a6] h-full'>
         <div className="w-full max-w-[150px]" >

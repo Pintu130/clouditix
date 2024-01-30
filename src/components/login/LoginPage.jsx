@@ -84,7 +84,7 @@ const LoginPage = ({ handlelogin }) => {
                 {isLoading && <CustomLoader />}
                 <div className='flex flex-col items-center justify-center gap-4 align-middle font-Assistant '>
                     <div className='flex items-center justify-center'>
-                        <Image src='/images/icon/logo.png'
+                        <Image src='/images/logo.png'
                             alt='BrandLogo'
                             width={300}
                             height={300}

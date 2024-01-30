@@ -75,7 +75,7 @@ const ProbabilisticAdd = ({ onClose, handleEditInApi }) => {
                 <div className='flex justify-between border-b '>
                     <button className='flex items-center flex-shrink-0 gap-6 px-6 '>
                         <Image
-                            src="/images/icon/logo.png"
+                            src="/images/logo.png"
                             alt='HOM-logo'
                             width="212"
                             priority

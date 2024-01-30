@@ -29,7 +29,7 @@ const UserModal = ({ isOpen, handlelogout}) => {
             {isOpen && <div className=" relative z-50 border-[1px] border-[#D0D0CE] shadow-[0px_2px_4px_0px_#4A4A4A26] animate-fadeIn" >
                 <div className="py-3 bg-white rounded-lg w-72">
                     <Image
-                        src="/images/icon/Polygon1.svg"
+                        src="/images/Polygon1.svg"
                         alt='Hibiscus'
                         width="27"
                         height="27"
@@ -42,7 +42,7 @@ const UserModal = ({ isOpen, handlelogout}) => {
                                 }`}
                             onClick={(e) => handleChengePhoto(e, 'Change Photo')}
                         >
-                            <Image src="/images/icon/user.svg"
+                            <Image src="/images/user.svg"
                                 alt='Notification'
                                 width="22"
                                 height="22"
@@ -55,7 +55,7 @@ const UserModal = ({ isOpen, handlelogout}) => {
                                 }`}
                             onClick={(e) => handleChengePassword(e, 'Change Password')}
                         >
-                            <Image src="/images/icon/lock.svg"
+                            <Image src="/images/lock.svg"
                                 alt='Notification'
                                 width="22"
                                 height="22"
@@ -69,7 +69,7 @@ const UserModal = ({ isOpen, handlelogout}) => {
                                 }`}
                         onClick={(e) => handleItemClick(e, 'Log Out')}
                         >
-                            <Image src="/images/icon/Logout.svg"
+                            <Image src="/images/Logout.svg"
                                 alt='Notification'
                                 width="22"
                                 height="22"

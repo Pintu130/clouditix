@@ -239,7 +239,13 @@ const ProbabilisticMatch = () => {
 
     const upEdit = {
       columns: DeleteData,
-      rules: deleteRowData?.rules,
+      rules: [{
+        "column_rule": Array(DeleteData?.length).fill({
+          "col_weight": null,
+          "min_match": null,
+          "name": null
+        })
+      }],
       "total-threshold": deleteRowData?.["total-threshold"]
     }
 
