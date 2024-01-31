@@ -27,8 +27,6 @@ const UserManagementSearch = ({ searchDatas, handleSearchData }) => {
          }) */
     }
 
-    console.log(searchDatas);
-
     useEffect(() => {
         if (searchDatas?.length > 0) {
 
@@ -49,15 +47,11 @@ const UserManagementSearch = ({ searchDatas, handleSearchData }) => {
                 ...uniqueData,
             ];
 
-            console.log(modifiedData);
-
             setRoleName(modifiedData)
 
 
 
             const searchEmailData = searchDatas.filter((item) => (searchData?.roleName?.value === 'All' || item?.roleName === searchData?.roleName?.value))
-
-            console.log(searchEmailData);
 
             const uniqueValuesSet = new Set();
 
@@ -70,8 +64,6 @@ const UserManagementSearch = ({ searchDatas, handleSearchData }) => {
             }, [])
 
             addsearchEmailData.unshift({ label: "ALL", value: "All" });
-
-            console.log(addsearchEmailData);
 
             setEmailSearchData(addsearchEmailData);
 

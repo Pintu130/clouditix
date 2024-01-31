@@ -31,7 +31,10 @@ function ChartsPage({ handlelogout }) {
     return `${timestamp}-${random}`;
   }
 
+  console.log(subSelectedTab);
+
   const handleChangeTab = (data) => {
+    console.log(data);
     const convertedData = tabs.map(tab => ({ ...tab, selected: false }))
     try {
       const previsitTabData = tabs?.filter(item => item?.key === data?.linkTo);
@@ -104,25 +107,25 @@ function ChartsPage({ handlelogout }) {
                                   <div className='h-full'>
                                     <GuestDataCreate />
                                   </div>
-                                :
-                                subSelectedTab === "guest-data-cross-ref" ?
-                                  <div className='h-full'>
-                                    <GuestDataCrossRef />
-                                  </div>
                                   :
-                                subSelectedTab === "guest-data-cross-ref-manual" ?
-                                  <div className='h-full'>
-                                    <GuestDataManual />
-                                  </div>
-                                  :
-                                subSelectedTab === "batch-jobs" ?
-                                  <div className='h-full'>
-                                    <Batchjobs />
-                                  </div>
-                                  :
-                                  (
-                                    <div className="p-6"> {subSelectedTab}</div>
-                                  )}
+                                  subSelectedTab === "guest-data-cross-ref" ?
+                                    <div className='h-full'>
+                                      <GuestDataCrossRef />
+                                    </div>
+                                    :
+                                    subSelectedTab === "guest-data-cross-ref-manual" ?
+                                      <div className='h-full'>
+                                        <GuestDataManual />
+                                      </div>
+                                      :
+                                      subSelectedTab === "batch-jobs" ?
+                                        <div className='h-full'>
+                                          <Batchjobs />
+                                        </div>
+                                        :
+                                        (
+                                          <div className="p-6"> {subSelectedTab}</div>
+                                        )}
               </div>
             </div>
           </div>

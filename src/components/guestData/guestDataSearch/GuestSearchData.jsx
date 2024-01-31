@@ -48,7 +48,8 @@ const GuestSearchData = ({ handleRoeData, handleRestart }) => {
     const animatedComponents = makeAnimated();
     const [searchData, setSearchData] = useState([]);
     const [guestOption, setGuestOption] = useState([]);
-    const [rowData, setRowData] = useState([])
+    const [rowData, setRowData] = useState([]);
+
 
     useEffect(() => {
         ; (
@@ -170,31 +171,10 @@ const GuestSearchData = ({ handleRoeData, handleRestart }) => {
         };
 
         let result = filterData(rowData, searchData);
-        result = makeArrayUnique(result, 'golden_id');
+        result = makeArrayUnique(result, 'goldenId');
 
 
         handleRoeData(result);
-
-
-
-        /* const filteredValue = rowData?.filter(item => {
-            return searchData.every(query => {
-                const keyLabel = query?.data?.Key?.label;
-                const isValue = query?.data?.is?.value;
-                const groupName = query?.data?.groupName;
-
-                switch (isValue) {
-                    case "is":
-                        return item[keyLabel] == groupName;
-                    case "isnot":
-                        return item[keyLabel] != groupName;
-                    default:
-                        return false;
-                }
-            });
-        });
-        handleRoeData(filteredValue);
-        console.log(filteredValue, "FILTEREDDATA"); */
 
     }
 

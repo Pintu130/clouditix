@@ -70,11 +70,7 @@ const UserInformation = ({ editData, updateEdit, removeEditData }) => {
 
     }, [edit])
 
-    console.log(edit);
-
-    console.log(formData);
-
-
+    
     const isFieldValid = (field, value) => {
         switch (field) {
             case 'firstName':

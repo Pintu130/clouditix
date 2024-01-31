@@ -10,9 +10,9 @@ import SmCustomModal from "@/components/common/SmCustomModal";
 import { useSelector } from "react-redux"
 import { BiSolidPencil } from "react-icons/bi";
 
-const LoyalityProgram = ({ isHideAll, onHandleHide }) => {
+const LoyalityProgram = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
-  const [rowData, setRowData] = useState(LoyalityData);
+  const [rowData, setRowData] = useState([]);
   const loyality = useSelector(state => state?.createData?.loyality)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideLoyalityProgram, setisHideLoyalityProgram] = useState(true);
@@ -25,30 +25,37 @@ const LoyalityProgram = ({ isHideAll, onHandleHide }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  useEffect(() => {
+    if (allData?.loyaltyProgramMemberships?.length > 0) {
+      setRowData(allData?.loyaltyProgramMemberships)
+    }
+  }, [allData])
+
   const [columnDefs] = useState([
     {
-      field: "loyalityProgramMembership",
+      field: "programName",
       headerName: "Loyality Program Membership",
       minWidth: 150,
       maxWidth: 200,
       filter: true,
     },
     {
-      field: "tierLevel",
-      headerName: "Tier Level",
+      field: "levelName",
+      headerName: "Level",
       minWidth: 150,
       maxWidth: 200,
       filter: true,
     },
     {
-      field: "startDate",
+      field: "memStartDate",
       headerName: "Start Date",
       minWidth: 150,
       maxWidth: 200,
       filter: true,
     },
     {
-      field: "endDate",
+      field: "memEndDate",
       headerName: " End Date",
       minWidth: 150,
       maxWidth: 200,
@@ -60,19 +67,19 @@ const LoyalityProgram = ({ isHideAll, onHandleHide }) => {
       maxWidth: 200,
     },
     {
-      field: "remptionHistory",
+      field: "redemptionHistory",
       headerName: "Remption History ",
       minWidth: 150,
       maxWidth: 200,
     },
     {
-      field: "loyalityPoints",
+      field: "loyaltyPoints",
       headerName: "Loyality Points ",
       minWidth: 150,
       maxWidth: 200,
     },
     {
-      field: "isActive",
+      field: "isActiveFlag",
       headerName: "Is Active ",
       minWidth: 150,
       maxWidth: 200,
@@ -150,14 +157,14 @@ const LoyalityProgram = ({ isHideAll, onHandleHide }) => {
     if (loyality?.length > 0) {
       const newData = loyality?.map((item) => ({
         id: item?.id,
-        loyalityProgramMembership: item?.loyaltyprogrammembership?.value,
-        tierLevel: item?.tierlevel?.value,
-        startDate: item?.membershipstartdate,
-        endDate: item?.membershipenddate,
+        programName: item?.loyaltyprogrammembership?.value,
+        levelName: item?.tierlevel?.value,
+        memStartDate: item?.membershipstartdate,
+        memEndDate: item?.membershipenddate,
         earningHistory: item?.earninghistory,
-        remptionHistory: item?.redemtionhistory,
-        loyalityPoints: item?.loyaltypoints,
-        isActive: item?.isActive,
+        redemptionHistory: item?.redemtionhistory,
+        loyaltyPoints: item?.loyaltypoints,
+        isActiveFlag: item?.isActive,
       }));
       setRowData(newData);
     }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from 'next/image';
 import CustomInput from "@/components/common/CustomInput";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
@@ -29,7 +29,7 @@ const preferanceInitialData = {
 }
 
 
-const PreferanceModel = ({ onClose }) => {
+const PreferanceModel = ({ onClose, allData }) => {
   const [preferance, setPreferance] = useState({})
   const [isEdit, setIsEdit] = useState(true)
 
@@ -39,6 +39,37 @@ const PreferanceModel = ({ onClose }) => {
       [name]: value
     })
   }
+
+
+  useEffect(() => {
+    if (allData?.guestPreferences?.length > 0) {
+      const preferenceDatas = allData?.guestPreferences?.map(item => ({
+        bedtype: { label: item?.bedType, value: item?.bedType },
+        floorlevel: { label: item?.floorLevel, value: item?.floorLevel },
+        roomviewpref: { label: item?.roomViewPreference, value: item?.roomViewPreference },
+        bathslippers: { label: item?.bathrobeAndSlippersSize, value: item?.bathrobeAndSlippersSize },
+        favouritecuisine: { label: item?.favoriteCuisines, value: item?.favoriteCuisines },
+        airporttransfer: { label: item?.airportTransferPreferences, value: item?.airportTransferPreferences },
+        conceirgeservices: { label: item?.conciergeServices, value: item?.conciergeServices },
+        connectivityreg: { label: item?.connectivityRequirements, value: item?.connectivityRequirements },
+        promotionalmaterials: { label: item?.promotionalMaterials, value: item?.promotionalMaterials },
+        pillowtype: { label: item?.pillowType, value: item?.pillowType },
+        roomtemppref: { label: item?.roomTemperaturePreference, value: item?.roomTemperaturePreference },
+        dietaryallergy: { label: item?.dietaryRestrictionsAndAllergies, value: item?.dietaryRestrictionsAndAllergies },
+        preferreddiningtimes: { label: item?.preferredDiningTimes, value: item?.preferredDiningTimes },
+        celebratoryoccasion: { label: item?.celebratoryOccasions, value: item?.celebratoryOccasions },
+        spatreatments: { label: item?.spaTreatments, value: item?.spaTreatments },
+        housekeepingschedule: { label: item?.housekeepingSchedule, value: item?.housekeepingSchedule },
+        donotdisturb: { label: item?.doNotDisturbPreferences, value: item?.doNotDisturbPreferences },
+        modeofcommunication: { label: item?.modeOfCommunication, value: item?.modeOfCommunication },
+        isActive: { label: item?.isActiveFlag, value: item?.isActiveFlag}
+      }))
+
+
+      setPreferance(preferenceDatas[0]);
+    }
+  }, [allData])
+
   const HandleSave = () => {
     if (preferance) {
       handleCancel()
@@ -83,7 +114,7 @@ const PreferanceModel = ({ onClose }) => {
                 label=""
                 placeholder="Kumar"
                 name="fullname"
-                value={preferance?.fullname}
+                value={allData?.guest?.fullName}
                 onChange={(e) => handlepreferanceData(e.target.name, e.target.value)}
               />
             </div>
@@ -99,7 +130,7 @@ const PreferanceModel = ({ onClose }) => {
                 label=""
                 placeholder="Kumar"
                 name="guestID"
-                value={preferance?.guestID}
+                value={allData?.guest?.goldenId}
                 onChange={(e) => handlepreferanceData(e.target.name, e.target.value)}
               />
             </div>

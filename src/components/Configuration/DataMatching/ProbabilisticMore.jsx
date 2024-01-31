@@ -24,9 +24,6 @@ const ProbabilisticMore = ({ onClose }) => {
     }, [MoreData])
 
 
-
-    console.log(formData);
-
     return (
         <div className='flex flex-col gap-5 px-5'>
             <div className='w-full h-full'>

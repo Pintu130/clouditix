@@ -11,8 +11,6 @@ const DataQualitySearch = ({ searchDatas, handleSearchData }) => {
     const [attiributeSearchData, setAttiributeSearchData] = useState([])
     const [ruleSearchData, setRuleSearchData] = useState([])
 
-    console.log(datasource);
-
     const handleSearch = (data, target) => {
 
         setSearchData({

@@ -158,8 +158,6 @@ const ProbabilisticEdit = ({ onClose, handleEditInApi }) => {
     }
 
 
-    console.log(formData?.removingstrings);
-
 
     return (
         <div className='flex flex-col gap-5 px-5'>

@@ -6,22 +6,19 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { BiSolidPencil } from "react-icons/bi";
 import GuestSearchData from "./GuestSearchData";
+import { useDispatch } from "react-redux"
+import { setChangeTab, setDetails, setEdititem } from "@/store/guestDetails";
 
 
 const GuestDataSearch = () => {
   const tableRef = useRef({});
   const [rowData, setRowData] = useState([]);
-
-  const handleSearch = () => { };
-
-
-
+  const dispatch = useDispatch()
 
   useEffect(() => {
     ; (
       async () => {
         const data = await fetchSearchGeust()
-        console.log(data );
         if (data?.length > 0) {
           setRowData(data);
         }
@@ -36,10 +33,7 @@ const GuestDataSearch = () => {
     }
   };
 
-  const handleEdit = (e, data) => {
-    e.stopPropagation();
 
-  };
 
   const [columnDefs] = useState([
     {
@@ -166,8 +160,8 @@ const GuestDataSearch = () => {
       cellRenderer: (params) => {
         const data = params.data;
         return (
-          <div className="flex items-center justify-center h-full  ">
-            <button onClick={(e) => handleEdit(e, data)}>
+          <div className="flex items-center justify-center h-full  " onClick={(e) => handleEdit(e, data)}>
+            <button >
               <BiSolidPencil className="w-6 h-6 text-blue-B40" />
             </button>
           </div>
@@ -221,8 +215,18 @@ const GuestDataSearch = () => {
   const onGridReady = (params) => {
     // tableRef.current = params.api;
   };
+
+  const handleEdit = (e, data) => {
+    e.stopPropagation();
+    dispatch(setEdititem('Edit'));
+  };
+
   const handleCellClicked = (param) => {
-    // console.log(param?.column);
+    const data = param?.data?.goldenId
+    dispatch(setDetails(data));
+
+    const Link = { text: 'Guest Data - Create', linkTo: 'guest-data-create', icon: '' };
+    dispatch(setChangeTab(Link));
   };
 
   const handleRoeData = (data) => {

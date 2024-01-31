@@ -9,14 +9,24 @@ import AddressModel from "./AddressModel";
 import { useSelector } from "react-redux";
 import { BiSolidPencil } from "react-icons/bi";
 
-const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
+const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
-  const [rowData, setRowData] = useState(GuestCreateAddressData);
+  const [rowData, setRowData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideAddress, setIsHideAddress] = useState(true);
   const [updateRowData, setUpdateRowData] = useState({})
 
   const CreatedAddressData = useSelector(state => state?.createData?.Address)
+
+
+  useEffect(() => {
+    if (allData?.addresses?.length > 0) {
+      setRowData(allData?.addresses)
+    }
+  }, [allData])
+
+
+
 
   const [columnDefs] = useState([
     {
@@ -50,7 +60,7 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
       maxWidth: 200,
     },
     {
-      field: "state",
+      field: "stateCode",
       headerName: "State",
       minWidth: 180,
       maxWidth: 250,
@@ -67,14 +77,12 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
     {
       field: "zipCode",
       headerName: "Zip Code",
-
       minWidth: 80,
       maxWidth: 100,
-
       editable: true,
     },
     {
-      field: "isActive",
+      field: "isActiveFlag",
       headerName: "isActive",
       cellClass: "uppercase",
       minWidth: 80,
@@ -127,7 +135,7 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
 
   const frameworkComponents = {
     agCheckboxCellRenderer: (params) => {
-      
+
       return (
         <input
           type="checkbox"
@@ -171,7 +179,7 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide }) => {
         state: CreatedAddressData?.state?.label,
         country: CreatedAddressData?.country,
         zipCode: CreatedAddressData?.zip,
-        isActive: CreatedAddressData?.isActive,
+        isActiveFlag: CreatedAddressData?.isActive,
 
       }))
 

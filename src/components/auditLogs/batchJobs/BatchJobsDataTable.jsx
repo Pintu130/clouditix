@@ -153,8 +153,6 @@ const BatchJobsDataTable = ({ batchId }) => {
             if (batchId > 0) {
                 const data = await fetchGetJobStatus(batchId)
 
-                console.log(data);
-
                 if (data.length > 0) {
                     const sortId = data?.sort((a, b) => b.batchId - a.batchId).sort((a, b) => b.jobId - a.jobId).sort((a, b) => new Date(a.startedAt) - new Date(b.startedAt))
 

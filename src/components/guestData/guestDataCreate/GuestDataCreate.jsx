@@ -5,17 +5,19 @@ import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
 import React, { useEffect, useState } from "react";
 import GuestCreateAddress from "./GuestCreateAddress";
 import PreferanceModel from "./PreferanceModel";
-import { genderDate, income, married, nationality } from "@/assets/data";
+import { fetchGuestData, genderDate, income, married, nationality } from "@/assets/data";
 import { FaChevronDown } from "react-icons/fa";
 import GuestContactDetails from "./GuestContactDetails";
 import GuestIdentification from "./GuestIdentification";
 import SocialMedia from "./SocialMedia";
 import LoyalityProgram from "./LoyalityProgram";
+import { useSelector } from 'react-redux'
 
 const GuestDataCreate = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setformData] = useState({})
   const [isHideAll, setIsHideAll] = useState(true);
+  const [allData, setAllData] = useState({});
   const [hideAllStates, setHideAllStates] = useState({
     creareAddress: false,
     contactDetails: false,
@@ -23,6 +25,86 @@ const GuestDataCreate = () => {
     socialMedia: false,
     lotaltyProgram: false
   });
+  const [edited, setEdited] = useState(false);
+
+  const goldenId = useSelector(state => state?.guestDetails?.goldenID);
+
+  const isEdit = useSelector(state => state?.guestDetails?.isEdit);
+
+  console.log(goldenId);
+  console.log(isEdit);
+  console.log(isEdit !== 'Edit');
+  console.log(goldenId > 0);
+
+
+  useEffect(() => {
+    if (isEdit !== 'Edit' && goldenId > 0) {
+      console.log("inside");
+      setEdited(true);
+    } else {
+      setEdited(false);
+    }
+  }, [isEdit])
+
+  useEffect(() => {
+    ; (async () => {
+      if (goldenId > 0) {
+        const Data = await fetchGuestData(goldenId);
+
+        const formDataValue = Data?.guest
+        /* {
+          goldenId: 3,
+          guestCategoryType: 'SEN',
+          firstName: 'Vikas',
+          middleName: 'Prakash',
+          lastName: 'Jain',
+          fullName: 'Vikas Prakash Jain',
+          dateOfBirth: '1960-12-10T00:00:00',
+          gender: 'Male',
+          maritalStatus: 'Married',
+          noOfChildren: 3,
+          incomeLevel: 'Middle',
+          nationality: 'Indian',
+          companyName: 'Jain Enterprises',
+          notes: 'First-time Guest',
+          createById: 'data_entry_user_id',
+          lastUpdatedById: 'data_entry_user_id',
+          isDeleted: false,
+          source: 'res',
+          isActiveFlag: true
+        } */
+
+
+        console.log(formDataValue);
+
+        const formDatas = {
+          firstName: formDataValue?.firstName,
+          middleName: formDataValue?.middleName,
+          lastName: formDataValue?.lastName,
+          fullName: formDataValue?.fullName,
+          notes: formDataValue?.notes,
+          date: formDataValue?.dateOfBirth,
+          gender: { label: formDataValue?.gender, value: formDataValue?.gender },
+          married: { label: formDataValue?.maritalStatus, value: formDataValue?.maritalStatus },
+          children: formDataValue?.noOfChildren,
+          nationality: { label: formDataValue?.nationality, value: formDataValue?.nationality },
+          companyName: formDataValue?.companyName,
+          income: { label: formDataValue?.incomeLevel, value: formDataValue?.incomeLevel },
+          category: { label: formDataValue?.guestCategoryType, value: formDataValue?.guestCategoryType, __isNew__: true },
+          isActive: formDataValue?.isActiveFlag,
+          createById: formDataValue?.createById,
+          lastUpdatedById: formDataValue?.lastUpdatedById,
+          isDeleted: formDataValue?.isDeleted,
+          source: formDataValue?.source,
+        }
+
+        setformData(formDatas)
+        setAllData(Data)
+      }
+
+    })()
+  }, [])
+
 
   const handleFromData = (value, name) => {
     setformData({
@@ -40,7 +122,7 @@ const GuestDataCreate = () => {
 
   useEffect(() => {
     const areALLHidden = Object.values(hideAllStates).every((state) => state)
-    
+
     if (areALLHidden) {
       setIsHideAll(true);
     }
@@ -54,10 +136,49 @@ const GuestDataCreate = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  console.log(formData);
+
+  const handleSaveDetails = () => {
+    const guest = {
+      "goldenId": 0,
+      "guestCategoryType": formData?.category?.value,
+      "firstName": formData?.firstName,
+      "middleName": formData?.middleName,
+      "lastName": formData?.lastName,
+      "fullName": formData?.fullName,
+      "dateOfBirth": formData?.date,
+      "gender": formData?.gender?.value,
+      "maritalStatus": formData?.married?.value,
+      "noOfChildren": formData?.children,
+      "incomeLevel": formData?.income?.value,
+      "nationality": formData?.nationality?.value,
+      "companyName": formData?.companyName,
+      "notes": formData?.notes,
+      "createById": formData?.createById,
+      "lastUpdatedById": formData?.lastUpdatedById,
+      "isDeleted": formData?.isDeleted,
+      "source": formData?.source,
+      "isActiveFlag": formData?.isActive
+    }
+
+    const upDatedData = {
+      guest: guest
+    }
+
+    console.log(guest);
+
+  }
+
+  const dateObject = new Date(formData?.date);
+  const formattedDate = dateObject ? `${(dateObject.getMonth() + 1).toString().padStart(2, '0')}/${dateObject.getDate().toString().padStart(2, '0')}/${dateObject.getFullYear()}` : '';
+
+  // const formattedDate = formData?.date ? formData.date.split('/').reverse().join('-') : '';
+
   return (
     <div className="w-full p-2 ">
       <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <PreferanceModel onClose={closeModal} />
+        <PreferanceModel onClose={closeModal} allData={allData} />
       </CustomModal>
 
 
@@ -75,10 +196,11 @@ const GuestDataCreate = () => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="Arjun"
+                placeholder="first Name"
                 name="firstName"
                 value={formData?.firstName}
                 onChange={(e) => handleFromData(e.target.value, e.target.name)}
+                isdisablad={edited}
               />
             </div>
           </div>
@@ -91,10 +213,11 @@ const GuestDataCreate = () => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="Kumar"
+                placeholder="middle Name"
                 name="middleName"
                 value={formData?.middleName}
                 onChange={(e) => handleFromData(e.target.value, e.target.name)}
+                isdisablad={edited}
               />
             </div>
           </div>
@@ -107,10 +230,11 @@ const GuestDataCreate = () => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="Sharma"
+                placeholder="last Name"
                 name="lastName"
                 value={formData?.lastName}
                 onChange={(e) => handleFromData(e.target.value, e.target.name)}
+                isdisablad={edited}
               />
             </div>
           </div>
@@ -123,10 +247,11 @@ const GuestDataCreate = () => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="Arjun Kumar Sharma"
+                placeholder="full Name"
                 name="fullName"
                 value={formData?.fullName}
                 onChange={(e) => handleFromData(e.target.value, e.target.name)}
+                isdisablad={edited}
               />
             </div>
           </div>
@@ -139,10 +264,11 @@ const GuestDataCreate = () => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder=""
+                placeholder="Notes"
                 name="notes"
                 value={formData?.notes}
                 onChange={(e) => handleFromData(e.target.value, e.target.name)}
+                isdisablad={edited}
               />
             </div>
           </div>
@@ -156,12 +282,14 @@ const GuestDataCreate = () => {
             <div className=" w-full md:w-[250px] xl:w-[300px] ]">
               <input
                 type='date'
-                placeholder="12/03/1992"
+                placeholder="DD/mm/yyyy"
                 autoComplete='false'
                 id='date'
                 name='date'
-                value={formData?.date}
+                // value={formattedDate}
+                value={formattedDate ? formattedDate.split('/').reverse().join('-') : ''}
                 onChange={(e) => handleFromData(e.target.value, e.target.name)}
+                disabled={edited}
                 className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
             </div>
           </div>
@@ -170,12 +298,13 @@ const GuestDataCreate = () => {
             <label className="flex items-center w-[160px] ">Gender</label>
             <div className=" w-full md:w-[250px] xl:w-[300px] ]">
               <SingleSelectDropDown
-                placeholder="Male"
+                placeholder="gender"
                 options={genderDate}
                 target="gender"
                 creatableSelect={true}
                 selectedType={formData?.gender}
                 handleSelectChange={(data) => handleFromData(data, 'gender')}
+                isDisabled={edited}
               />
             </div>
           </div>
@@ -186,12 +315,13 @@ const GuestDataCreate = () => {
             </label>
             <div className=" w-full md:w-[250px] xl:w-[300px] ]">
               <SingleSelectDropDown
-                placeholder="Married"
+                placeholder=" Marital Status"
                 options={married}
                 target="married"
                 creatableSelect={true}
                 selectedType={formData?.married}
                 handleSelectChange={(data) => handleFromData(data, 'married')}
+                isDisabled={edited}
               />
             </div>
           </div>
@@ -204,10 +334,11 @@ const GuestDataCreate = () => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="0"
+                placeholder="children"
                 name="children"
                 value={formData?.children}
                 onChange={(e) => handleFromData(e.target.value, e.target.name)}
+                isdisablad={edited}
               />
             </div>
           </div>
@@ -222,6 +353,7 @@ const GuestDataCreate = () => {
               name='isActive'
               checked={formData?.isActive}
               onChange={(e) => handleFromData(e.target.checked, e.target.name)}
+              disabled={edited}
               className={`w-5 h-5 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none`}
             />
           </div>
@@ -235,12 +367,13 @@ const GuestDataCreate = () => {
             <label className="flex items-center w-[170px] ">Nationality</label>
             <div className=" w-full md:w-[250px] xl:w-[300px] ]">
               <SingleSelectDropDown
-                placeholder="India"
+                placeholder="nationality"
                 options={nationality}
                 target="nationality"
                 creatableSelect={true}
                 selectedType={formData?.nationality}
                 handleSelectChange={(data) => handleFromData(data, 'nationality')}
+                isDisabled={edited}
               />
             </div>
           </div>
@@ -253,10 +386,11 @@ const GuestDataCreate = () => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder=""
+                placeholder="company Name"
                 name="companyName"
                 value={formData?.companyName}
                 onChange={(e) => handleFromData(e.target.value, e.target.name)}
+                isdisablad={edited}
               />
             </div>
           </div>
@@ -271,6 +405,7 @@ const GuestDataCreate = () => {
                 creatableSelect={true}
                 selectedType={formData?.income}
                 handleSelectChange={(data) => handleFromData(data, 'income')}
+                isDisabled={edited}
               />
             </div>
           </div>
@@ -285,6 +420,7 @@ const GuestDataCreate = () => {
                 creatableSelect={true}
                 selectedType={formData?.category}
                 handleSelectChange={(data) => handleFromData(data, 'category')}
+                isDisabled={edited}
               />
             </div>
           </div>
@@ -300,11 +436,11 @@ const GuestDataCreate = () => {
               />
             </div>
 
-            <div className="flex  gap-4">
+            {(isEdit === 'Edit' || goldenId === 0) && <div className="flex  gap-4">
               <div className="w-full max-w-[150px]  ">
                 <CustomButton
-                  name="Save"
-                  handleClick={() => { }}
+                  name={isEdit === 'Edit' ? "Update" : "Save"}
+                  handleClick={() => handleSaveDetails()}
                   isDisable={false}
                   isLoading={false}
                 />
@@ -317,7 +453,7 @@ const GuestDataCreate = () => {
                   isLoading={false}
                 />
               </div>
-            </div>
+            </div>}
 
           </div>
 
@@ -340,23 +476,23 @@ const GuestDataCreate = () => {
 
         <div className="w-full h-full flex flex-col gap-6">
           <div className="w-full h-full">
-            <GuestCreateAddress isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("creareAddress", isHidden)} />
+            <GuestCreateAddress isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("creareAddress", isHidden)} allData={allData} />
           </div>
 
           <div className="w-full h-full">
-            <GuestContactDetails isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("contactDetails", isHidden)} />
+            <GuestContactDetails isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("contactDetails", isHidden)} allData={allData} />
           </div>
 
           <div className="w-full h-full">
-            <GuestIdentification isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("identification", isHidden)} />
+            <GuestIdentification isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("identification", isHidden)} allData={allData} />
           </div>
 
           <div className="w-full h-full">
-            <SocialMedia isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("socialMedia", isHidden)} />
+            <SocialMedia isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("socialMedia", isHidden)} allData={allData} />
           </div>
 
           <div className="w-full h-full">
-            <LoyalityProgram isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("lotaltyProgram", isHidden)} />
+            <LoyalityProgram isHideAll={isHideAll} onHandleHide={(isHidden) => handlehideChange("lotaltyProgram", isHidden)} allData={allData} />
           </div>
         </div>
       </div>

@@ -7,7 +7,6 @@ const Batchjobs = () => {
 
     const getBatchId = (data) => {
         setBatchId(data)
-        console.log(data);
     };
 
 

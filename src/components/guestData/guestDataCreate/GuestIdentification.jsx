@@ -10,9 +10,9 @@ import SmCustomModal from "@/components/common/SmCustomModal";
 import { useSelector } from "react-redux";
 import { BiSolidPencil } from "react-icons/bi";
 
-const GuestIdentification = ({ isHideAll, onHandleHide }) => {
+const GuestIdentification = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
-  const [rowData, setRowData] = useState(IdentificationData);
+  const [rowData, setRowData] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideIdentification, setisHideIdentification] = useState(true);
@@ -24,6 +24,15 @@ const GuestIdentification = ({ isHideAll, onHandleHide }) => {
     setIsModalOpen(true);
     setUpdateRowData({})
   };
+
+
+  useEffect(() => {
+    if (allData?.identificationInfo?.length > 0) {
+      setRowData(allData?.identificationInfo)
+    }
+  }, [allData])
+
+
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -158,8 +167,8 @@ const GuestIdentification = ({ isHideAll, onHandleHide }) => {
 
   const handleHide = (e) => {
     e.stopPropagation();
-      setisHideIdentification(!isHideIdentification);
-      onHandleHide(!isHideIdentification);
+    setisHideIdentification(!isHideIdentification);
+    onHandleHide(!isHideIdentification);
   }
 
   const handleEdit = (e, data) => {

@@ -10,9 +10,9 @@ import SmCustomModal from "@/components/common/SmCustomModal";
 import { useSelector } from "react-redux"
 import { BiSolidPencil } from "react-icons/bi";
 
-const SocialMedia = ({ isHideAll, onHandleHide }) => {
+const SocialMedia = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
-  const [rowData, setRowData] = useState(SocialMediaData);
+  const [rowData, setRowData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideSocialMedia, setisHideSocialMedia] = useState(true);
   const [updateRowData, setUpdateRowData] = useState({})
@@ -28,16 +28,23 @@ const SocialMedia = ({ isHideAll, onHandleHide }) => {
     setUpdateRowData({})
   };
 
+
+  useEffect(() => {
+    if (allData?.socialMediaProfiles?.length > 0) {
+      setRowData(allData?.socialMediaProfiles)
+    }
+  }, [allData])
+
   const [columnDefs] = useState([
     {
-      field: "socialMediaApplication",
+      field: "socialMediaApp",
       headerName: "Social Media Application ",
       minWidth: 250,
       maxWidth: 300,
       filter: true,
     },
     {
-      field: "socialMediaProfile",
+      field: "profile",
       headerName: "Social Media Profile ",
       minWidth: 250,
       filter: true,
@@ -117,8 +124,8 @@ const SocialMedia = ({ isHideAll, onHandleHide }) => {
     if (socialMedia?.length > 0) {
       const newData = socialMedia?.map((item) => ({
         id: item.id,
-        socialMediaApplication: item?.socialMediatype?.value,
-        socialMediaProfile: item?.Profile,
+        socialMediaApp: item?.socialMediatype?.value,
+        profile: item?.Profile,
       }));
       setRowData(newData)
     }

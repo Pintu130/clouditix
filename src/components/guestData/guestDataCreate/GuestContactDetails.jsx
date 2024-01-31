@@ -12,53 +12,18 @@ import { BiSolidPencil } from "react-icons/bi";
 
 
 
-const GuestContactDetails = ({ isHideAll, onHandleHide }) => {
+const GuestContactDetails = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
   const [updateRowData, setUpdateRowData] = useState({})
-  const [rowData, setRowData] = useState([
-    {
-      busineddCountryCode: "IND",
-      homeCountryCode: "USA",
-      busineddPhone: "123456789",
-      homePhone: "987654321",
-      mobileCountryCode: "IND",
-      mobilePhone: "1597532648",
-      alternateeCountryCode: "INZ",
-      alternatPhone: "9863475112",
-      emailBusiness: "business@email.com",
-      emailPersonal: "personal@email.com",
-      emailAlternate: "alternate@email.com"
+  const [rowData, setRowData] = useState([ ]);
 
-    },
-    {
-      busineddCountryCode: "USA",
-      homeCountryCode: "IND",
-      busineddPhone: "123456789",
-      homePhone: "987654321",
-      mobileCountryCode: "ESZ",
-      mobilePhone: "1597532648",
-      alternateeCountryCode: "INZ",
-      alternatPhone: "9863475112",
-      emailBusiness: "business@email.com",
-      emailPersonal: "personal@email.com",
-      emailAlternate: "alternate@email.com"
 
-    },
-    {
-      busineddCountryCode: "UKS",
-      homeCountryCode: "PAK",
-      busineddPhone: "123456789",
-      homePhone: "987654321",
-      mobileCountryCode: "AIZ",
-      mobilePhone: "1597532648",
-      alternateeCountryCode: "INZ",
-      alternatPhone: "9863475112",
-      emailBusiness: "business@email.com",
-      emailPersonal: "personal@email.com",
-      emailAlternate: "alternate@email.com"
+  useEffect(() => {
+    if (allData?.contactDetails?.length > 0) {
+      setRowData(allData?.contactDetails)
+    }
+  }, [allData])
 
-    },
-  ]);
 
   const [columnDefs] = useState([
     {
@@ -66,7 +31,7 @@ const GuestContactDetails = ({ isHideAll, onHandleHide }) => {
       headerClass: "flex justify-center border-r border-[#a6a6a6]",
       children: [
         {
-          field: 'busineddCountryCode',
+          field: 'businessPhoneCountryCode',
           width: 180,
           headerName: "Country Code",
           headerClass: "flex justify-center border-r border-[#a6a6a6]",
@@ -74,7 +39,7 @@ const GuestContactDetails = ({ isHideAll, onHandleHide }) => {
         },
         {
           headerClass: "flex justify-center border-r",
-          field: 'busineddPhone',
+          field: 'businessPhone',
           headerName: "Phone",
           width: 90,
           filter: 'agNumberColumnFilter',
@@ -87,7 +52,7 @@ const GuestContactDetails = ({ isHideAll, onHandleHide }) => {
       headerClass: "flex justify-center border-r border-[#a6a6a6]",
       children: [
         {
-          field: 'homeCountryCode',
+          field: 'homePhoneCountryCode',
           width: 180,
           headerName: "Country Code",
           filter: 'homeCountryCode',
@@ -107,7 +72,7 @@ const GuestContactDetails = ({ isHideAll, onHandleHide }) => {
       headerClass: "flex justify-center border-r border-[#a6a6a6]",
       children: [
         {
-          field: 'mobileCountryCode',
+          field: 'mobilePhoneCountryCode',
           width: 180,
           headerName: "Country Code",
           filter: 'agTextColumnFilter',
@@ -127,14 +92,14 @@ const GuestContactDetails = ({ isHideAll, onHandleHide }) => {
       headerClass: "flex justify-center border-r border-[#a6a6a6]",
       children: [
         {
-          field: 'alternateeCountryCode',
+          field: 'alternatePhoneCountryCode',
           width: 180,
           headerName: "Country Code",
           filter: 'agTextColumnFilter',
           headerClass: "flex justify-center border-r border-[#a6a6a6]",
         },
         {
-          field: 'alternatPhone',
+          field: 'alternatePhone',
           headerName: "Phone",
           width: 200,
           filter: 'agNumberColumnFilter',
@@ -147,21 +112,21 @@ const GuestContactDetails = ({ isHideAll, onHandleHide }) => {
       headerClass: "flex justify-center ",
       children: [
         {
-          field: 'emailBusiness',
+          field: 'businessEmail',
           minWidth: 200,
           headerName: "Business",
           filter: 'agTextColumnFilter',
           headerClass: "flex justify-center border-r border-[#a6a6a6]",
         },
         {
-          field: 'emailPersonal',
+          field: 'personalEmail',
           headerName: "Personal",
           minWidth: 200,
           filter: 'agNumberColumnFilter',
           headerClass: "flex justify-center border-r border-[#a6a6a6]",
         },
         {
-          field: 'emailAlternate',
+          field: 'alternateEmail',
           headerName: "Alternate",
           minWidth: 200,
           filter: 'agNumberColumnFilter',
@@ -220,17 +185,17 @@ const GuestContactDetails = ({ isHideAll, onHandleHide }) => {
     if (contectData?.length > 0) {
       const newContect = contectData?.map((item) => ({
         id: item?.id,
-        busineddCountryCode: "IND",
-        homeCountryCode: "USA",
-        busineddPhone: item?.businessphone,
+        businessPhoneCountryCode: "91",
+        homePhoneCountryCode: "91",
+        businessPhone: item?.businessphone,
         homePhone: item?.homephone,
-        mobileCountryCode: "IND",
-        alternateeCountryCode: "IND",
+        mobilePhoneCountryCode: "91",
+        alternatePhoneCountryCode: "91",
         mobilePhone: item?.mobilephone,
-        alternatPhone: item?.alternatephone,
-        emailBusiness: item?.businessemail,
-        emailPersonal: item?.personalemail,
-        emailAlternate: item?.alternateemail
+        alternatePhone: item?.alternatephone,
+        businessEmail: item?.businessemail,
+        personalEmail: item?.personalemail,
+        alternateEmail: item?.alternateemail
       }));
 
       setRowData(newContect)

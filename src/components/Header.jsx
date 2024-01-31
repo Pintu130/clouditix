@@ -7,6 +7,8 @@ import { staticMenuItems } from '@/assets/data';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { GrClose } from "react-icons/gr"
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
+import { useSelector, useDispatch } from 'react-redux'
+import { setChangeTab, setDetails, setEdititem } from '@/store/guestDetails';
 
 
 function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
@@ -14,6 +16,10 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [selectedPage, setselectedPage] = useState("home");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useDispatch()
+  const changeTab = useSelector(state => state?.guestDetails?.link);
+
+  console.log(changeTab);
 
   useEffect(() => {
     setselectedPage(selectedTab)
@@ -36,7 +42,20 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
     handleChangeTab(link)
     setselectedPage(link?.linkTo)
 
+    if (link?.linkTo !== 'guest-data-create') {
+      dispatch(setDetails(0));
+      dispatch(setEdititem(''));
+    }
+    dispatch(setChangeTab({}));
+
   }
+
+  useEffect(() => {
+    if (Object.keys(changeTab).length > 0) {
+      handleLinkTo(changeTab)
+    }
+  }, [changeTab])
+
 
 
   function MenuItem({ item, handleLinkTo }) {
@@ -139,7 +158,7 @@ function Header({ children, handleChangeTab, selectedTab, handlelogout }) {
       <div className='px-3 pt-3 shadow-[0px_4px_6px_0px_#1143911A]  z-10 '>
         <div className='flex justify-between border-b '>
           <button className='flex items-center flex-shrink-0 gap-3 '>
-              {!isSidebarOpen ? <AiOutlineMenu className='w-4 h-4 cursor-pointer sm:h-6 sm:w-6' onClick={toggleSidebar} /> : <GrClose className='w-4 h-4 cursor-pointer sm:h-6 sm:w-6 ' onClick={toggleSidebar} />}
+            {!isSidebarOpen ? <AiOutlineMenu className='w-4 h-4 cursor-pointer sm:h-6 sm:w-6' onClick={toggleSidebar} /> : <GrClose className='w-4 h-4 cursor-pointer sm:h-6 sm:w-6 ' onClick={toggleSidebar} />}
             <Image
               src="/images/logo.png"
               alt='HOM-logo'

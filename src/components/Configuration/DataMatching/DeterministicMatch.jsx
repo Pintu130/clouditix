@@ -79,7 +79,7 @@ const DeterministicMatch = () => {
 
     const isAnyFieldEmpty = dynamicFields.some((field, index) => {
       if (!field.name) {
-        console.log("inside This");
+      
         // Set error message for the empty field
         setFieldErrors((prevErrors) => {
           const newErrors = [...prevErrors];
@@ -113,6 +113,8 @@ const DeterministicMatch = () => {
     setIsEditruleModal()
     setIsOption(matchdata)
     setEditMatchRules('')
+    setFieldErrors([]);
+    setSaveButtonDisabled(false);
   };
 
   useEffect(() => {
@@ -128,7 +130,7 @@ const DeterministicMatch = () => {
 
 
   const handleFromData = (selectedOption, index, fieldKey) => {
-    console.log(selectedOption?.value);
+
     if (selectedOption?.value) {
       setDynamicFields((prevFields) => {
         const newFields = [...prevFields];
@@ -151,7 +153,7 @@ const DeterministicMatch = () => {
     }
   }
 
-  console.log(dynamicFields);
+
 
 
 
@@ -160,7 +162,7 @@ const DeterministicMatch = () => {
 
     const isAnyFieldEmpty = dynamicFields.some((field, index) => {
       if (!field.name) {
-        console.log("inside This");
+
         // Set error message for the empty field
         setFieldErrors((prevErrors) => {
           const newErrors = [...prevErrors];
@@ -383,19 +385,55 @@ const DeterministicMatch = () => {
     setSaveButtonDisabled(false);
   };
 
+  const handleRemoveField = async (field, rule) => {
 
-  /*   const handleRemoveField = (ruleIndex, fieldIndex) => {
-      setRules((prevRules) => {
-        const updatedRules = [...prevRules];
-        updatedRules[ruleIndex].dynamicFields.splice(fieldIndex, 1);
-        // If dynamicFields is empty, remove the entire rule
-        if (updatedRules[ruleIndex].dynamicFields.length === 0) {
-          updatedRules.splice(ruleIndex, 1);
-        }
-   
-        return updatedRules;
-      });
-    }; */
+    const updatedData = createRuleData?.match_rules?.map(item => {
+      if (item.match_rule === rule.match_rule) {
+
+        const updatedColumns = item.columns.filter(Colitem => Colitem.column !== field.column);
+
+        /* if (updatedColumns.length === 0) {
+          return null;
+        } */
+
+        const updatedRules = [
+          {
+            "column_rule": Array(updatedColumns?.length).fill({
+              "col_weight": null,
+              "min_match": null,
+              "name": null
+            })
+          }
+        ];
+
+        return { ...item, columns: updatedColumns, rules: updatedRules };
+      } else {
+        return item;
+      }
+    })/* .filter(item => item !== null) */;
+
+    const EditJson = {
+      "match_rules": updatedData,
+    }
+
+     const EditApi = await fetchDeterministic_Config(EditJson)
+ 
+     if (EditApi?.isSuccess) {
+       toast.success('Remove Attribute', {
+         position: "top-center",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "light",
+         toastId: "toastId"
+       });
+       closeModal();
+       setForUpdate(EditApi)
+     }
+  };
 
   const handleToggleRule = (ruleIndex) => {
     setOpenRules((prevOpenRules) => ({
@@ -544,8 +582,6 @@ const DeterministicMatch = () => {
         </div>
       </SmCustomModal>
 
-
-
       <SmCustomModal type="Create" isopen={isEditruleModal} onClose={closeModal} >
         <div className='w-full h-full '>
           <div className='flex justify-between border-b '>
@@ -687,7 +723,7 @@ const DeterministicMatch = () => {
                           field?.column && <div key={fieldIndex} className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 '>
                             <span>{field?.column}</span>
                             <IoClose className='w-5 h-5 flex-shrink-0 cursor-pointer'
-                            // onClick={() => handleRemoveField(index, fieldIndex)}
+                              onClick={() => handleRemoveField(field, rule)}
                             />
                           </div>
                         ))}

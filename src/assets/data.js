@@ -75,9 +75,9 @@ export const fetchvalidationRule = async () => {
   }
 }
 
-export const fetchGuestData = async () => {
+export const fetchGuestData = async (data) => {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GuestData`)
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GuestData/${data}`)
     return response?.data
   } catch (error) {
     return error
@@ -252,6 +252,11 @@ export const fetchSearchGeust = async () => {
     return error
   }
 }
+
+
+
+
+
 
 
 export const datasourceData = [
