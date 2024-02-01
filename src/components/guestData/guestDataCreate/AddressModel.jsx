@@ -2,45 +2,68 @@ import { AddressTypeData, StateData } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
 import CustomInput from "@/components/common/CustomInput";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
-import { setCreateAddressData, setCreateAddressDataUpdate } from "@/store/guestDataCreateSlice";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
 
-const AddressModel = ({ onClose, updateRowData }) => {
-  const [formData, setFormData] = useState({});
 
-  const dispatch = useDispatch()
-  const oldFormData = useSelector(state => state?.createData?.Address)
+
+const initialValue = {
+  addressId: 0,
+  goldenId: 0,
+  stateCode: '',
+  addressType: '',
+  addressLine1: '',
+  addressLine2: '',
+  addressLine3: '',
+  city: '',
+  country: '',
+  zipCode: '',
+  isPrimary: true,
+  startDate: '',
+  endDate: '',
+  isActive: true,
+  createById: '',
+  lastUpdatedById: '',
+  isDeleted: false,
+  source: '',
+  isActiveFlag: true
+}
+
+
+const AddressModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
+  const [formData, setFormData] = useState(initialValue);
 
   const handleFromData = (data, target) => {
 
-    const dynamicId = generateDynamicId();
-
     setFormData((prevFormData) => ({
       ...prevFormData,
-      id: dynamicId,
       [target]: data,
     }));
   };
 
-  const generateDynamicId = () => {
-    return Math.floor(Math.random() * 1000) + 1;
-  };
+  /*   const generateDynamicId = () => {
+      return Math.floor(Math.random() * 1000) + 1;
+    }; */
 
 
   const handleAddressSave = () => {
 
     if (Object.keys(updateRowData).length > 0) {
-      const updatedata = oldFormData?.map((item) => item.id === updateRowData.id ? formData : item)
+      const updatedata = rowData?.map((item) => item.addressId === updateRowData.addressId ? formData : item)
 
-      dispatch(setCreateAddressDataUpdate(updatedata))
+      console.log(updatedata);
+      updatedRowData(updatedata)
+      
       onClose()
+      setFormData(initialValue)
     } else {
       if (Object.keys(formData)?.length > 0) {
-        
-        dispatch(setCreateAddressData(formData))
+        const createNewData = [...rowData, formData]
+        console.log(createNewData);
+        updatedRowData(createNewData)
+
         onClose()
+        setFormData(initialValue)
       }
     }
 
@@ -51,16 +74,25 @@ const AddressModel = ({ onClose, updateRowData }) => {
     if (updateRowData && Object.keys(updateRowData).length > 0) {
 
       const convertData = {
-        id: updateRowData?.id,
-        address: { label: updateRowData?.addressType, value: updateRowData?.addressType },
-        line: updateRowData?.addressLine1,
-        line1: updateRowData?.addressLine2,
-        line2: updateRowData?.addressLine3,
-        isActive: true,
+        addressId: updateRowData?.addressId,
+        goldenId: updateRowData?.goldenId,
+        stateCode: { label: updateRowData?.stateCode, value: updateRowData?.stateCode },
+        addressType: { label: updateRowData?.addressType, value: updateRowData?.addressType },
+        addressLine1: updateRowData?.addressLine1,
+        addressLine2: updateRowData?.addressLine2,
+        addressLine3: updateRowData?.addressLine3,
         city: updateRowData?.city,
-        state: { label: updateRowData?.state, value: updateRowData?.state },
         country: updateRowData?.country,
-        zip: updateRowData?.zipCode
+        zipCode: updateRowData?.zipCode,
+        isPrimary: updateRowData?.isPrimary,
+        startDate: updateRowData?.startDate,
+        endDate: updateRowData?.endDate,
+        isActive: updateRowData?.isActive,
+        createById: updateRowData?.createById,
+        lastUpdatedById: updateRowData?.lastUpdatedById,
+        isDeleted: updateRowData?.isDeleted,
+        source: updateRowData?.source,
+        isActiveFlag: updateRowData?.isActiveFlag
       }
 
       setFormData(convertData)
@@ -99,8 +131,8 @@ const AddressModel = ({ onClose, updateRowData }) => {
               label=""
               placeholder="Arjun Kumar Sharma"
               name="address"
-              value={formData?.address}
-              onChange={(e) => handleFromData(e.target.value, "address")}
+              value={formData?.addresss}
+              onChange={(e) => handleFromData(e.target.value, "addresss")}
             />
           </div>
         </div>
@@ -128,11 +160,11 @@ const AddressModel = ({ onClose, updateRowData }) => {
             <label className="flex items-center w-44 ">Address Type</label>
             <div className="w-full max-w-[300px] lg:max-w-[70%]">
               <SingleSelectDropDown
-                placeholder="Home"
+                placeholder="addressType"
                 options={AddressTypeData}
-                target="address"
+                target="addressType"
                 creatableSelect={true}
-                selectedType={formData?.address}
+                selectedType={formData?.addressType}
                 handleSelectChange={handleFromData}
               />
             </div>
@@ -146,10 +178,10 @@ const AddressModel = ({ onClose, updateRowData }) => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="123 Main Street"
-                name="line"
-                value={formData?.line}
-                onChange={(e) => handleFromData(e.target.value, "line")}
+                placeholder="addressLine1"
+                name="addressLine1"
+                value={formData?.addressLine1}
+                onChange={(e) => handleFromData(e.target.value, "addressLine1")}
               />
             </div>
           </div>
@@ -161,10 +193,10 @@ const AddressModel = ({ onClose, updateRowData }) => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="Apartment 101"
-                name="line1"
-                value={formData?.line1}
-                onChange={(e) => handleFromData(e.target.value, "line1")}
+                placeholder="addressLine2"
+                name="addressLine2"
+                value={formData?.addressLine2}
+                onChange={(e) => handleFromData(e.target.value, "addressLine2")}
               />
             </div>
           </div>
@@ -176,10 +208,10 @@ const AddressModel = ({ onClose, updateRowData }) => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="XYZ Towers"
-                name="line2"
-                value={formData?.line2}
-                onChange={(e) => handleFromData(e.target.value, "line2")}
+                placeholder="addressLine3"
+                name="addressLine3"
+                value={formData?.addressLine3}
+                onChange={(e) => handleFromData(e.target.value, "addressLine3")}
               />
             </div>
           </div>
@@ -208,7 +240,7 @@ const AddressModel = ({ onClose, updateRowData }) => {
                   isRequired={true}
                   isIcon={true}
                   label=""
-                  placeholder="Mumbai"
+                  placeholder="city"
                   name="city"
                   value={formData?.city}
                   onChange={(e) => handleFromData(e.target.value, "city")}
@@ -220,11 +252,11 @@ const AddressModel = ({ onClose, updateRowData }) => {
               <label className="flex items-center w-14 ">State</label>
               <div className="w-full max-w-[300px] lg:max-w-[80%]">
                 <SingleSelectDropDown
-                  placeholder="Maharashtra"
+                  placeholder="stateCode"
                   options={StateData}
-                  target="state"
+                  target="stateCode"
                   creatableSelect={true}
-                  selectedType={formData?.state}
+                  selectedType={formData?.stateCode}
                   handleSelectChange={handleFromData}
                 />
               </div>
@@ -237,7 +269,7 @@ const AddressModel = ({ onClose, updateRowData }) => {
                   isRequired={true}
                   isIcon={true}
                   label=""
-                  placeholder="India"
+                  placeholder="country"
                   name="country"
                   value={formData?.country}
                   onChange={(e) => handleFromData(e.target.value, "country")}
@@ -252,10 +284,10 @@ const AddressModel = ({ onClose, updateRowData }) => {
                   isRequired={true}
                   isIcon={true}
                   label=""
-                  placeholder="400001"
-                  name="zip"
-                  value={formData?.zip}
-                  onChange={(e) => handleFromData(e.target.value, "zip")}
+                  placeholder="zipCode"
+                  name="zipCode"
+                  value={formData?.zipCode}
+                  onChange={(e) => handleFromData(e.target.value, "zipCode")}
                 />
               </div>
             </div>

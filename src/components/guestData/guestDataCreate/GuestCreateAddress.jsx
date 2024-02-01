@@ -6,8 +6,9 @@ import { MdOutlineAdd } from "react-icons/md";
 import { FaChevronDown } from "react-icons/fa6";
 import CustomModal from "@/components/common/CustomModal";
 import AddressModel from "./AddressModel";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BiSolidPencil } from "react-icons/bi";
+import { setCreateAddressData } from "@/store/guestDataCreateSlice";
 
 const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
@@ -15,18 +16,15 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideAddress, setIsHideAddress] = useState(true);
   const [updateRowData, setUpdateRowData] = useState({})
-
-  const CreatedAddressData = useSelector(state => state?.createData?.Address)
-
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (allData?.addresses?.length > 0) {
+      console.log("Addresses");
       setRowData(allData?.addresses)
+      dispatch(setCreateAddressData(allData?.addresses))
     }
   }, [allData])
-
-
-
 
   const [columnDefs] = useState([
     {
@@ -79,6 +77,15 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
       headerName: "Zip Code",
       minWidth: 80,
       maxWidth: 100,
+      editable: true,
+    },
+    {
+      field: "isPrimary",
+      headerName: "isPrimary",
+      cellClass: "uppercase",
+      minWidth: 80,
+      maxWidth: 100,
+      cellRenderer: "agCheckboxCellRenderer",
       editable: true,
     },
     {
@@ -165,28 +172,6 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
     rowClass: "custom-row-hover",
     // domLayout: 'autoHeight',
   };
-  useEffect(() => {
-
-    if (CreatedAddressData.length > 0) {
-
-      const newAddress = CreatedAddressData?.map((CreatedAddressData) => ({
-        id: CreatedAddressData?.id,
-        addressType: CreatedAddressData?.address?.label,
-        addressLine1: CreatedAddressData?.line,
-        addressLine2: CreatedAddressData?.line1,
-        addressLine3: CreatedAddressData?.line2,
-        city: CreatedAddressData?.city,
-        state: CreatedAddressData?.state?.label,
-        country: CreatedAddressData?.country,
-        zipCode: CreatedAddressData?.zip,
-        isActiveFlag: CreatedAddressData?.isActive,
-
-      }))
-
-      setRowData(newAddress)
-    }
-  }, [CreatedAddressData])
-
 
   useEffect(() => {
     setIsHideAddress(isHideAll)
@@ -204,10 +189,26 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
     setIsModalOpen(true);
   }
 
+  const updatedRowData = (data) => {
+    console.log(data);
+    if (data?.length > 0) {
+      const modifyData = data.map(item => {
+        return {
+          ...item,
+          stateCode: item?.stateCode?.value?.length > 0 ? item?.stateCode?.value : item?.stateCode,
+          addressType: item?.addressType?.value?.length > 0 ? item?.addressType?.value : item?.addressType,
+        }
+      })
+
+      setRowData(modifyData);
+      dispatch(setCreateAddressData(modifyData))
+    }
+  }
+
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll ">
       <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <AddressModel onClose={closeModal} updateRowData={updateRowData} />
+        <AddressModel onClose={closeModal} updateRowData={updateRowData} rowData={rowData} updatedRowData={updatedRowData} />
       </CustomModal>
       <div className="flex items-center gap-3">
         <FaChevronDown className={`h-4 w-4 transform ${!isHideAddress ? 'rotate-180' : 'rotate-0'} cursor-pointer transition-transform duration-300 ease-in-out`} onClick={(e) => handleHide(e)} />

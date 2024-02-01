@@ -7,20 +7,26 @@ import { FaChevronDown } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
 import ContactModel from "./ContactModel";
 import SmCustomModal from "@/components/common/SmCustomModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BiSolidPencil } from "react-icons/bi";
+import { setContectData, setContectDataUpdate } from "@/store/guestDataCreateSlice";
 
 
 
 const GuestContactDetails = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
   const [updateRowData, setUpdateRowData] = useState({})
-  const [rowData, setRowData] = useState([ ]);
+  const [rowData, setRowData] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHideContact, setisHideContact] = useState(true);
+  const contectData = useSelector(state => state?.createData?.contect);
+  const dispatch = useDispatch()
 
 
   useEffect(() => {
     if (allData?.contactDetails?.length > 0) {
       setRowData(allData?.contactDetails)
+      dispatch(setContectDataUpdate(allData?.contactDetails))
     }
   }, [allData])
 
@@ -177,12 +183,11 @@ const GuestContactDetails = ({ isHideAll, onHandleHide, allData }) => {
     rowClass: 'custom-row-hover',
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isHideContact, setisHideContact] = useState(true);
-  const contectData = useSelector(state => state?.createData?.contect)
+
+
   useEffect(() => {
 
-    if (contectData?.length > 0) {
+    if (contectData?.length > 0 && isModalOpen) {
       const newContect = contectData?.map((item) => ({
         id: item?.id,
         businessPhoneCountryCode: "91",
@@ -199,6 +204,8 @@ const GuestContactDetails = ({ isHideAll, onHandleHide, allData }) => {
       }));
 
       setRowData(newContect)
+    } else {
+      setRowData(contectData)
     }
   }, [contectData])
 
@@ -229,13 +236,19 @@ const GuestContactDetails = ({ isHideAll, onHandleHide, allData }) => {
     e.stopPropagation();
     setUpdateRowData(data);
     setIsModalOpen(true);
+  };
+
+  const updatedRowData = (data) => {
+    console.log(data);
+    setRowData(data);
+    dispatch(setContectData(data));
   }
 
   return (
     <div className=" w-full  flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll">
 
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <ContactModel onClose={closeModal} updateRowData={updateRowData} />
+        <ContactModel onClose={closeModal} updateRowData={updateRowData} rowData={rowData} updatedRowData={updatedRowData} />
       </SmCustomModal>
 
       <div className=" w-full h-full flex items-center gap-3">

@@ -7,16 +7,42 @@ import { identificationtype, issuingcountry } from "@/assets/data";
 import { useDispatch, useSelector } from "react-redux"
 import { setIdentificationData, setIdentificationDataUpdate } from "@/store/guestDataCreateSlice";
 
-const IdentificationModel = ({ onClose, updateRowData }) => {
 
-  const [identification, setIdentification] = useState({})
-  const dispatch = useDispatch()
-  const oldFormData = useSelector(state => state?.createData?.identification)
+const initialValue = {
+  identificationId: 0,
+  goldenId: 0,
+  identificationType: "",
+  identificationValue: "",
+  issuingCountry: "",
+  issueDate: "",
+  expiryDate: "",
+  createdAt: "",
+  updatedAt: "",
+  createById: "",
+  lastUpdatedById: "",
+  isDeleted: false,
+  source: "",
+  isActiveFlag: true
+}
+
+const IdentificationModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
+
+  const [identification, setIdentification] = useState(initialValue)
+
+
+  console.log(rowData);
+  console.log(updateRowData);
+  console.log(identification);
 
   const handleidentificationData = (name, value) => {
-    const dynamicId = generateDynamicId();
 
-    if (updateRowData && Object.keys(updateRowData).length > 0) {
+
+    setIdentification((prevFormData) => ({
+      ...prevFormData,
+      [name]: value
+    }))
+
+    /* if (updateRowData && Object.keys(updateRowData).length > 0) {
       setIdentification({
         ...identification,
         [name]: value
@@ -24,52 +50,58 @@ const IdentificationModel = ({ onClose, updateRowData }) => {
     } else {
       setIdentification({
         ...identification,
-        id: dynamicId,
         [name]: value
       })
-    }
+    } */
 
   }
-
-  const generateDynamicId = () => {
-    return Math.floor(Math.random() * 1000) + 1;
-  };
 
   const HandleSave = () => {
 
     if (Object.keys(updateRowData).length > 0) {
-      const updatedata = oldFormData?.map((item) => item.id === updateRowData.id ? identification : item)
-      
-      dispatch(setIdentificationDataUpdate(updatedata))
-      onClose()
-    } else {
-      if (identification) {
-        dispatch(setIdentificationData(identification))
-        onClose()
-        setIdentification({})
-      }
-    }
+      const updatedata = rowData?.map((item) => item.identificationId === updateRowData.identificationId ? identification : item)
 
+      updatedRowData(updatedata);
+
+      onClose()
+      setIdentification(initialValue);
+    } else {
+
+      const createdData = [...rowData, identification];
+
+      updatedRowData(createdData);
+      onClose()
+      setIdentification(initialValue);
+
+    }
 
   }
 
   const handleClose = () => {
     onClose()
-    setIdentification({})
+    setIdentification(initialValue)
   }
+
 
   useEffect(() => {
     if (updateRowData && Object.keys(updateRowData).length > 0) {
 
       const convertData = {
 
-        id: updateRowData?.id,
-        expirydate: updateRowData?.expiryDate,
-        identificationvalue: updateRowData?.identificationValue,
-        issuingdate: updateRowData?.issueDate,
-        isActive: true,
-        issuingcountry: { label: updateRowData?.issuingCountry, value: updateRowData?.issuingCountry },
-        identificationtype: { label: updateRowData?.identificationType, value: updateRowData?.identificationType }
+        identificationId: updateRowData?.identificationId,
+        goldenId: updateRowData?.goldenId,
+        identificationType: { label: updateRowData?.identificationType, value: updateRowData?.identificationType },
+        identificationValue: updateRowData?.identificationValue,
+        issuingCountry: { label: updateRowData?.issuingCountry, value: updateRowData?.issuingCountry },
+        issueDate: updateRowData?.issueDate,
+        expiryDate: updateRowData?.expiryDate,
+        createdAt: updateRowData?.createdAt,
+        updatedAt: updateRowData?.updatedAt,
+        createById: updateRowData?.createById,
+        lastUpdatedById: updateRowData?.lastUpdatedById,
+        isDeleted: updateRowData?.isDeleted,
+        source: updateRowData?.source,
+        isActiveFlag: updateRowData?.isActiveFlag
       }
 
       setIdentification(convertData)
@@ -139,10 +171,10 @@ const IdentificationModel = ({ onClose, updateRowData }) => {
                   <SingleSelectDropDown
                     placeholder="Identification Type"
                     options={identificationtype}
-                    target="identificationtype"
+                    target="identificationType"
                     creatableSelect={true}
-                    selectedType={identification?.identificationtype}
-                    handleSelectChange={(data) => handleidentificationData('identificationtype', data)}
+                    selectedType={identification?.identificationType}
+                    handleSelectChange={(data) => handleidentificationData('identificationType', data)}
                   />
                 </div>
               </div>
@@ -153,10 +185,10 @@ const IdentificationModel = ({ onClose, updateRowData }) => {
                   <SingleSelectDropDown
                     placeholder="Issuing Country"
                     options={issuingcountry}
-                    target="issuingcountry"
+                    target="issuingCountry"
                     creatableSelect={true}
-                    selectedType={identification?.issuingcountry}
-                    handleSelectChange={(data) => handleidentificationData('issuingcountry', data)}
+                    selectedType={identification?.issuingCountry}
+                    handleSelectChange={(data) => handleidentificationData('issuingCountry', data)}
                   />
                 </div>
               </div>
@@ -169,8 +201,8 @@ const IdentificationModel = ({ onClose, updateRowData }) => {
                     placeholder="Expiry Date"
                     autoComplete='false'
                     id='expirydate'
-                    name='expirydate'
-                    value={identification?.expirydate}
+                    name='expiryDate'
+                    value={identification?.expiryDate ? identification?.expiryDate.split('T')[0] : ""}
                     onChange={(e) => handleidentificationData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -189,8 +221,8 @@ const IdentificationModel = ({ onClose, updateRowData }) => {
                     isIcon={true}
                     label=""
                     placeholder="Kumar"
-                    name="identificationvalue"
-                    value={identification?.identificationvalue}
+                    name="identificationValue"
+                    value={identification?.identificationValue}
                     onChange={(e) => handleidentificationData(e.target.name, e.target.value)}
                   />
                 </div>
@@ -204,8 +236,9 @@ const IdentificationModel = ({ onClose, updateRowData }) => {
                     placeholder="12/03/1992"
                     autoComplete='false'
                     id='issuingdate'
-                    name='issuingdate'
-                    value={identification?.issuingdate}
+                    name='issueDate'
+                    value={identification?.issueDate ? identification.issueDate.split('T')[0] : ""}
+                    // value={identification?.issueDate}
                     onChange={(e) => handleidentificationData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -224,8 +257,8 @@ const IdentificationModel = ({ onClose, updateRowData }) => {
                 placeholder=""
                 autoComplete='false'
                 id='date'
-                name='isActive'
-                checked={identification?.isActive}
+                name='isActiveFlag'
+                checked={identification?.isActiveFlag}
                 onChange={(e) => handleidentificationData(e.target.name, e.target.checked)}
                 className={`w-5 h-5 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none`}
               />
@@ -253,9 +286,6 @@ const IdentificationModel = ({ onClose, updateRowData }) => {
           </div>
 
         </div>
-
-
-
       </div>
     </div>
   </>;

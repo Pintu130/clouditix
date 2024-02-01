@@ -8,42 +8,51 @@ import { useDispatch, useSelector } from "react-redux"
 import { setSocialMediaData, setSocialMediaDataUpdate } from "@/store/guestDataCreateSlice";
 
 const initialValue = {
-  socialMediatype: '',
-  Profile: '',
-  isActive: ''
+  smpId: 0,
+  goldenId: 0,
+  socialMediaApp: "",
+  profile: "",
+  createById: "",
+  lastUpdatedById: "",
+  isDeleted: false,
+  source: "",
+  isActiveFlag: true
 }
 
-const SocialMediaModel = ({ onClose, updateRowData }) => {
-  const [socialMedia, setSocialMedia] = useState({})
+const SocialMediaModel = ({ onClose, updateRowData, rowData, ModifyRowData }) => {
+  const [socialMedia, setSocialMedia] = useState(initialValue)
   const dispatch = useDispatch()
   const oldFormData = useSelector(state => state?.createData?.socialMedia)
 
+  console.log(rowData);
+  console.log(updateRowData);
+  console.log(socialMedia);
+
   const handlesocialMediaData = (name, value) => {
-    const dynamicId = generateDynamicId();
+
     setSocialMedia({
       ...socialMedia,
-      id: dynamicId,
       [name]: value
     })
 
   }
 
-  const generateDynamicId = () => {
-    return Math.floor(Math.random() * 1000) + 1;
-  };
 
   const HandleSave = () => {
     if (Object.keys(updateRowData).length > 0) {
-      const updatedata = oldFormData?.map((item) => item.id === updateRowData.id ? socialMedia : item)
+      const updatedata = rowData?.map((item) => item.smpId === updateRowData.smpId ? socialMedia : item)
 
-      dispatch(setSocialMediaDataUpdate(updatedata))
+      ModifyRowData(updatedata);
+
       onClose()
+      setSocialMedia(initialValue)
     } else {
-      if (socialMedia) {
-        dispatch(setSocialMediaData(socialMedia))
-        setSocialMedia(initialValue)
-        onClose()
-      };
+
+      const createNewData = [...rowData, socialMedia]
+      ModifyRowData(createNewData);
+
+      setSocialMedia(initialValue)
+      onClose()
     }
   }
 
@@ -51,11 +60,16 @@ const SocialMediaModel = ({ onClose, updateRowData }) => {
     if (updateRowData && Object.keys(updateRowData).length > 0) {
 
       const convertData = {
-        id: updateRowData?.id,
-        socialMediatype: { label: updateRowData?.socialMediaApplication, value: updateRowData?.socialMediaApplication },
-        Profile: updateRowData?.socialMediaProfile,
-        isActive: true,
 
+        smpId: updateRowData?.smpId,
+        goldenId: updateRowData?.goldenId,
+        socialMediaApp: { label: updateRowData?.socialMediaApp, value: updateRowData?.socialMediaApp },
+        profile: updateRowData?.profile,
+        createById: updateRowData?.createById,
+        lastUpdatedById: updateRowData?.lastUpdatedById,
+        isDeleted: updateRowData?.isDeleted,
+        source: updateRowData?.source,
+        isActiveFlag: updateRowData?.isActiveFlag
       }
       setSocialMedia(convertData)
     }
@@ -126,10 +140,10 @@ const SocialMediaModel = ({ onClose, updateRowData }) => {
                 <SingleSelectDropDown
                   placeholder="Social Media"
                   options={socialmediaData}
-                  target="socialMediatype"
+                  target="socialMediaApp"
                   creatableSelect={true}
-                  selectedType={socialMedia?.socialMediatype}
-                  handleSelectChange={(data) => handlesocialMediaData('socialMediatype', data)}
+                  selectedType={socialMedia?.socialMediaApp}
+                  handleSelectChange={(data) => handlesocialMediaData('socialMediaApp', data)}
                 />
               </div>
             </div>
@@ -142,9 +156,9 @@ const SocialMediaModel = ({ onClose, updateRowData }) => {
                   isRequired={true}
                   isIcon={true}
                   label=""
-                  placeholder="https://www.facebook.com/Arjun_Sharma"
-                  name="Profile"
-                  value={socialMedia?.Profile}
+                  placeholder="Social Media Link "
+                  name="profile"
+                  value={socialMedia?.profile}
                   onChange={(e) => handlesocialMediaData(e.target.name, e.target.value)}
                 />
               </div>
@@ -161,8 +175,8 @@ const SocialMediaModel = ({ onClose, updateRowData }) => {
                 placeholder=""
                 autoComplete='false'
                 id='date'
-                name='isActive'
-                checked={socialMedia?.isActive}
+                name='isActiveFlag'
+                checked={socialMedia?.isActiveFlag}
                 onChange={(e) => handlesocialMediaData(e.target.name, e.target.checked)}
                 className={`w-5 h-5 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none`}
               />

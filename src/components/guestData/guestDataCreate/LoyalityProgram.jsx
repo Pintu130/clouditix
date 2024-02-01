@@ -5,18 +5,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
 import LoyalityModel from "./LoyalityModel";
-import { LoyalityData } from "@/assets/data";
+import { LoyalityData, fetchGoldLoyaltyProgram } from "@/assets/data";
 import SmCustomModal from "@/components/common/SmCustomModal";
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { BiSolidPencil } from "react-icons/bi";
+import { setLotalityData } from "@/store/guestDataCreateSlice";
 
 const LoyalityProgram = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState([]);
-  const loyality = useSelector(state => state?.createData?.loyality)
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideLoyalityProgram, setisHideLoyalityProgram] = useState(true);
   const [updateRowData, setUpdateRowData] = useState({})
+  const dispatch = useDispatch();
 
   const handleLoyalityModal = () => {
     setIsModalOpen(true);
@@ -27,9 +29,17 @@ const LoyalityProgram = ({ isHideAll, onHandleHide, allData }) => {
   };
 
   useEffect(() => {
-    if (allData?.loyaltyProgramMemberships?.length > 0) {
+    ; (async () => {
+      const res = await fetchGoldLoyaltyProgram();
+      console.log(res);
+      if (res?.length > 0) {
+        setRowData(res);
+        dispatch(setLotalityData(res))
+      };
+    })()
+    /* if (allData?.loyaltyProgramMemberships?.length > 0) {
       setRowData(allData?.loyaltyProgramMemberships)
-    }
+    } */
   }, [allData])
 
   const [columnDefs] = useState([
@@ -153,7 +163,7 @@ const LoyalityProgram = ({ isHideAll, onHandleHide, allData }) => {
     rowClass: "custom-row-hover",
   };
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (loyality?.length > 0) {
       const newData = loyality?.map((item) => ({
         id: item?.id,
@@ -168,7 +178,7 @@ const LoyalityProgram = ({ isHideAll, onHandleHide, allData }) => {
       }));
       setRowData(newData);
     }
-  }, [loyality])
+  }, [loyality]) */
 
   useEffect(() => {
     setisHideLoyalityProgram(isHideAll)

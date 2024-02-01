@@ -7,8 +7,9 @@ import { FaChevronDown } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
 import SocialMediaModel from "./SocialMediaModel";
 import SmCustomModal from "@/components/common/SmCustomModal";
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { BiSolidPencil } from "react-icons/bi";
+import { setSocialMediaData } from "@/store/guestDataCreateSlice";
 
 const SocialMedia = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
@@ -16,7 +17,8 @@ const SocialMedia = ({ isHideAll, onHandleHide, allData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideSocialMedia, setisHideSocialMedia] = useState(true);
   const [updateRowData, setUpdateRowData] = useState({})
-  const socialMedia = useSelector(state => state?.createData?.socialMedia)
+  
+  const dispatch = useDispatch()
 
   const handleSocialModal = () => {
     setIsModalOpen(true);
@@ -32,6 +34,7 @@ const SocialMedia = ({ isHideAll, onHandleHide, allData }) => {
   useEffect(() => {
     if (allData?.socialMediaProfiles?.length > 0) {
       setRowData(allData?.socialMediaProfiles)
+      dispatch(setSocialMediaData(allData?.socialMediaProfiles))
     }
   }, [allData])
 
@@ -119,17 +122,17 @@ const SocialMedia = ({ isHideAll, onHandleHide, allData }) => {
     // domLayout: 'autoHeight',
   };
 
-  useEffect(() => {
-
-    if (socialMedia?.length > 0) {
-      const newData = socialMedia?.map((item) => ({
-        id: item.id,
-        socialMediaApp: item?.socialMediatype?.value,
-        profile: item?.Profile,
-      }));
-      setRowData(newData)
-    }
-  }, [socialMedia])
+  /*   useEffect(() => {
+  
+      if (socialMedia?.length > 0) {
+        const newData = socialMedia?.map((item) => ({
+          id: item.id,
+          socialMediaApp: item?.socialMediatype?.value,
+          profile: item?.Profile,
+        }));
+        setRowData(newData)
+      }
+    }, [socialMedia]) */
 
 
   useEffect(() => {
@@ -148,11 +151,27 @@ const SocialMedia = ({ isHideAll, onHandleHide, allData }) => {
     setIsModalOpen(true);
   }
 
+  const ModifyRowData = (data) => {
+    console.log(data);
+
+    if (data?.length > 0) {
+      const modifyData = data?.map((item) => {
+        return {
+          ...item,
+          socialMediaApp: item?.socialMediaApp?.value?.length > 0 ? item?.socialMediaApp?.value : item?.socialMediaApp
+        }
+      });
+      setRowData(modifyData);
+      dispatch(setSocialMediaData(modifyData));
+    }
+
+  }
+
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll">
 
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <SocialMediaModel onClose={closeModal} updateRowData={updateRowData} />
+        <SocialMediaModel onClose={closeModal} updateRowData={updateRowData} rowData={rowData} ModifyRowData={ModifyRowData} />
       </SmCustomModal>
 
       <div className="flex items-center gap-3">

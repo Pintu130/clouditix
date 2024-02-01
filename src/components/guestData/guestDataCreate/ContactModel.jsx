@@ -5,38 +5,65 @@ import CustomButton from "@/components/common/CustomButton";
 import { useDispatch, useSelector } from "react-redux"
 import { setContectData, setContectDataUpdate } from "@/store/guestDataCreateSlice";
 
-const ContactModel = ({ onClose, updateRowData }) => {
-  const [contact, setcontact] = useState({})
+const initialValue = {
+  contactId: 0,
+  goldenId: 0,
+  businessPhoneCountryCode: '91',
+  businessPhone: '',
+  homePhoneCountryCode: '91',
+  homePhone: '',
+  mobilePhoneCountryCode: '91',
+  mobilePhone: '',
+  alternatePhoneCountryCode: '91',
+  alternatePhone: '',
+  businessEmail: '',
+  personalEmail: '',
+  alternateEmail: '',
+  createById: '',
+  lastUpdatedById: '',
+  isDeleted: false,
+  source: '',
+  isActiveFlag: ''
+}
+
+const ContactModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
+  const [contact, setcontact] = useState(initialValue)
   const dispatch = useDispatch()
-  const oldformData = useSelector(state => state?.createData?.contect)
+  // const oldformData = useSelector(state => state?.createData?.contect)
+
+
+  console.log(updateRowData);
+  console.log(rowData);
+  console.log(contact);
+
 
   const handlecontactData = (name, value) => {
-    const dynamicId = generateDynamicId();
     setcontact({
       ...contact,
-      id: dynamicId,
       [name]: value
     })
   }
-
-  const generateDynamicId = () => {
-    return Math.floor(Math.random() * 1000) + 1;
-  };
 
 
   const HandleSave = () => {
 
     if (Object.keys(updateRowData).length > 0) {
-      const updateData = oldformData?.map((item) => item.id === updateRowData.id ? contact : item)
-      
-      dispatch(setContectDataUpdate(updateData))
+      const updateData = rowData?.map((item) => item.contactId === updateRowData.contactId ? contact : item)
+
+      updatedRowData(updateData);
+
+      // dispatch(setContectDataUpdate(updateData))
       onClose()
+      setcontact(initialValue)
 
     } else {
-      if (contact) {
-        dispatch(setContectData(contact));
-        onClose()
-      }
+
+      const createNew = [...rowData, contact]
+
+      updatedRowData(createNew);
+
+      onClose()
+      setcontact(initialValue)
     }
 
   }
@@ -45,14 +72,24 @@ const ContactModel = ({ onClose, updateRowData }) => {
     if (updateRowData && Object.keys(updateRowData).length > 0) {
 
       const convertData = {
-        id: updateRowData?.id,
-        businessphone: updateRowData?.busineddPhone,
-        mobilephone: updateRowData?.mobilePhone,
-        alternateemail: updateRowData?.emailAlternate,
-        businessemail: updateRowData?.emailBusiness,
-        homephone: updateRowData?.homePhone,
-        alternatephone: updateRowData?.alternatephone,
-        personalemail: updateRowData?.emailPersonal
+        contactId: updateRowData?.contactId,
+        goldenId: updateRowData?.goldenId,
+        businessPhoneCountryCode: updateRowData?.businessPhoneCountryCode,
+        businessPhone: updateRowData?.businessPhone,
+        homePhoneCountryCode: updateRowData?.homePhoneCountryCode,
+        homePhone: updateRowData?.homePhone,
+        mobilePhoneCountryCode: updateRowData?.mobilePhoneCountryCode,
+        mobilePhone: updateRowData?.mobilePhone,
+        alternatePhoneCountryCode: updateRowData?.alternatePhoneCountryCode,
+        alternatePhone: updateRowData?.alternatePhone,
+        businessEmail: updateRowData?.businessEmail,
+        personalEmail: updateRowData?.personalEmail,
+        alternateEmail: updateRowData?.alternateEmail,
+        createById: updateRowData?.createById,
+        lastUpdatedById: updateRowData?.lastUpdatedById,
+        isDeleted: updateRowData?.isDeleted,
+        source: updateRowData?.source,
+        isActiveFlag: updateRowData?.isActiveFlag
       }
 
       setcontact(convertData)
@@ -61,6 +98,7 @@ const ContactModel = ({ onClose, updateRowData }) => {
 
   const handleClose = () => {
     onClose()
+    setcontact(initialValue)
   }
   return <>
     <div className='w-full h-full '>
@@ -127,8 +165,8 @@ const ContactModel = ({ onClose, updateRowData }) => {
                     placeholder="Business Phone"
                     autoComplete='false'
                     id='businessphone'
-                    name='businessphone'
-                    value={contact?.businessphone}
+                    name='businessPhone'
+                    value={contact?.businessPhone}
                     onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -142,8 +180,8 @@ const ContactModel = ({ onClose, updateRowData }) => {
                     placeholder="Mobile Phone"
                     autoComplete='false'
                     id='mobilephone'
-                    name='mobilephone'
-                    value={contact?.mobilephone}
+                    name='mobilePhone'
+                    value={contact?.mobilePhone}
                     onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -157,8 +195,8 @@ const ContactModel = ({ onClose, updateRowData }) => {
                     placeholder="Alternate Email"
                     autoComplete='false'
                     id='alternateemail'
-                    name='alternateemail'
-                    value={contact?.alternateemail}
+                    name='alternateEmail'
+                    value={contact?.alternateEmail}
                     onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -172,8 +210,8 @@ const ContactModel = ({ onClose, updateRowData }) => {
                     placeholder="Business Email"
                     autoComplete='false'
                     id='businessemail'
-                    name='businessemail'
-                    value={contact?.businessemail}
+                    name='businessEmail'
+                    value={contact?.businessEmail}
                     onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -191,8 +229,8 @@ const ContactModel = ({ onClose, updateRowData }) => {
                     placeholder="Home Phone"
                     autoComplete='false'
                     id='homephone'
-                    name='homephone'
-                    value={contact?.homephone}
+                    name='homePhone'
+                    value={contact?.homePhone}
                     onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -205,9 +243,9 @@ const ContactModel = ({ onClose, updateRowData }) => {
                     type='tel'
                     placeholder="Alternate Phone"
                     autoComplete='false'
-                    id='alternatephone'
-                    name='alternatephone'
-                    value={contact?.alternatephone}
+                    id='alternatePhone'
+                    name='alternatePhone'
+                    value={contact?.alternatePhone}
                     onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -221,8 +259,8 @@ const ContactModel = ({ onClose, updateRowData }) => {
                     placeholder="Personal Email"
                     autoComplete='false'
                     id='personalemail'
-                    name='personalemail'
-                    value={contact?.personalemail}
+                    name='personalEmail'
+                    value={contact?.personalEmail}
                     onChange={(e) => handlecontactData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -241,8 +279,8 @@ const ContactModel = ({ onClose, updateRowData }) => {
                 placeholder=""
                 autoComplete='false'
                 id='date'
-                name='isActive'
-                checked={contact?.isActive}
+                name='isActiveFlag'
+                checked={contact?.isActiveFlag}
                 onChange={(e) => handlecontactData(e.target.name, e.target.checked)}
                 className={`w-5 h-5 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none`}
               />

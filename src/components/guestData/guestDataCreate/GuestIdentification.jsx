@@ -7,8 +7,9 @@ import { FaChevronDown } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
 import IdentificationModel from "./IdentificationModel";
 import SmCustomModal from "@/components/common/SmCustomModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BiSolidPencil } from "react-icons/bi";
+import { setIdentificationData } from "@/store/guestDataCreateSlice";
 
 const GuestIdentification = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
@@ -18,17 +19,22 @@ const GuestIdentification = ({ isHideAll, onHandleHide, allData }) => {
   const [isHideIdentification, setisHideIdentification] = useState(true);
   const [updateRowData, setUpdateRowData] = useState({})
 
-  const identification = useSelector(state => state?.createData?.identification);
+  const dispatch = useDispatch();
+  
 
   const handleIdentificationModal = () => {
     setIsModalOpen(true);
     setUpdateRowData({})
   };
 
+  console.log(allData?.identificationInfo);
+  console.log(rowData);
 
   useEffect(() => {
     if (allData?.identificationInfo?.length > 0) {
+      console.log("inside ");
       setRowData(allData?.identificationInfo)
+      dispatch(setIdentificationData(allData?.identificationInfo))
     }
   }, [allData])
 
@@ -38,6 +44,7 @@ const GuestIdentification = ({ isHideAll, onHandleHide, allData }) => {
     setIsModalOpen(false);
     setUpdateRowData({})
   };
+
   const [columnDefs] = useState([
     {
       field: "identificationType",
@@ -144,24 +151,6 @@ const GuestIdentification = ({ isHideAll, onHandleHide, allData }) => {
   };
 
   useEffect(() => {
-
-    if (identification.length > 0) {
-      const newData = identification?.map((item) => ({
-        id: item.id,
-        identificationType: item?.identificationtype?.value,
-        identificationValue: item?.identificationvalue,
-        issuingCountry: item?.issuingcountry?.value,
-        issueDate: item?.issuingdate,
-        expiryDate: item?.expirydate,
-      }));
-
-      setRowData(newData);
-    }
-
-  }, [identification])
-
-
-  useEffect(() => {
     setisHideIdentification(isHideAll)
   }, [isHideAll])
 
@@ -177,11 +166,28 @@ const GuestIdentification = ({ isHideAll, onHandleHide, allData }) => {
     setIsModalOpen(true);
   }
 
+  const updatedRowData = (data) => {
+
+
+    if (data?.length > 0) {
+      const modifyData = data?.map(item => {
+        return {
+          ...item,
+          identificationType: item?.identificationType?.value?.length > 0 ? item?.identificationType?.value : item?.identificationType,
+          issuingCountry: item?.issuingCountry?.value?.length > 0 ? item?.issuingCountry?.value : item?.issuingCountry
+        }
+      });
+      setRowData(modifyData);
+      dispatch(setIdentificationData(modifyData))
+    }
+
+  }
+
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full  custom-scroll">
 
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <IdentificationModel onClose={closeModal} updateRowData={updateRowData} />
+        <IdentificationModel onClose={closeModal} updateRowData={updateRowData} rowData={rowData} updatedRowData={updatedRowData} />
       </SmCustomModal>
 
       <div className="flex items-center gap-3">

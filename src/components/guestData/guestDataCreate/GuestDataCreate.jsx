@@ -31,10 +31,18 @@ const GuestDataCreate = () => {
 
   const isEdit = useSelector(state => state?.guestDetails?.isEdit);
 
-  console.log(goldenId);
-  console.log(isEdit);
-  console.log(isEdit !== 'Edit');
-  console.log(goldenId > 0);
+  const CreatedAddressData = useSelector(state => state?.createData?.Address);
+  const CreatedcontectData = useSelector(state => state?.createData?.contect);
+  const CreatedidentificationData = useSelector(state => state?.createData?.identification);
+  const CreatedsocialMedia = useSelector(state => state?.createData?.socialMedia);
+  const loyality = useSelector(state => state?.createData?.loyality);
+
+  console.log(CreatedAddressData);
+  console.log(CreatedcontectData);
+  console.log(CreatedidentificationData);
+  console.log(CreatedsocialMedia);
+
+
 
 
   useEffect(() => {
@@ -52,30 +60,6 @@ const GuestDataCreate = () => {
         const Data = await fetchGuestData(goldenId);
 
         const formDataValue = Data?.guest
-        /* {
-          goldenId: 3,
-          guestCategoryType: 'SEN',
-          firstName: 'Vikas',
-          middleName: 'Prakash',
-          lastName: 'Jain',
-          fullName: 'Vikas Prakash Jain',
-          dateOfBirth: '1960-12-10T00:00:00',
-          gender: 'Male',
-          maritalStatus: 'Married',
-          noOfChildren: 3,
-          incomeLevel: 'Middle',
-          nationality: 'Indian',
-          companyName: 'Jain Enterprises',
-          notes: 'First-time Guest',
-          createById: 'data_entry_user_id',
-          lastUpdatedById: 'data_entry_user_id',
-          isDeleted: false,
-          source: 'res',
-          isActiveFlag: true
-        } */
-
-
-        console.log(formDataValue);
 
         const formDatas = {
           firstName: formDataValue?.firstName,
@@ -137,7 +121,6 @@ const GuestDataCreate = () => {
     setIsModalOpen(false);
   };
 
-  console.log(formData);
 
   const handleSaveDetails = () => {
     const guest = {
@@ -162,11 +145,16 @@ const GuestDataCreate = () => {
       "isActiveFlag": formData?.isActive
     }
 
+
     const upDatedData = {
-      guest: guest
+      guest: guest,
+      addresses: CreatedAddressData,
+      contactDetails: CreatedcontectData,
+      identificationInfo: CreatedidentificationData,
+      socialMediaProfiles: CreatedsocialMedia
     }
 
-    console.log(guest);
+    console.log(upDatedData);
 
   }
 

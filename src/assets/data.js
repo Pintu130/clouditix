@@ -253,6 +253,15 @@ export const fetchSearchGeust = async () => {
   }
 }
 
+export const fetchGoldLoyaltyProgram = async () => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}GoldLoyaltyProgram`)
+    return response?.data
+  } catch (error) {
+    return error
+  }
+}
+
 
 
 
@@ -1079,32 +1088,59 @@ export const income = [
 ]
 export const bedtype = [
   { label: "King_Size", value: "King_Size" },
-  { label: "Full_Size", value: "Full_Size" },
-  { label: "Twin Xl", value: "Twin Xl" }
+  { label: "Queen_Size", value: "Queen_Size" },
 ]
 export const floorlevel = [
   { label: "Low", value: "low" },
-  { label: "Middle", value: "Middle" },
+  { label: "Mid", value: "Mid" },
   { label: "High", value: "High" }
 ]
 export const roomviewpref = [
-  { label: "Fountain View", value: "Fountain View" }
+  { label: "Fountain View", value: "Fountain View" },
+  { label: "Ocean View", value: "Ocean View" },
+  { label: "City View", value: "City View" },
+  { label: "Mountain View", value: "Mountain View" },
 ]
 export const bathslippers = [
   { label: "Large", value: "Large" },
   { label: "Small", value: "Small" },
+  { label: "Medium	", value: "Medium	" },
 ]
 export const favouritecuisine = [
-  { label: "Indian, Italian", value: "Indian, Italian" }
+  { label: "Indian, Italian", value: "Indian, Italian" },
+  { label: "French, Chinese	", value: "French, Chinese" },
+  { label: "Thai, Mexican", value: "Thai, Mexican	" },
+  { label: "French, Japanese", value: "French, Japanese" },
+  { label: "Japanese, Italian", value: "Japanese, Italian" },
+  { label: "Indian, Mexican", value: "Indian, Mexican" },
+  { label: "Thai, Italian", value: "Thai, Italian" },
+  { label: "French, Italian", value: "French, Italian" },
+  { label: "Thai, Chinese", value: "Thai, Chinese" },
+  { label: "Indian, Japanese", value: "Indian, Japanese" },
+  { label: "French, Mexican", value: "French, Mexican" },
+  { label: "Indian, Chinese", value: "Indian, Chinese" },
+  { label: "Thai, Japanese", value: "Thai, Japanese" },
+  { label: "Japanese, Mexican", value: "Japanese, Mexican" },
 ]
 export const airporttransfer = [
-  { label: "Limousine", value: "Limousine" }
+  { label: "Limousine", value: "Limousine" },
+  { label: "Shuttle Service, Private Car", value: "Shuttle Service, Private Car" },
+  { label: "Shuttle Service, Airport Taxi", value: "Shuttle Service, Airport Taxi" },
+  { label: "Private Car, Limousine", value: "Private Car, Limousine" },
+  { label: "Airport Taxi, Private Car", value: "Airport Taxi, Private Car" },
+  { label: "Shuttle Service, Airport Taxi, Limous", value: "Shuttle Service, Airport Taxi, Limous" },
+  { label: "Private Car, Airport Taxi", value: "Private Car, Airport Taxi" },
+  { label: "Shuttle Service, Limousine", value: "Shuttle Service, Limousine" },
 ]
 export const conceirgeservices = [
-  { label: "Reservations twice a day", value: "Reservations twice a day" }
+  { label: "Reservations twice a day", value: "Reservations twice a day" },
+  { label: "Tour Booking", value: "Tour Booking" },
+  { label: "Concierge Assistance", value: "Concierge Assistance" },
+  { label: "Activity Reservations", value: "Activity Reservations" },
 ]
 export const connectivityreg = [
-  { label: "Wifi", value: "Wifi" }
+  { label: "Wifi", value: "Wifi" },
+  { label: "Ethernet", value: "Ethernet" }
 ]
 export const promotionalmaterials = [
   { label: "Yes", value: "yes" },
@@ -1115,32 +1151,71 @@ export const donotdisturb = [
   { label: "No", value: "No" },
 ]
 export const pillowtype = [
-  { label: "Film", value: "Film" }
+  { label: "Film", value: "Film" },
+  { label: "Soft", value: "Soft" },
+  { label: "Medium", value: "Medium" },
 ]
 export const roomtemppref = [
   { label: "Cool", value: "Cool" },
   { label: "Warm", value: "Warm" },
+  { label: "Neutral", value: "Neutral" },
 ]
 export const dietaryallergy = [
-  { label: "Vegetarian", value: "Vegetarian" }
+  { label: "Vegetarian", value: "Vegetarian" },
+  { label: "No Dietary Restrictions	", value: "No Dietary Restrictions" },
+  { label: "Vegan", value: "Vegan" },
+  { label: "Nut Allergy	", value: "Nut Allergy" },
+  { label: "Lactose Intolerant", value: "Lactose Intolerant" },
 ]
 export const celebratoryoccasion = [
-  { label: "BrithDay", value: "BrithDay" },
+  { label: "Birthday, Anniversary", value: "Birthday, Anniversary" },
+  { label: "Wedding", value: "Wedding" },
   { label: "Anniversary", value: "Anniversary" },
+  { label: "Graduation", value: "Graduation" },
+  { label: "Birthday", value: "Birthday" },
 ]
 export const spatreatments = [
-  { label: "Swedish Massage", value: "Swedish Massage" }
+  { label: "Swedish Massage", value: "Swedish Massage" },
+  { label: "Aromatherapy", value: "Aromatherapy" },
+  { label: "Hot Stone Massage	", value: "Hot Stone Massage" },
+  { label: "Deep Tissue Massage	", value: "Deep Tissue Massage" },
 ]
 export const housekeepingschedule = [
-  { label: "8:00 AM - 10:00 PM", value: "8:00 AM - 10:00 PM" }
+  { label: "12 AM - 2 AM", value: "12 AM - 2 AM" },
+  { label: "1 AM - 3 AM", value: "1 AM - 3 AM" },
+  { label: "2 AM - 4 AM", value: "2 AM - 4 AM" },
+  { label: "3 AM - 5 AM", value: "3 AM - 5 AM" },
+  { label: "4 AM - 6 AM", value: "4 AM - 6 AM" },
+  { label: "5 AM - 7 AM", value: "5 AM - 7 AM" },
+  { label: "6 AM - 8 AM", value: "6 AM - 8 AM" },
+  { label: "7 AM - 9 AM", value: "7 AM - 9 AM" },
+  { label: "8 AM - 10 AM", value: "8 AM - 10 AM" },
+  { label: "9 AM - 11 AM", value: "9 AM - 11 AM" },
+  { label: "10 AM - 12 PM", value: "10 AM - 12 PM" },
+  { label: "11 AM - 1 PM", value: "11 AM - 1 PM" },
+  { label: "12 PM - 2 PM", value: "12 PM - 2 PM" },
+  { label: "1 PM - 3 PM", value: "1 PM - 3 PM" },
+  { label: "2 PM - 4 PM", value: "2 PM - 4 PM" },
+  { label: "3 PM - 5 PM", value: "3 PM - 5 PM" },
+  { label: "4 PM - 6 PM", value: "4 PM - 6 PM" },
+  { label: "5 PM - 7 PM", value: "5 PM - 7 PM" },
+  { label: "6 PM - 8 PM", value: "6 PM - 8 PM" },
+  { label: "7 PM - 9 PM", value: "7 PM - 9 PM" },
+  { label: "8 PM - 10 PM", value: "8 PM - 10 PM" },
+  { label: "9 PM - 11 PM", value: "9 PM - 11 PM" },
+  { label: "10 PM - 12 AM", value: "10 PM - 12 AM" },
+  { label: "11 PM - 1 AM", value: "11 PM - 1 AM" },
 ]
 export const modeofcommunication = [
+  { label: "Email, SMS", value: "Email, SMS" },
   { label: "Email", value: "Email" },
-  { label: "SMS", value: "SMS" },
+  { label: "Email, Phone", value: "Email, Phone" },
+  { label: "Phone", value: "Phone" },
 ]
 export const preferreddiningtimes = [
-  { label: "Lunch", value: "Lunch" },
-  { label: "Dinner", value: "Dinner" },
+  { label: "Lunch, Dinner", value: "Lunch, Dinner" },
+  { label: "Breakfast, Dinner", value: "Breakfast, Dinner" },
+  { label: "Breakfast, Lunch", value: "Breakfast, Lunch" },
 ]
 
 export const SocialMediaData = [
@@ -1167,6 +1242,7 @@ export const LoyalityData = [
 export const identificationtype = [
   { label: "Aadhar_Card", value: "Aadhar_Card" },
   { label: "PassPort", value: "PassPort" },
+  { label: "Driving_License", value: "Driving_License" },
 ]
 export const issuingcountry = [
   { label: "India", value: "India" },
@@ -1179,12 +1255,12 @@ export const issuingcountry = [
 ]
 export const socialmediaData = [
   { label: "Facebook", value: "Facebook" },
-  { label: "YouTube", value: "YouTube" },
-  { label: "WhatsApp", value: "WhatsApp" },
   { label: "Twitter", value: "Twitter" },
   { label: "instagram", value: "instagram" },
-  { label: "TikTOk", value: "TikTOk" },
   { label: "Linkedin", value: "Linkedin" },
+  /* { label: "YouTube", value: "YouTube" },
+  { label: "WhatsApp", value: "WhatsApp" },
+  { label: "TikTOk", value: "TikTOk" }, */
 ]
 
 export const CrossTableData = [

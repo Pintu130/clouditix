@@ -11,19 +11,19 @@ const guestDataCreareSlice = createSlice({
     },
     reducers: {
         setCreateAddressData: (state, action) => {
-            state.Address.push(action.payload);
+            state.Address = action.payload;
         },
         setContectData: (state, action) => {
-            state.contect.push(action.payload);
+            state.contect = action.payload;
         },
         setIdentificationData: (state, action) => {
-            state.identification.push(action.payload);
+            state.identification = action.payload;
         },
         setSocialMediaData: (state, action) => {
-            state.socialMedia.push(action.payload);
+            state.socialMedia = action.payload;
         },
         setLotalityData: (state, action) => {
-            state.loyality.push(action.payload);
+            state.loyality = action.payload;
         },
         setCreateAddressDataUpdate: (state, action) => {
             const updatedData = action.payload;
