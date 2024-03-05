@@ -33,8 +33,6 @@ const GuestDataSearch = () => {
     }
   };
 
-
-
   const [columnDefs] = useState([
     {
       field: "goldenId",
@@ -218,7 +216,7 @@ const GuestDataSearch = () => {
 
   const handleEdit = (e, data) => {
     e.stopPropagation();
-    dispatch(setEdititem('Edit'));
+    dispatch(setEdititem('Edit'));  
   };
 
   const handleCellClicked = (param) => {

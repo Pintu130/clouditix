@@ -1,47 +1,58 @@
-import Image from 'next/image'
-import { useRouter } from 'next/router';
-import React, { useState } from 'react'
+import Image from 'next/image';
+import React, { useState } from 'react';
 import CustomLoader from '../common/CutomLoader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SingleSelectDropDown from '../common/SingleSelectDropDown';
+import { useDispatch } from 'react-redux';
+import { setRole, setSingleRole } from '@/store/roleSlice';
+import { fetchGetRoles } from '@/assets/data';
 
 const Solution = [
-    { label: "Solution 1", value: "solution1" },
+    { label: "Guest 360", value: "Guest 360" },
     { label: "Solution 2", value: "solution2" },
     { label: "Solution 3", value: "solution3" },
 ];
+const Roledata = [
+    { label: "Data Owner", value: "Data Owner" },
+    { label: "Data Entry", value: "Data Entry" },
+    { label: "Data Steward", value: "Data Steward" },
+    { label: "Just For Testing", value: "Just For Testing" },
+    { label: "Administrator", value: "Administrator" },
+];
 
 const LoginPage = ({ handlelogin }) => {
+    const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
         password: '',
-        solution: ''
+        solution: '',
+        roledata: ''
     });
 
     const [errors, setErrors] = useState({
         username: '',
         password: '',
-        solution: ''
+        solution: '',
+        roledata: ''
     });
-    const router = useRouter();
 
     const handleChange = (e) => {
-        const name = e.target.name
-        const value = name === 'solution' ? e.target.value : e.target.value.trim();
+        const name = e.target.name;
+        const value = name === 'roledata' || name === 'solution' ? e.target.value : e.target.value.trim();
         setFormData({
             ...formData,
             [name]: value
-        })
+        });
 
         setErrors({
             username: '',
             password: '',
-            solution: ''
-        })
-
-    }
+            solution: '',
+            roledata: ''
+        });
+    };
 
     const formvalidation = () => {
         const errors = {};
@@ -54,29 +65,31 @@ const LoginPage = ({ handlelogin }) => {
         if (!formData.solution) {
             errors.solution = 'Solution is required';
         }
+        if (!formData.roledata) {
+            errors.roledata = 'Roledata is required';
+        }
         setErrors(errors);
         return Object.keys(errors).length === 0;
     };
-
     const submitForm = async (e) => {
         e.preventDefault();
         if (formvalidation()) {
-
-            handlelogin(true)
-            /* toast.error(Data.Message, {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                toastId: "toastId"
-            }); */
+            dispatch(setRole(formData.roledata));
+            const data = await fetchGetRoles();
+            if (data?.length > 0) {
+                const modifyData = data.map((item) => ({
+                    label: item.roleName,
+                    value: item.roleScreens
+                }));
+                console.log(modifyData, 'all data----->>>');
+                const adminData = modifyData.find(item => item.label === formData?.roledata.value);
+                console.log("🚀single data------->>>", adminData)
+                dispatch(setSingleRole(adminData));
+            }
+            handlelogin(true);
         }
-
     };
+
 
     return (
         <>
@@ -143,6 +156,31 @@ const LoginPage = ({ handlelogin }) => {
                                         )}
                                     </div>
                                 </div>
+                                <div className='relative flex flex-col w-full pt-3 '>
+                                    <div className="flex flex-col w-full items-start  custom-select">
+                                        <label
+                                            htmlFor="speciality"
+                                            className="text-[#4A4A4A] text-sm font-normal font-Assistant"
+                                        >
+                                            Role
+                                        </label>
+                                        <div className="w-full max-w-[100%]">
+                                            <SingleSelectDropDown
+                                                placeholder="Enter Role"
+                                                options={Roledata}
+                                                target="roledata"
+                                                creatableSelect={true}
+                                                selectedType={formData?.roledata}
+                                                handleSelectChange={(data) => handleChange({ target: { name: "roledata", value: data } })}
+                                            />
+                                        </div>
+                                        {errors.roledata && (
+                                            <span className="absolute pt-1 text-sm font-normal leading-4 -bottom-4 text-Error animate-fade-in ">
+                                                {errors.roledata}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
                                 <div className='flex items-center justify-between w-full pt-3'>
                                     <div className='flex items-center justify-center gap-2'>
                                         <input type="checkbox" id='Remember-me' className='rounded-[4px] border-[1px] border-[#4A4A4A] ' />
@@ -151,7 +189,6 @@ const LoginPage = ({ handlelogin }) => {
                                     <div className="text-[#4A4A4A] border-b-[1.5px] border-b-[#4A4A4A] cursor-pointer leading-4 font-normal text-base ">Forgot Password</div>
                                 </div>
                             </div>
-
                         </div>
                         <button
                             type="submit"
@@ -160,15 +197,6 @@ const LoginPage = ({ handlelogin }) => {
                             SIGN IN
                         </button>
                     </form>
-                    {/* <div className='w-full px-8 flex items-center justify-center gap-3 flex-col'>
-                        <span className='text-[#4A4A4A] text-base font-normal font-Assistant'>New User</span>
-                        <button
-                            type=""
-                            className=' bg-[#046e04] w-full py-[10px] px-6 text-[#fff] font-semibold text-lg leading-5 text-center rounded-[3px] '
-                        >
-                            SIGN UP
-                        </button>
-                    </div> */}
                 </div>
             </div>
             <ToastContainer
@@ -187,4 +215,4 @@ const LoginPage = ({ handlelogin }) => {
     )
 }
 
-export default LoginPage
+export default LoginPage;

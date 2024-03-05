@@ -24,7 +24,7 @@ const BarCharts = () => {
                 yKey: 'data',
                 // fill: '#3498db',
                 column: {
-                    width: 10, 
+                    width: 10,
                 },
             },
         ],

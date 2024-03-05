@@ -5,36 +5,43 @@ import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
+// const initialValue = {
+//   addressId: 0,
+//   goldenId: 0,
+//   stateCode: "",
+//   addressType: "",
+//   addressLine1: "",
+//   addressLine2: "",
+//   addressLine3: "",
+//   city: "",
+//   country: "",
+//   zipCode: "",
+//   isPrimary: true,
+//   startDate: "2024-01-27T08:09:20.794Z",
+//   endDate: "2024-01-27T08:09:20.794Z",
+//   isActive: true,
+//   createById: "data_entry_user_id",
+//   lastUpdatedById: "data_entry_user_id",
+//   isDeleted: false,
+//   source: "res",
+//   isActiveFlag: true,
+// };
 
-
-const initialValue = {
-  addressId: 0,
-  goldenId: 0,
-  stateCode: '',
-  addressType: '',
-  addressLine1: '',
-  addressLine2: '',
-  addressLine3: '',
-  city: '',
-  country: '',
-  zipCode: '',
-  isPrimary: true,
-  startDate: '',
-  endDate: '',
-  isActive: true,
-  createById: '',
-  lastUpdatedById: '',
-  isDeleted: false,
-  source: '',
-  isActiveFlag: true
-}
-
-
-const AddressModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
-  const [formData, setFormData] = useState(initialValue);
+const AddressModel = ({
+  onClose,
+  updateRowData,
+  rowData,
+  updatedRowData,
+  allData,
+  initialValue,
+  setFormData,
+  formData
+}) => {
+  // const [formData, setFormData] = useState(initialValue);
+  // console.log("🚀 ~ updateRowData:-----------------000", updateRowData)
+  // console.log("formData-------->>>", formData);
 
   const handleFromData = (data, target) => {
-
     setFormData((prevFormData) => ({
       ...prevFormData,
       [target]: data,
@@ -45,39 +52,43 @@ const AddressModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
       return Math.floor(Math.random() * 1000) + 1;
     }; */
 
-
   const handleAddressSave = () => {
-
     if (Object.keys(updateRowData).length > 0) {
-      const updatedata = rowData?.map((item) => item.addressId === updateRowData.addressId ? formData : item)
+      const updatedata = rowData?.map((item) =>
+        item.addressId === updateRowData.addressId ? formData : item
+      );
 
-      console.log(updatedata);
-      updatedRowData(updatedata)
-      
-      onClose()
-      setFormData(initialValue)
+      // console.log(updatedata);
+      updatedRowData(updatedata);
+
+      onClose();
+      setFormData(initialValue);
     } else {
       if (Object.keys(formData)?.length > 0) {
-        const createNewData = [...rowData, formData]
-        console.log(createNewData);
-        updatedRowData(createNewData)
+        const createNewData = [
+          ...rowData,
+          rowData?.length > 0
+            ? { ...formData, isPrimary: false, addressId: new Date().getTime() }
+            : formData,
+        ];
+        updatedRowData(createNewData);
 
-        onClose()
-        setFormData(initialValue)
+        onClose();
+        setFormData(initialValue);
       }
     }
-
-
   };
 
   useEffect(() => {
     if (updateRowData && Object.keys(updateRowData).length > 0) {
-
       const convertData = {
         addressId: updateRowData?.addressId,
         goldenId: updateRowData?.goldenId,
-        stateCode: { label: updateRowData?.stateCode, value: updateRowData?.stateCode },
-        addressType: { label: updateRowData?.addressType, value: updateRowData?.addressType },
+        stateCode: stateFilter(updateRowData?.stateCode),
+        addressType: {
+          label: updateRowData?.addressType,
+          value: updateRowData?.addressType,
+        },
         addressLine1: updateRowData?.addressLine1,
         addressLine2: updateRowData?.addressLine2,
         addressLine3: updateRowData?.addressLine3,
@@ -92,18 +103,23 @@ const AddressModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
         lastUpdatedById: updateRowData?.lastUpdatedById,
         isDeleted: updateRowData?.isDeleted,
         source: updateRowData?.source,
-        isActiveFlag: updateRowData?.isActiveFlag
-      }
+        isActiveFlag: updateRowData?.isActiveFlag,
+      };
 
-      setFormData(convertData)
+      setFormData(convertData);
     }
-  }, [updateRowData])
-
+  }, [updateRowData]);
 
   const handleCancleModel = () => {
     setFormData({});
-    onClose()
+    onClose();
   };
+
+  const stateFilter = (state) => {
+    const data = StateData?.filter((item) => item.label === state)?.[0];
+    return data ? data : state;
+  };
+
   return (
     <div className="h-full flex flex-col gap-4 w-full p-2  ">
       <div className="flex justify-between border-b ">
@@ -129,10 +145,11 @@ const AddressModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
               isRequired={true}
               isIcon={true}
               label=""
-              placeholder="Arjun Kumar Sharma"
+              isdisablad={true}
+              placeholder="Guest Name"
               name="address"
-              value={formData?.addresss}
-              onChange={(e) => handleFromData(e.target.value, "addresss")}
+              value={allData?.fullName}
+              // onChange={(e) => handleFromData(e.target.value, "addresss")}
             />
           </div>
         </div>
@@ -144,12 +161,13 @@ const AddressModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
             <CustomInput
               isNUmber={true}
               isRequired={true}
+              isdisablad={true}
               isIcon={true}
-              label=""
-              placeholder="1"
+              label="" 
+              placeholder=""
               name="guest"
-              value={formData?.guest}
-              onChange={(e) => handleFromData(e.target.value, "guest")}
+              value={allData?.goldenId}
+              // onChange={(e) => handleFromData(e.target.value, "guest")}
             />
           </div>
         </div>
@@ -192,7 +210,7 @@ const AddressModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
                 isNUmber={false}
                 isRequired={true}
                 isIcon={true}
-                label=""
+                label="" 
                 placeholder="addressLine2"
                 name="addressLine2"
                 value={formData?.addressLine2}
@@ -218,13 +236,13 @@ const AddressModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
           <div className="flex gap-20">
             <label className="">Is Active</label>
             <input
-              type='checkbox'
+              type="checkbox"
               placeholder=""
-              autoComplete='false'
-              id='date'
-              name='isActive'
+              autoComplete="false"
+              id="date"
+              name="isActive"
               checked={formData?.isActive}
-              onChange={(e) => handleFromData(e.target.checked, 'isActive',)}
+              onChange={(e) => handleFromData(e.target.checked, "isActive")}
               className={`w-5 h-5 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none`}
             />
           </div>

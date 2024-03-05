@@ -11,10 +11,29 @@ import { useDispatch, useSelector } from "react-redux"
 import { BiSolidPencil } from "react-icons/bi";
 import { setLotalityData } from "@/store/guestDataCreateSlice";
 
+const initialData = {
+  loyaltyPrgMemId: 0,
+  goldenId: 0,
+  programName: "",
+  levelName: "",
+  memberId: 0,
+  memStartDate: "",
+  memEndDate: "",
+  membershipStatus: "",
+  redemptionHistory: "",
+  earningHistory: "",
+  loyaltyPoints: 0,
+  createById: "data_entry_user_id",
+  lastUpdatedById: "data_entry_user_id",
+  isDeleted: false,
+  source: "res",
+  isActiveFlag: true
+}
+
 const LoyalityProgram = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState([]);
-  
+  const [loyality, setLoyality] = useState(initialData)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideLoyalityProgram, setisHideLoyalityProgram] = useState(true);
   const [updateRowData, setUpdateRowData] = useState({})
@@ -22,24 +41,23 @@ const LoyalityProgram = ({ isHideAll, onHandleHide, allData }) => {
 
   const handleLoyalityModal = () => {
     setIsModalOpen(true);
+    setUpdateRowData({});
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setUpdateRowData({});
+    setLoyality(initialData)
   };
 
   useEffect(() => {
-    ; (async () => {
-      const res = await fetchGoldLoyaltyProgram();
-      console.log(res);
-      if (res?.length > 0) {
-        setRowData(res);
-        dispatch(setLotalityData(res))
-      };
-    })()
-    /* if (allData?.loyaltyProgramMemberships?.length > 0) {
+
+    if (allData?.loyaltyProgramMemberships?.length > 0) {
       setRowData(allData?.loyaltyProgramMemberships)
-    } */
+      dispatch(setLotalityData(allData?.loyaltyProgramMemberships));
+    }else{
+      setRowData([])
+    }
   }, [allData])
 
   const [columnDefs] = useState([
@@ -163,22 +181,22 @@ const LoyalityProgram = ({ isHideAll, onHandleHide, allData }) => {
     rowClass: "custom-row-hover",
   };
 
-/*   useEffect(() => {
-    if (loyality?.length > 0) {
-      const newData = loyality?.map((item) => ({
-        id: item?.id,
-        programName: item?.loyaltyprogrammembership?.value,
-        levelName: item?.tierlevel?.value,
-        memStartDate: item?.membershipstartdate,
-        memEndDate: item?.membershipenddate,
-        earningHistory: item?.earninghistory,
-        redemptionHistory: item?.redemtionhistory,
-        loyaltyPoints: item?.loyaltypoints,
-        isActiveFlag: item?.isActive,
-      }));
-      setRowData(newData);
-    }
-  }, [loyality]) */
+  /*   useEffect(() => {
+      if (loyality?.length > 0) {
+        const newData = loyality?.map((item) => ({
+          id: item?.id,
+          programName: item?.loyaltyprogrammembership?.value,
+          levelName: item?.tierlevel?.value,
+          memStartDate: item?.membershipstartdate,
+          memEndDate: item?.membershipenddate,
+          earningHistory: item?.earninghistory,
+          redemptionHistory: item?.redemtionhistory,
+          loyaltyPoints: item?.loyaltypoints,
+          isActiveFlag: item?.isActive,
+        }));
+        setRowData(newData);
+      }
+    }, [loyality]) */
 
   useEffect(() => {
     setisHideLoyalityProgram(isHideAll)
@@ -193,14 +211,38 @@ const LoyalityProgram = ({ isHideAll, onHandleHide, allData }) => {
   const handleEdit = (e, data) => {
     e.stopPropagation();
     setUpdateRowData(data);
+    // console.log(data);
     setIsModalOpen(true);
   }
+
+  const UpdatedData = (data) => {
+
+    if (data?.length > 0) {
+      const modifyData = data.map(item => {
+
+        // console.log(item?.loyaltyPoints);
+        // console.log(+item?.loyaltyPoints);
+
+        return {
+          ...item,
+          programName: item?.programName?.value?.length > 0 ? item?.programName?.value : item?.programName,
+          levelName: item?.levelName?.value?.length > 0 ? item?.levelName?.value : item?.levelName,
+          loyaltyPoints: +item?.loyaltyPoints
+        }
+      });
+      setRowData(modifyData);
+      dispatch(setLotalityData(modifyData));
+    }
+
+  }
+
+
 
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll">
 
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <LoyalityModel onClose={closeModal} updateRowData={updateRowData} />
+        <LoyalityModel onClose={closeModal} updateRowData={updateRowData} UpdatedData={UpdatedData} rowData={rowData} allData={allData?.guest} initialData={initialData} loyality={loyality} setLoyality={setLoyality}/>
       </SmCustomModal>
 
       <div className="flex items-center gap-3">

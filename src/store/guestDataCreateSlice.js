@@ -7,7 +7,8 @@ const guestDataCreareSlice = createSlice({
         contect: [],
         identification: [],
         socialMedia: [],
-        loyality: []
+        loyality: [],
+        Preferance:[]
     },
     reducers: {
         setCreateAddressData: (state, action) => {
@@ -24,6 +25,9 @@ const guestDataCreareSlice = createSlice({
         },
         setLotalityData: (state, action) => {
             state.loyality = action.payload;
+        },
+        setPreferanceData: (state, action) => {
+            state.Preferance = action.payload;
         },
         setCreateAddressDataUpdate: (state, action) => {
             const updatedData = action.payload;
@@ -49,5 +53,5 @@ const guestDataCreareSlice = createSlice({
     }
 });
 
-export const { setCreateAddressData, setContectData, setIdentificationData, setSocialMediaData, setLotalityData, setCreateAddressDataUpdate, setContectDataUpdate, setIdentificationDataUpdate, setSocialMediaDataUpdate, setLotalityDataUpdate } = guestDataCreareSlice.actions;
+export const { setCreateAddressData, setContectData, setIdentificationData, setSocialMediaData, setLotalityData, setPreferanceData, setCreateAddressDataUpdate, setContectDataUpdate, setIdentificationDataUpdate, setSocialMediaDataUpdate, setLotalityDataUpdate } = guestDataCreareSlice.actions;
 export default guestDataCreareSlice.reducer;

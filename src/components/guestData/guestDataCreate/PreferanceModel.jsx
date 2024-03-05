@@ -4,34 +4,44 @@ import CustomInput from "@/components/common/CustomInput";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
 import { airporttransfer, bathslippers, bedtype, celebratoryoccasion, conceirgeservices, connectivityreg, dietaryallergy, donotdisturb, favouritecuisine, floorlevel, genderDate, housekeepingschedule, modeofcommunication, pillowtype, preferreddiningtimes, promotionalmaterials, roomtemppref, roomviewpref, spatreatments } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
+import { useDispatch } from "react-redux"
+import { setPreferanceData } from "@/store/guestDataCreateSlice";
 
 
 const preferanceInitialData = {
-  bedtype: "",
-  floorlevel: "",
-  roomviewpref: "",
-  bathslippers: "",
-  favouritecuisine: "",
-  airporttransfer: "",
-  conceirgeservices: "",
-  connectivityreg: "",
-  promotionalmaterials: "",
-  pillowtype: "",
-  roomtemppref: "",
-  dietaryallergy: "",
-  preferreddiningtimes: "",
-  celebratoryoccasion: "",
-  spatreatments: "",
-  housekeepingschedule: "",
-  donotdisturb: "",
-  modeofcommunication: "",
-  isActive: false
+  guestPrefId: 0,
+  goldenId: 0,
+  bedType: "",
+  smoking: "",
+  floorLevel: "",
+  roomViewPreference: "",
+  bathrobeAndSlippersSize: "",
+  pillowType: "",
+  roomTemperaturePreference: "",
+  dietaryRestrictionsAndAllergies: "",
+  preferredDiningTimes: "",
+  favoriteCuisines: "",
+  celebratoryOccasions: "",
+  airportTransferPreferences: "",
+  spaTreatments: "",
+  conciergeServices: "",
+  housekeepingSchedule: "",
+  connectivityRequirements: "",
+  doNotDisturbPreferences: "",
+  promotionalMaterials: "",
+  modeOfCommunication: "",
+  createById: "",
+  lastUpdatedById: "",
+  isDeleted: false,
+  source: "",
+  isActiveFlag: true
 }
 
 
 const PreferanceModel = ({ onClose, allData }) => {
-  const [preferance, setPreferance] = useState({})
+  const [preferance, setPreferance] = useState(preferanceInitialData)
   const [isEdit, setIsEdit] = useState(true)
+  const dispatch = useDispatch();
 
   const handlepreferanceData = (name, value) => {
     setPreferance({
@@ -40,50 +50,84 @@ const PreferanceModel = ({ onClose, allData }) => {
     })
   }
 
-
+  
   useEffect(() => {
+
     if (allData?.guestPreferences?.length > 0) {
       const preferenceDatas = allData?.guestPreferences?.map(item => ({
-        bedtype: { label: item?.bedType, value: item?.bedType },
-        floorlevel: { label: item?.floorLevel, value: item?.floorLevel },
-        roomviewpref: { label: item?.roomViewPreference, value: item?.roomViewPreference },
-        bathslippers: { label: item?.bathrobeAndSlippersSize, value: item?.bathrobeAndSlippersSize },
-        favouritecuisine: { label: item?.favoriteCuisines, value: item?.favoriteCuisines },
-        airporttransfer: { label: item?.airportTransferPreferences, value: item?.airportTransferPreferences },
-        conceirgeservices: { label: item?.conciergeServices, value: item?.conciergeServices },
-        connectivityreg: { label: item?.connectivityRequirements, value: item?.connectivityRequirements },
-        promotionalmaterials: { label: item?.promotionalMaterials, value: item?.promotionalMaterials },
-        pillowtype: { label: item?.pillowType, value: item?.pillowType },
-        roomtemppref: { label: item?.roomTemperaturePreference, value: item?.roomTemperaturePreference },
-        dietaryallergy: { label: item?.dietaryRestrictionsAndAllergies, value: item?.dietaryRestrictionsAndAllergies },
-        preferreddiningtimes: { label: item?.preferredDiningTimes, value: item?.preferredDiningTimes },
-        celebratoryoccasion: { label: item?.celebratoryOccasions, value: item?.celebratoryOccasions },
-        spatreatments: { label: item?.spaTreatments, value: item?.spaTreatments },
-        housekeepingschedule: { label: item?.housekeepingSchedule, value: item?.housekeepingSchedule },
-        donotdisturb: { label: item?.doNotDisturbPreferences, value: item?.doNotDisturbPreferences },
-        modeofcommunication: { label: item?.modeOfCommunication, value: item?.modeOfCommunication },
-        isActive: { label: item?.isActiveFlag, value: item?.isActiveFlag}
+        bedType: { label: item?.bedType, value: item?.bedType },
+        floorLevel: { label: item?.floorLevel, value: item?.floorLevel },
+        roomViewPreference: { label: item?.roomViewPreference, value: item?.roomViewPreference },
+        bathrobeAndSlippersSize: { label: item?.bathrobeAndSlippersSize, value: item?.bathrobeAndSlippersSize },
+        favoriteCuisines: { label: item?.favoriteCuisines, value: item?.favoriteCuisines },
+        airportTransferPreferences: { label: item?.airportTransferPreferences, value: item?.airportTransferPreferences },
+        conciergeServices: { label: item?.conciergeServices, value: item?.conciergeServices },
+        connectivityRequirements: { label: item?.connectivityRequirements, value: item?.connectivityRequirements },
+        promotionalMaterials: { label: item?.promotionalMaterials, value: item?.promotionalMaterials },
+        pillowType: { label: item?.pillowType, value: item?.pillowType },
+        roomTemperaturePreference: { label: item?.roomTemperaturePreference, value: item?.roomTemperaturePreference },
+        dietaryRestrictionsAndAllergies: { label: item?.dietaryRestrictionsAndAllergies, value: item?.dietaryRestrictionsAndAllergies },
+        preferredDiningTimes: { label: item?.preferredDiningTimes, value: item?.preferredDiningTimes },
+        celebratoryOccasions: { label: item?.celebratoryOccasions, value: item?.celebratoryOccasions },
+        spaTreatments: { label: item?.spaTreatments, value: item?.spaTreatments },
+        housekeepingSchedule: { label: item?.housekeepingSchedule, value: item?.housekeepingSchedule },
+        doNotDisturbPreferences: { label: item?.doNotDisturbPreferences, value: item?.doNotDisturbPreferences },
+        modeOfCommunication: { label: item?.modeOfCommunication, value: item?.modeOfCommunication },
+        isActiveFlag: { label: item?.isActiveFlag, value: item?.isActiveFlag }
       }))
 
 
       setPreferance(preferenceDatas[0]);
+      dispatch(setPreferanceData(allData?.guestPreferences[0]))
     }
   }, [allData])
 
   const HandleSave = () => {
     if (preferance) {
-      handleCancel()
+      handleCancel();
     }
+
+    const data = {
+      guestPrefId: 0,
+      goldenId: 0,
+      bedType: preferance?.bedType?.value,
+      smoking: "",
+      floorLevel: preferance?.floorLevel?.value,
+      roomViewPreference: preferance?.roomViewPreference?.value,
+      bathrobeAndSlippersSize: preferance?.bathrobeAndSlippersSize?.value,
+      pillowType: preferance?.pillowType?.value,
+      roomTemperaturePreference: preferance?.roomTemperaturePreference?.value,
+      dietaryRestrictionsAndAllergies: preferance?.dietaryRestrictionsAndAllergies?.value,
+      preferredDiningTimes: preferance?.preferredDiningTimes?.value,
+      favoriteCuisines: preferance?.favoriteCuisines?.value,
+      celebratoryOccasions: preferance?.celebratoryOccasions?.value,
+      airportTransferPreferences: preferance?.airportTransferPreferences?.value,
+      spaTreatments: preferance?.spaTreatments?.value,
+      conciergeServices: preferance?.conciergeServices?.value,
+      housekeepingSchedule: preferance?.housekeepingSchedule?.value,
+      connectivityRequirements: preferance?.connectivityRequirements?.value,
+      doNotDisturbPreferences: preferance?.doNotDisturbPreferences?.value,
+      promotionalMaterials: preferance?.promotionalMaterials?.value,
+      modeOfCommunication: preferance?.modeOfCommunication?.value,
+      createById: '',
+      lastUpdatedById: '',
+      isDeleted: false,
+      source: "",
+      isActiveFlag: true
+    }
+
+    dispatch(setPreferanceData(data))
   }
 
   const handleCancel = () => {
-    onClose()
-    setPreferance(preferanceInitialData)
-    setIsEdit(true)
+    onClose();
+    setPreferance(preferanceInitialData);
+    setIsEdit(true);
   }
 
   const HandleEdit = () => {
-    setIsEdit(!isEdit)
+    // console.log(preferance);
+    setIsEdit(!isEdit);
   }
 
   return <>
@@ -112,7 +156,8 @@ const PreferanceModel = ({ onClose, allData }) => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="Kumar"
+                isdisablad={true}
+                placeholder="Guest Name"
                 name="fullname"
                 value={allData?.guest?.fullName}
                 onChange={(e) => handlepreferanceData(e.target.name, e.target.value)}
@@ -128,7 +173,8 @@ const PreferanceModel = ({ onClose, allData }) => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="Kumar"
+                isdisablad={true}
+                placeholder=""
                 name="guestID"
                 value={allData?.guest?.goldenId}
                 onChange={(e) => handlepreferanceData(e.target.name, e.target.value)}
@@ -142,17 +188,19 @@ const PreferanceModel = ({ onClose, allData }) => {
           <div className=" w-full flex flex-col items-center justify-center gap-3">
             <div className=" w-full flex items-start justify-start flex-col xl:flex-row  gap-2 xl:gap-4">
               <label className="flex items-center w-full  xl:max-w-[160px]">Bed Type</label>
+
               <div className=" w-full md:w-[250px] lg:w-full xl:w-[300px] ]">
                 <SingleSelectDropDown
                   placeholder="Bed Type"
                   options={bedtype}
-                  target="bedtype"
+                  target="bedType"
                   creatableSelect={true}
-                  selectedType={preferance?.bedtype}
-                  handleSelectChange={(data) => handlepreferanceData('bedtype', data)}
+                  selectedType={preferance?.bedType}
+                  handleSelectChange={(data) => handlepreferanceData('bedType', data)}
                   isDisabled={isEdit}
                 />
               </div>
+
             </div>
 
             <div className=" w-full flex items-start justify-start flex-col xl:flex-row  gap-2 xl:gap-4">
@@ -161,10 +209,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Floor Level"
                   options={floorlevel}
-                  target="floorlevel"
+                  target="floorLevel"
                   creatableSelect={true}
-                  selectedType={preferance?.floorlevel}
-                  handleSelectChange={(data) => handlepreferanceData('floorlevel', data)}
+                  selectedType={preferance?.floorLevel}
+                  handleSelectChange={(data) => handlepreferanceData('floorLevel', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -176,10 +224,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Room View Pref"
                   options={roomviewpref}
-                  target="roomviewpref"
+                  target="roomViewPreference"
                   creatableSelect={true}
-                  selectedType={preferance?.roomviewpref}
-                  handleSelectChange={(data) => handlepreferanceData('roomviewpref', data)}
+                  selectedType={preferance?.roomViewPreference}
+                  handleSelectChange={(data) => handlepreferanceData('roomViewPreference', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -191,10 +239,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Bath Robe & Slippers"
                   options={bathslippers}
-                  target="bathslippers"
+                  target="bathrobeAndSlippersSize"
                   creatableSelect={true}
-                  selectedType={preferance?.bathslippers}
-                  handleSelectChange={(data) => handlepreferanceData('bathslippers', data)}
+                  selectedType={preferance?.bathrobeAndSlippersSize}
+                  handleSelectChange={(data) => handlepreferanceData('bathrobeAndSlippersSize', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -206,10 +254,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Favourite Cuisine"
                   options={favouritecuisine}
-                  target="favouritecuisine"
+                  target="favoriteCuisines"
                   creatableSelect={true}
-                  selectedType={preferance?.favouritecuisine}
-                  handleSelectChange={(data) => handlepreferanceData('favouritecuisine', data)}
+                  selectedType={preferance?.favoriteCuisines}
+                  handleSelectChange={(data) => handlepreferanceData('favoriteCuisines', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -221,10 +269,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Airport Transfer"
                   options={airporttransfer}
-                  target="airporttransfer"
+                  target="airportTransferPreferences"
                   creatableSelect={true}
-                  selectedType={preferance?.airporttransfer}
-                  handleSelectChange={(data) => handlepreferanceData('airporttransfer', data)}
+                  selectedType={preferance?.airportTransferPreferences}
+                  handleSelectChange={(data) => handlepreferanceData('airportTransferPreferences', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -236,10 +284,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Conceirge Services"
                   options={conceirgeservices}
-                  target="conceirgeservices"
+                  target="conciergeServices"
                   creatableSelect={true}
-                  selectedType={preferance?.conceirgeservices}
-                  handleSelectChange={(data) => handlepreferanceData('conceirgeservices', data)}
+                  selectedType={preferance?.conciergeServices}
+                  handleSelectChange={(data) => handlepreferanceData('conciergeServices', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -251,10 +299,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Connectivity Reg"
                   options={connectivityreg}
-                  target="connectivityreg"
+                  target="connectivityRequirements"
                   creatableSelect={true}
-                  selectedType={preferance?.connectivityreg}
-                  handleSelectChange={(data) => handlepreferanceData('connectivityreg', data)}
+                  selectedType={preferance?.connectivityRequirements}
+                  handleSelectChange={(data) => handlepreferanceData('connectivityRequirements', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -266,10 +314,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Promotional Materials"
                   options={promotionalmaterials}
-                  target="promotionalmaterials"
+                  target="promotionalMaterials"
                   creatableSelect={true}
-                  selectedType={preferance?.promotionalmaterials}
-                  handleSelectChange={(data) => handlepreferanceData('promotionalmaterials', data)}
+                  selectedType={preferance?.promotionalMaterials}
+                  handleSelectChange={(data) => handlepreferanceData('promotionalMaterials', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -285,10 +333,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Pillow Type"
                   options={pillowtype}
-                  target="pillowtype"
+                  target="pillowType"
                   creatableSelect={true}
-                  selectedType={preferance?.pillowtype}
-                  handleSelectChange={(data) => handlepreferanceData('pillowtype', data)}
+                  selectedType={preferance?.pillowType}
+                  handleSelectChange={(data) => handlepreferanceData('pillowType', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -300,10 +348,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Room Temp Pref"
                   options={roomtemppref}
-                  target="roomtemppref"
+                  target="roomTemperaturePreference"
                   creatableSelect={true}
-                  selectedType={preferance?.roomtemppref}
-                  handleSelectChange={(data) => handlepreferanceData('roomtemppref', data)}
+                  selectedType={preferance?.roomTemperaturePreference}
+                  handleSelectChange={(data) => handlepreferanceData('roomTemperaturePreference', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -315,10 +363,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Dietary Restictions & Allergy"
                   options={dietaryallergy}
-                  target="dietaryallergy"
+                  target="dietaryRestrictionsAndAllergies"
                   creatableSelect={true}
-                  selectedType={preferance?.dietaryallergy}
-                  handleSelectChange={(data) => handlepreferanceData('dietaryallergy', data)}
+                  selectedType={preferance?.dietaryRestrictionsAndAllergies}
+                  handleSelectChange={(data) => handlepreferanceData('dietaryRestrictionsAndAllergies', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -330,10 +378,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Preferred Dining Times"
                   options={preferreddiningtimes}
-                  target="preferreddiningtimes"
+                  target="preferredDiningTimes"
                   creatableSelect={true}
-                  selectedType={preferance?.preferreddiningtimes}
-                  handleSelectChange={(data) => handlepreferanceData('preferreddiningtimes', data)}
+                  selectedType={preferance?.preferredDiningTimes}
+                  handleSelectChange={(data) => handlepreferanceData('preferredDiningTimes', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -345,10 +393,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Celebratory occasion"
                   options={celebratoryoccasion}
-                  target="celebratoryoccasion"
+                  target="celebratoryOccasions"
                   creatableSelect={true}
-                  selectedType={preferance?.celebratoryoccasion}
-                  handleSelectChange={(data) => handlepreferanceData('celebratoryoccasion', data)}
+                  selectedType={preferance?.celebratoryOccasions}
+                  handleSelectChange={(data) => handlepreferanceData('celebratoryOccasions', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -360,10 +408,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Spa Treatments"
                   options={spatreatments}
-                  target="spatreatments"
+                  target="spaTreatments"
                   creatableSelect={true}
-                  selectedType={preferance?.spatreatments}
-                  handleSelectChange={(data) => handlepreferanceData('spatreatments', data)}
+                  selectedType={preferance?.spaTreatments}
+                  handleSelectChange={(data) => handlepreferanceData('spaTreatments', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -375,10 +423,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Housekeeping Schedule"
                   options={housekeepingschedule}
-                  target="housekeepingschedule"
+                  target="housekeepingSchedule"
                   creatableSelect={true}
-                  selectedType={preferance?.housekeepingschedule}
-                  handleSelectChange={(data) => handlepreferanceData('housekeepingschedule', data)}
+                  selectedType={preferance?.housekeepingSchedule}
+                  handleSelectChange={(data) => handlepreferanceData('housekeepingSchedule', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -390,10 +438,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Do Not Disturb Preference"
                   options={donotdisturb}
-                  target="donotdisturb"
+                  target="doNotDisturbPreferences"
                   creatableSelect={true}
-                  selectedType={preferance?.donotdisturb}
-                  handleSelectChange={(data) => handlepreferanceData('donotdisturb', data)}
+                  selectedType={preferance?.doNotDisturbPreferences}
+                  handleSelectChange={(data) => handlepreferanceData('doNotDisturbPreferences', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -405,10 +453,10 @@ const PreferanceModel = ({ onClose, allData }) => {
                 <SingleSelectDropDown
                   placeholder="Mode Of Communication"
                   options={modeofcommunication}
-                  target="modeofcommunication"
+                  target="modeOfCommunication"
                   creatableSelect={true}
-                  selectedType={preferance?.modeofcommunication}
-                  handleSelectChange={(data) => handlepreferanceData('modeofcommunication', data)}
+                  selectedType={preferance?.modeOfCommunication}
+                  handleSelectChange={(data) => handlepreferanceData('modeOfCommunication', data)}
                   isDisabled={isEdit}
                 />
               </div>
@@ -427,7 +475,7 @@ const PreferanceModel = ({ onClose, allData }) => {
               placeholder=""
               autoComplete='false'
               id='date'
-              name='isActive'
+              name='isActiveFlag'
               checked={preferance?.isActive}
               onChange={(e) => handlepreferanceData(e.target.name, e.target.checked)}
               className={`w-5 h-5 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none`}

@@ -4,73 +4,133 @@ import Image from 'next/image';
 import CustomInput from "@/components/common/CustomInput";
 import CustomButton from "@/components/common/CustomButton";
 import SingleSelectDropDown from "@/components/common/SingleSelectDropDown";
-import { useDispatch, useSelector } from "react-redux"
-import { setLotalityData, setLotalityDataUpdate } from "@/store/guestDataCreateSlice";
+// import { useDispatch } from "react-redux"
+import { fetchGoldLoyaltyProgram, fetchGoldLoyaltyProgramID } from "@/assets/data";
 
-const initialData = {
-  fullname: '',
-  guestID: '',
-  membershipstartdate: '',
-  redemtionhistory: '',
-  loyaltypoints: '',
-  membershipenddate: '',
-  earninghistory: '',
-  tierlevel: "",
-  loyaltyprogrammembership: ""
-}
+// const initialData = {
+//   loyaltyPrgMemId: 0,
+//   goldenId: 0,
+//   programName: "",
+//   levelName: "",
+//   memberId: 0,
+//   memStartDate: "",
+//   memEndDate: "",
+//   membershipStatus: "",
+//   redemptionHistory: "",
+//   earningHistory: "",
+//   loyaltyPoints: 0,
+//   createById: "data_entry_user_id",
+//   lastUpdatedById: "data_entry_user_id",
+//   isDeleted: false,
+//   source: "res",
+//   isActiveFlag: true
+// }
 
-const LoyalityModel = ({ onClose, updateRowData }) => {
-  const [loyality, setLoyality] = useState({})
-  const dispatch = useDispatch()
-  const oldFormData = useSelector(state => state?.createData?.loyality)
+const LoyalityModel = ({ onClose, updateRowData, UpdatedData, rowData,allData,initialData,setLoyality,loyality }) => {
+  // console.log("🚀 ~ LoyalityModel ~ rowData--------->>:", allData)
+  // const [loyality, setLoyality] = useState(initialData)
+  const [loyOption, setLoyOption] = useState([])
+  const [filterLoyalityID, setFilterLoyalityID] = useState([])
+  const [loyalityLevel, setLoyalityLevel] = useState([])
+  // const dispatch = useDispatch()
 
   const handleloyalityData = (name, value) => {
-    const dynamicId = generateDynamicId();
-
     setLoyality({
       ...loyality,
-      id: dynamicId,
       [name]: value
     })
   }
 
-  const generateDynamicId = () => {
-    return Math.floor(Math.random() * 1000) + 1;
-  };
+
+  useEffect(() => {(async () => {
+
+      const filteredId = filterLoyalityID.filter((item) => item?.programName === updateRowData?.programName);
+
+      const bodyData = loyality?.programName?.loyaltyProgramId > 0 ? loyality?.programName?.loyaltyProgramId : filteredId[0]?.loyaltyProgramId;
+
+      if(bodyData){
+
+        const responce = await fetchGoldLoyaltyProgramID(bodyData);
+        
+        if (responce?.length > 0) {
+          
+          const modifyLoyality = responce?.map((item) => ({
+            label: item?.levelName, value: item?.levelName
+          }))
+          
+          setLoyalityLevel(modifyLoyality)
+        }
+      }
+
+    })()
+  }, [loyality, filterLoyalityID])
+
+
+  useEffect(() => {
+    ; (async () => {
+      const res = await fetchGoldLoyaltyProgram();
+
+      if (res?.length > 0) {
+
+        if (updateRowData && Object.keys(updateRowData).length > 0) {
+          setFilterLoyalityID(res);
+        }
+
+        const loyaltyOptions = res.map((item) => {
+          return {
+            label: item?.programName, value: item?.programName, loyaltyProgramId: item?.loyaltyProgramId
+          }
+        });
+
+        setLoyOption(loyaltyOptions);
+
+        /* 
+        dispatch(setLotalityData(res)) */
+      };
+    })()
+  }, [updateRowData])
+
+
 
   const HandleSave = () => {
     if (Object.keys(updateRowData).length > 0) {
-      const updatedata = oldFormData?.map((item) => item.id === updateRowData.id ? loyality : item)
+      const updatedata = rowData?.map((item) => item.programName === updateRowData.programName ? loyality : item)
 
-      dispatch(setLotalityDataUpdate(updatedata))
+      UpdatedData(updatedata)
+      // console.log(updatedata);
       onClose()
     } else {
-      if (loyality) {
-        dispatch(setLotalityData(loyality))
-        setLoyality(initialData)
-        onClose()
-      }
+
+      const CreateNewRow = [...rowData, loyality]
+
+      // console.log(CreateNewRow);
+      // UpdatedData(CreateNewRow)
+      onClose()
+
     }
   };
 
 
   useEffect(() => {
     if (updateRowData && Object.keys(updateRowData).length > 0) {
-      
+      // console.log("inside");
       const convertData = {
-        id: updateRowData?.id,
-        membershipstartdate: updateRowData?.startDate,
-        redemtionhistory: updateRowData?.remptionHistory,
-        loyaltypoints: updateRowData?.loyalityPoints,
-        membershipenddate: updateRowData?.endDate,
-        earninghistory: updateRowData?.earningHistory,
-        tierlevel: {
-          label: updateRowData?.tierLevel, value: updateRowData?.tierLevel
-        },
-        loyaltyprogrammembership: {
-          label: updateRowData?.loyalityProgramMembership, value: updateRowData?.loyalityProgramMembership,
-        },
-        isActive: updateRowData?.isActive
+        loyaltyPrgMemId: updateRowData?.loyaltyPrgMemId,
+        goldenId: updateRowData?.goldenId,
+        programName: { label: updateRowData?.programName, value: updateRowData?.programName },
+        levelName: { label: updateRowData?.levelName, value: updateRowData?.levelName },
+        memberId: updateRowData?.memberId,
+        memStartDate: updateRowData?.memStartDate,
+        memEndDate: updateRowData?.memEndDate,
+        membershipStatus: updateRowData?.membershipStatus,
+        redemptionHistory: updateRowData?.redemptionHistory,
+        earningHistory: updateRowData?.earningHistory,
+        loyaltyPoints: updateRowData?.loyaltyPoints,
+        createById: updateRowData?.createById,
+        lastUpdatedById: updateRowData?.lastUpdatedById,
+        isDeleted: updateRowData?.isDeleted,
+        source: updateRowData?.source,
+        isActiveFlag: updateRowData?.isActiveFlag
       }
 
       setLoyality(convertData)
@@ -108,9 +168,10 @@ const LoyalityModel = ({ onClose, updateRowData }) => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="Kumar"
+                isdisablad={true}
+                placeholder="Guest Name"
                 name="fullname"
-                value={loyality?.fullname}
+                value={allData?.fullName}
                 onChange={(e) => handleloyalityData(e.target.name, e.target.value)}
               />
             </div>
@@ -124,9 +185,10 @@ const LoyalityModel = ({ onClose, updateRowData }) => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="Kumar"
+                isdisablad={true}
+                placeholder=""
                 name="guestID"
-                value={loyality?.guestID}
+                value={allData?.goldenId}
                 onChange={(e) => handleloyalityData(e.target.name, e.target.value)}
               />
             </div>
@@ -144,11 +206,11 @@ const LoyalityModel = ({ onClose, updateRowData }) => {
                 <div className=" w-full md:w-[250px] lg:w-full xl:w-[300px] ]">
                   <SingleSelectDropDown
                     placeholder="Loyalty Program membership"
-                    options={[]}
-                    target="loyaltyprogrammembership"
+                    options={loyOption}
+                    target="programName"
                     creatableSelect={true}
-                    selectedType={loyality?.loyaltyprogrammembership}
-                    handleSelectChange={(data) => handleloyalityData('loyaltyprogrammembership', data)}
+                    selectedType={loyality?.programName}
+                    handleSelectChange={(data) => handleloyalityData('programName', data)}
                   />
                 </div>
               </div>
@@ -161,8 +223,8 @@ const LoyalityModel = ({ onClose, updateRowData }) => {
                     placeholder="Membership Start Date"
                     autoComplete='false'
                     id='membershipstartdate'
-                    name='membershipstartdate'
-                    value={loyality?.membershipstartdate}
+                    name='memStartDate'
+                    value={loyality?.memStartDate}
                     onChange={(e) => handleloyalityData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -176,8 +238,8 @@ const LoyalityModel = ({ onClose, updateRowData }) => {
                     placeholder="Redemtion History"
                     autoComplete='false'
                     id='redemtionhistory'
-                    name='redemtionhistory'
-                    value={loyality?.redemtionhistory}
+                    name='redemptionHistory'
+                    value={loyality?.redemptionHistory}
                     onChange={(e) => handleloyalityData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -192,8 +254,8 @@ const LoyalityModel = ({ onClose, updateRowData }) => {
                     placeholder="Loyalty Points"
                     autoComplete='false'
                     id='loyaltypoints'
-                    name='loyaltypoints'
-                    value={loyality?.loyaltypoints}
+                    name='loyaltyPoints'
+                    value={loyality?.loyaltyPoints}
                     onChange={(e) => handleloyalityData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -209,11 +271,11 @@ const LoyalityModel = ({ onClose, updateRowData }) => {
                 <div className=" w-full md:w-[250px] lg:w-full xl:w-[300px] ]">
                   <SingleSelectDropDown
                     placeholder="Tier Level"
-                    options={[]}
-                    target="tierlevel"
+                    options={loyalityLevel}
+                    target="levelName"
                     creatableSelect={true}
-                    selectedType={loyality?.tierlevel}
-                    handleSelectChange={(data) => handleloyalityData('tierlevel', data)}
+                    selectedType={loyality?.levelName}
+                    handleSelectChange={(data) => handleloyalityData('levelName', data)}
                   />
                 </div>
               </div>
@@ -226,8 +288,8 @@ const LoyalityModel = ({ onClose, updateRowData }) => {
                     placeholder="Membership End Date"
                     autoComplete='false'
                     id='membershipenddate'
-                    name='membershipenddate'
-                    value={loyality?.membershipenddate}
+                    name='memEndDate'
+                    value={loyality?.memEndDate}
                     onChange={(e) => handleloyalityData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -241,8 +303,8 @@ const LoyalityModel = ({ onClose, updateRowData }) => {
                     placeholder="Earning History"
                     autoComplete='false'
                     id='earninghistory'
-                    name='earninghistory'
-                    value={loyality?.earninghistory}
+                    name='earningHistory'
+                    value={loyality?.earningHistory}
                     onChange={(e) => handleloyalityData(e.target.name, e.target.value)}
                     className={`w-full h-10 p-2 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none `} />
                 </div>
@@ -262,8 +324,8 @@ const LoyalityModel = ({ onClose, updateRowData }) => {
                 placeholder=""
                 autoComplete='false'
                 id='date'
-                name='isActive'
-                checked={loyality?.isActive}
+                name='isActiveFlag'
+                checked={loyality?.isActiveFlag}
                 onChange={(e) => handleloyalityData(e.target.name, e.target.checked)}
                 className={`w-5 h-5 rounded-[4px] border-[1px] border-gray-G30 placeholder:text-lg placeholder:leading-6 placeholder:font-normal placeholder:text-[#4A4A4A] hover:border-blue-B40  active:border-2 active:border-solid active:border-blue-B40 focus:border-2 focus:border-solid focus:border-blue-B40 outline-none`}
               />

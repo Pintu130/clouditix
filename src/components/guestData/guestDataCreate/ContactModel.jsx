@@ -19,22 +19,22 @@ const initialValue = {
   businessEmail: '',
   personalEmail: '',
   alternateEmail: '',
-  createById: '',
-  lastUpdatedById: '',
+  createById: 'data_entry_user_id',
+  lastUpdatedById: 'data_entry_user_id',
   isDeleted: false,
-  source: '',
-  isActiveFlag: ''
+  source: 'res',
+  isActiveFlag: true
 }
 
-const ContactModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
+const ContactModel = ({ onClose, updateRowData, rowData, updatedRowData,allData }) => {
   const [contact, setcontact] = useState(initialValue)
   const dispatch = useDispatch()
   // const oldformData = useSelector(state => state?.createData?.contect)
 
 
-  console.log(updateRowData);
-  console.log(rowData);
-  console.log(contact);
+  // console.log(updateRowData);
+  // console.log(rowData);
+  // console.log(contact);
 
 
   const handlecontactData = (name, value) => {
@@ -126,9 +126,10 @@ const ContactModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="Kumar"
+                isdisablad={true}
+                placeholder="Guest Name"
                 name="fullname"
-                value={contact?.fullname}
+                value={allData?.fullName}
                 onChange={(e) => handlecontactData(e.target.name, e.target.value)}
               />
             </div>
@@ -142,9 +143,10 @@ const ContactModel = ({ onClose, updateRowData, rowData, updatedRowData }) => {
                 isRequired={true}
                 isIcon={true}
                 label=""
-                placeholder="Kumar"
+                isdisablad={true}
+                placeholder=""
                 name="guestID"
-                value={contact?.guestID}
+                value={allData?.goldenId}
                 onChange={(e) => handlecontactData(e.target.name, e.target.value)}
               />
             </div>

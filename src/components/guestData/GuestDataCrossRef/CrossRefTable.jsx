@@ -16,7 +16,7 @@ const CrossRefTable = () => {
 
         return (
             <div
-                // style={{ textAlign: !isNumber || !isDate ? 'left' : 'right' }}
+                // style={{ textAlign: !isNumber || !isDate ? 'left' : 'right' }} 
                 className={`${isNumber || isDate ? 'text-right' : 'text-left'}`}>
                 {value}
             </div>

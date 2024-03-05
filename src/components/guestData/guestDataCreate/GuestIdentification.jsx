@@ -11,38 +11,51 @@ import { useDispatch, useSelector } from "react-redux";
 import { BiSolidPencil } from "react-icons/bi";
 import { setIdentificationData } from "@/store/guestDataCreateSlice";
 
+const initialValue = {
+  identificationId: 0,
+  goldenId: 0,
+  identificationType: "",
+  identificationValue: "",
+  issuingCountry: "",
+  issueDate: "",
+  expiryDate: "",
+  createdAt: "2023-09-20T00:00:00",
+  updatedAt: "2023-09-20T00:00:00",
+  createById: "data_entry_user_id",
+  lastUpdatedById: "data_entry_user_id",
+  isDeleted: false,
+  source: "res",
+  isActiveFlag: true,
+};
+
 const GuestIdentification = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState([]);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideIdentification, setisHideIdentification] = useState(true);
-  const [updateRowData, setUpdateRowData] = useState({})
+  const [updateRowData, setUpdateRowData] = useState({});
+  const [identification, setIdentification] = useState(initialValue);
 
   const dispatch = useDispatch();
-  
 
   const handleIdentificationModal = () => {
     setIsModalOpen(true);
-    setUpdateRowData({})
+    setUpdateRowData({});
   };
-
-  console.log(allData?.identificationInfo);
-  console.log(rowData);
 
   useEffect(() => {
     if (allData?.identificationInfo?.length > 0) {
-      console.log("inside ");
-      setRowData(allData?.identificationInfo)
-      dispatch(setIdentificationData(allData?.identificationInfo))
+      setRowData(allData?.identificationInfo);
+      dispatch(setIdentificationData(allData?.identificationInfo));
+    }else{
+      setRowData([])
     }
-  }, [allData])
-
-
+  }, [allData]);
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setUpdateRowData({})
+    setUpdateRowData({});
+    setIdentification(initialValue);
   };
 
   const [columnDefs] = useState([
@@ -80,14 +93,15 @@ const GuestIdentification = ({ isHideAll, onHandleHide, allData }) => {
       maxWidth: 250,
     },
     {
-
-      field: '', headerName: "Edit", minWidth: 60, maxWidth: 80, cellRenderer: (params) => {
+      field: "",
+      headerName: "Edit",
+      minWidth: 60,
+      maxWidth: 80,
+      cellRenderer: (params) => {
         const data = params.data;
         return (
           <div className="flex items-center justify-center h-full  ">
-            <button
-              onClick={(e) => handleEdit(e, data)}
-            >
+            <button onClick={(e) => handleEdit(e, data)}>
               <BiSolidPencil className="w-6 h-6 text-blue-B40" />
             </button>
           </div>
@@ -119,7 +133,6 @@ const GuestIdentification = ({ isHideAll, onHandleHide, allData }) => {
 
   const frameworkComponents = {
     agCheckboxCellRenderer: (params) => {
-
       return (
         <input
           type="checkbox"
@@ -151,47 +164,63 @@ const GuestIdentification = ({ isHideAll, onHandleHide, allData }) => {
   };
 
   useEffect(() => {
-    setisHideIdentification(isHideAll)
-  }, [isHideAll])
+    setisHideIdentification(isHideAll);
+  }, [isHideAll]);
 
   const handleHide = (e) => {
     e.stopPropagation();
     setisHideIdentification(!isHideIdentification);
     onHandleHide(!isHideIdentification);
-  }
+  };
 
   const handleEdit = (e, data) => {
     e.stopPropagation();
     setUpdateRowData(data);
     setIsModalOpen(true);
-  }
+  };
 
   const updatedRowData = (data) => {
-
-
     if (data?.length > 0) {
-      const modifyData = data?.map(item => {
+      const modifyData = data?.map((item) => {
         return {
           ...item,
-          identificationType: item?.identificationType?.value?.length > 0 ? item?.identificationType?.value : item?.identificationType,
-          issuingCountry: item?.issuingCountry?.value?.length > 0 ? item?.issuingCountry?.value : item?.issuingCountry
-        }
+          identificationType:
+            item?.identificationType?.value?.length > 0
+              ? item?.identificationType?.value
+              : item?.identificationType,
+          issuingCountry:
+            item?.issuingCountry?.value?.length > 0
+              ? item?.issuingCountry?.value
+              : item?.issuingCountry,
+        };
       });
       setRowData(modifyData);
-      dispatch(setIdentificationData(modifyData))
+      dispatch(setIdentificationData(modifyData));
     }
-
-  }
+  };
 
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full  custom-scroll">
-
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <IdentificationModel onClose={closeModal} updateRowData={updateRowData} rowData={rowData} updatedRowData={updatedRowData} />
+        <IdentificationModel
+          onClose={closeModal}
+          updateRowData={updateRowData}
+          rowData={rowData}
+          updatedRowData={updatedRowData}
+          allData={allData?.guest}
+          initialValue={initialValue}
+          setIdentification={setIdentification}
+          identification={identification}
+        />
       </SmCustomModal>
 
       <div className="flex items-center gap-3">
-        <FaChevronDown className={`h-4 w-4 transform ${!isHideIdentification ? 'rotate-180' : 'rotate-0'} cursor-pointer transition-transform duration-300 ease-in-out`} onClick={(e) => handleHide(e)} />
+        <FaChevronDown
+          className={`h-4 w-4 transform ${
+            !isHideIdentification ? "rotate-180" : "rotate-0"
+          } cursor-pointer transition-transform duration-300 ease-in-out`}
+          onClick={(e) => handleHide(e)}
+        />
         <div className=" w-[150px] flex gap-2   ">
           <CustomButton
             name="Identification"
@@ -203,30 +232,29 @@ const GuestIdentification = ({ isHideAll, onHandleHide, allData }) => {
         </div>
       </div>
 
-      {isHideIdentification && <div className="flex w-full h-full min-h-[30vh] pb-10  xl:max-h-[60%]  mx-auto ag-theme-alpine ">
-        <div
-          className="relative overflow-auto "
-          style={{ width: "70%" }}
-        >
-          <AgGridReact
-            ref={tableRef}
-            rowData={rowData}
-            columnDefs={columnDefs}
-            defaultColDef={defaultColDef}
-            frameworkComponents={frameworkComponents}
-            enableBrowserTooltips={true}
-            tooltipShowDelay={{ tooltipShowDelay: 2 }}
-            rowSelection="multiple"
-            pagination={true}
-            onCellClicked={handleCellClicked}
-            gridOptions={gridOptions}
-            paginationAutoPageSize={true}
-            onGridReady={onGridReady}
-            suppressCopyRowsToClipboard={true}
-            animateRows={true}
-          />
+      {isHideIdentification && (
+        <div className="flex w-full h-full min-h-[30vh] pb-10  xl:max-h-[60%]  mx-auto ag-theme-alpine ">
+          <div className="relative overflow-auto " style={{ width: "70%" }}>
+            <AgGridReact
+              ref={tableRef}
+              rowData={rowData}
+              columnDefs={columnDefs}
+              defaultColDef={defaultColDef}
+              frameworkComponents={frameworkComponents}
+              enableBrowserTooltips={true}
+              tooltipShowDelay={{ tooltipShowDelay: 2 }}
+              rowSelection="multiple"
+              pagination={true}
+              onCellClicked={handleCellClicked}
+              gridOptions={gridOptions}
+              paginationAutoPageSize={true}
+              onGridReady={onGridReady}
+              suppressCopyRowsToClipboard={true}
+              animateRows={true}
+            />
+          </div>
         </div>
-      </div>}
+      )}
     </div>
   );
 };

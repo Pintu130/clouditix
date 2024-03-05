@@ -7,26 +7,26 @@ import { socialmediaData } from "@/assets/data";
 import { useDispatch, useSelector } from "react-redux"
 import { setSocialMediaData, setSocialMediaDataUpdate } from "@/store/guestDataCreateSlice";
 
-const initialValue = {
-  smpId: 0,
-  goldenId: 0,
-  socialMediaApp: "",
-  profile: "",
-  createById: "",
-  lastUpdatedById: "",
-  isDeleted: false,
-  source: "",
-  isActiveFlag: true
-}
+// const initialValue = {
+//   smpId: 0,
+//   goldenId: 0,
+//   socialMediaApp: "",
+//   profile: "",
+//   createById: "data_entry_user_id",
+//   lastUpdatedById: "data_entry_user_id",
+//   isDeleted: false,
+//   source: "res",
+//   isActiveFlag: true
+// }
 
-const SocialMediaModel = ({ onClose, updateRowData, rowData, ModifyRowData }) => {
-  const [socialMedia, setSocialMedia] = useState(initialValue)
+const SocialMediaModel = ({ onClose, updateRowData, rowData, ModifyRowData,allData,socialMedia,setSocialMedia,initialValue }) => {
+  // const [socialMedia, setSocialMedia] = useState(initialValue)
   const dispatch = useDispatch()
   const oldFormData = useSelector(state => state?.createData?.socialMedia)
 
-  console.log(rowData);
-  console.log(updateRowData);
-  console.log(socialMedia);
+  // console.log(rowData);
+  // console.log(updateRowData);
+  // console.log(socialMedia);
 
   const handlesocialMediaData = (name, value) => {
 
@@ -103,11 +103,12 @@ const SocialMediaModel = ({ onClose, updateRowData, rowData, ModifyRowData }) =>
               <CustomInput
                 isNUmber={false}
                 isRequired={true}
+                isdisablad={true}
                 isIcon={true}
                 label=""
-                placeholder="Kumar"
+                placeholder="Guest Name"
                 name="fullname"
-                value={socialMedia?.fullname}
+                value={allData?.fullName}
                 onChange={(e) => handlesocialMediaData(e.target.name, e.target.value)}
               />
             </div>
@@ -119,11 +120,12 @@ const SocialMediaModel = ({ onClose, updateRowData, rowData, ModifyRowData }) =>
               <CustomInput
                 isNUmber={true}
                 isRequired={true}
+                isdisablad={true}
                 isIcon={true}
                 label=""
-                placeholder="Kumar"
+                placeholder=""
                 name="guestID"
-                value={socialMedia?.guestID}
+                value={allData?.goldenId}
                 onChange={(e) => handlesocialMediaData(e.target.name, e.target.value)}
               />
             </div>

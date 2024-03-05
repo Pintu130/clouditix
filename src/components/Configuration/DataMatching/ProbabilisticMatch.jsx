@@ -19,7 +19,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { MdDelete } from 'react-icons/md';
 import DeletePopup from '@/components/common/DeletePopup';
 
-const ProbabilisticMatch = () => {
+const ProbabilisticMatch = ({ accLevel }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState(ProbabilisticMatchtableData);
   const [rowEditData, setRowEditData] = useState([]);
@@ -30,9 +30,6 @@ const ProbabilisticMatch = () => {
   const [postProbabilistic_Config, setPostProbabilistic_Config] = useState({})
   const dispatch = useDispatch()
   const addData = useSelector(state => state?.ProbMatch?.add)
-
-
-
 
   useEffect(() => {
     ; (async () => {
@@ -79,10 +76,11 @@ const ProbabilisticMatch = () => {
           <div className="flex items-center justify-center h-full  ">
             <button
               onClick={(e) => handleMoreDetails(e, data)}
+              disabled={accLevel === 'View' ? true : false}
             >
-              <BsThreeDotsVertical className="w-6 h-6 text-blue-B40" />
+              <BsThreeDotsVertical className={`w-6 h-6  ${accLevel === 'View' ? 'text-[#678bb4]' : 'text-blue-B40'}`} />
             </button>
-          </div>
+          </div >
         );
       },
     },
@@ -93,8 +91,9 @@ const ProbabilisticMatch = () => {
           <div className="flex items-center justify-center h-full  ">
             <button
               onClick={(e) => handleEdit(e, data)}
+              disabled={accLevel === 'View' ? true : false}
             >
-              <BiSolidPencil className="w-6 h-6 text-blue-B40" />
+              <BiSolidPencil className={`w-6 h-6  ${accLevel === 'View' ? 'text-[#678bb4]' : 'text-blue-B40'}`} />
             </button>
           </div>
         );
@@ -107,9 +106,10 @@ const ProbabilisticMatch = () => {
           <div className="flex items-center justify-center h-full  ">
             <button
               onClick={(e) => handleDelete(e, data)}
+              disabled={accLevel === 'View' ? true : false}
             >
 
-              <MdDelete className="w-6 h-6 text-blue-B40" />
+              <MdDelete className={`w-6 h-6  ${accLevel === 'View' ? 'text-[#678bb4]' : 'text-blue-B40'}`} />
             </button>
           </div>
         );
@@ -204,18 +204,18 @@ const ProbabilisticMatch = () => {
     setIsDelete(data);
 
     /*  const deleteRowData = await fetchProbabilisticConfig();
- 
+   
      const DeleteData = deleteRowData?.columns?.filter((item) => item?.column !== data?.column)
- 
+   
      const upEdit = {
        columns: DeleteData,
        rules: deleteRowData?.rules,
        "total-threshold": deleteRowData?.["total-threshold"]
      }
- 
+   
      const editApi = await fetchProbabilistic_Config(upEdit)
      setPostProbabilistic_Config(editApi);
- 
+   
      if (editApi.isSuccess) {
        toast.error('Delete Data', {
          position: "top-center",
@@ -367,7 +367,7 @@ const ProbabilisticMatch = () => {
         onDelete={() => deleteConfirmation()}
       />
 
-      <div className='flex items-center gap-10 '>
+      {/* <div className='flex items-center gap-10 '>
         <fieldset className='border pl-3 rounded-lg'>
           <legend className=''>Select Attribute</legend>
           <div className='flex items-center justify-start gap-5 p-3'>
@@ -397,7 +397,7 @@ const ProbabilisticMatch = () => {
           <span>Total-threshold </span>
           <span className='flex items-center justify-center gap-3 border border-[#a6a6a6] px-1.5 rounded-md py-1 '>0.2</span>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex w-full min-h-[50vh] pb-10  xl:max-h-[30%]  mx-auto ag-theme-alpine ">
         <div className="relative overflow-auto max-h-[500px]" style={{ width: "60%" }}>
@@ -425,7 +425,7 @@ const ProbabilisticMatch = () => {
         <CustomButton
           name="ADD"
           handleClick={() => handleAddRow()}
-          isDisable={false}
+          isDisable={accLevel === 'View' ? true : false}
           isLoading={false}
           icon={<FaPlus />}
         />

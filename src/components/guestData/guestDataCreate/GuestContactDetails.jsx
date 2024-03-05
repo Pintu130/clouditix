@@ -27,6 +27,8 @@ const GuestContactDetails = ({ isHideAll, onHandleHide, allData }) => {
     if (allData?.contactDetails?.length > 0) {
       setRowData(allData?.contactDetails)
       dispatch(setContectDataUpdate(allData?.contactDetails))
+    } else {
+      setRowData([])
     }
   }, [allData])
 
@@ -185,7 +187,7 @@ const GuestContactDetails = ({ isHideAll, onHandleHide, allData }) => {
 
 
 
-  useEffect(() => {
+  /* useEffect(() => {
 
     if (contectData?.length > 0 && isModalOpen) {
       const newContect = contectData?.map((item) => ({
@@ -207,7 +209,7 @@ const GuestContactDetails = ({ isHideAll, onHandleHide, allData }) => {
     } else {
       setRowData(contectData)
     }
-  }, [contectData])
+  }, [contectData]) */
 
 
   const handleContactModal = () => {
@@ -239,16 +241,16 @@ const GuestContactDetails = ({ isHideAll, onHandleHide, allData }) => {
   };
 
   const updatedRowData = (data) => {
-    console.log(data);
+    // console.log(data);
     setRowData(data);
     dispatch(setContectData(data));
   }
-
+  // console.log("rowData",rowData);
   return (
     <div className=" w-full  flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll">
 
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <ContactModel onClose={closeModal} updateRowData={updateRowData} rowData={rowData} updatedRowData={updatedRowData} />
+        <ContactModel onClose={closeModal} updateRowData={updateRowData} rowData={rowData} updatedRowData={updatedRowData} allData={allData?.guest} />
       </SmCustomModal>
 
       <div className=" w-full h-full flex items-center gap-3">
@@ -259,7 +261,7 @@ const GuestContactDetails = ({ isHideAll, onHandleHide, allData }) => {
           <CustomButton
             name="Contact Details"
             handleClick={() => handleContactModal()}
-            isDisable={false}
+            isDisable={rowData?.length > 0 ? true : false}
             isLoading={false}
             icon={<MdOutlineAdd className="h-6 w-6" />}
           />

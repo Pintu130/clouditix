@@ -1,4 +1,4 @@
-import { GuestCreateAddressData } from "@/assets/data";
+import { GuestCreateAddressData, StateData } from "@/assets/data";
 import CustomButton from "@/components/common/CustomButton";
 import { AgGridReact } from "ag-grid-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -10,21 +10,54 @@ import { useDispatch, useSelector } from "react-redux";
 import { BiSolidPencil } from "react-icons/bi";
 import { setCreateAddressData } from "@/store/guestDataCreateSlice";
 
+const initialValue = {
+  addressId: 0,
+  goldenId: 0,
+  stateCode: "",
+  addressType: "",
+  addressLine1: "",
+  addressLine2: "",
+  addressLine3: "",
+  city: "",
+  country: "",
+  zipCode: "",
+  isPrimary: true,
+  startDate: "2024-01-27T08:09:20.794Z",
+  endDate: "2024-01-27T08:09:20.794Z",
+  isActive: true,
+  createById: "data_entry_user_id",
+  lastUpdatedById: "data_entry_user_id",
+  isDeleted: false,
+  source: "res",
+  isActiveFlag: true,
+};
+
 const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideAddress, setIsHideAddress] = useState(true);
   const [updateRowData, setUpdateRowData] = useState({})
+  console.log("🚀 ~ GuestCreateAddress ~ updateRowData:lJKlskfnafl-----", updateRowData)
+  const [formData, setFormData] = useState(initialValue);
   const dispatch = useDispatch();
+
+  // console.log("rowData1", rowData);
+
 
   useEffect(() => {
     if (allData?.addresses?.length > 0) {
-      console.log("Addresses");
-      setRowData(allData?.addresses)
+      setRowData(allData?.addresses?.map((item) => { return ({ ...item, stateCode: stateFilter(item?.stateCode) }) }))
       dispatch(setCreateAddressData(allData?.addresses))
+    }else {
+      setRowData([])
     }
   }, [allData])
+
+  const stateFilter = (state) => {
+    const data = StateData?.filter((item) => item.value === state)?.[0]?.label
+    return data ? data : state
+  }
 
   const [columnDefs] = useState([
     {
@@ -85,8 +118,22 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
       cellClass: "uppercase",
       minWidth: 80,
       maxWidth: 100,
-      cellRenderer: "agCheckboxCellRenderer",
+      // cellRenderer: "agCheckboxCellRenderer",
       editable: true,
+      cellRenderer: (params) => {
+        tableRef.current = params.api
+        return (
+          <div className={params?.data?.isPrimary ? "ag-wrapper ag-input-wrapper ag-checkbox-input-wrapper ag-checked" : "ag-wrapper ag-input-wrapper ag-checkbox-input-wrapper"}>
+            <input
+              type="checkbox"
+              className="ag-checkbox-input-wrapper input, .ag-checkbox-input-wrapper input"
+              onClick={() => AddressValueChange(params?.data, tableRef.current.getModel().rowsToDisplay.map((rowNode) => rowNode.data))}
+              checked={params?.data?.isPrimary}
+            />
+          </div>
+        )
+
+      }
     },
     {
       field: "isActiveFlag",
@@ -114,9 +161,23 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
     },
   ]);
 
+
+
+  const AddressValueChange = (data, allData) => {
+    const finelData = allData?.map((item) => {
+      if (item?.addressId === data?.addressId) {
+        return { ...item, isPrimary: !data?.isPrimary }
+      } else {
+        return { ...item, isPrimary: false }
+      }
+    })
+    setRowData(finelData)
+  }
+
   const closeModal = () => {
     setIsModalOpen(false);
     setUpdateRowData({})
+    setFormData(initialValue);
   };
 
   const defaultColDef = {
@@ -190,7 +251,7 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
   }
 
   const updatedRowData = (data) => {
-    console.log(data);
+    // console.log(data);
     if (data?.length > 0) {
       const modifyData = data.map(item => {
         return {
@@ -199,7 +260,6 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
           addressType: item?.addressType?.value?.length > 0 ? item?.addressType?.value : item?.addressType,
         }
       })
-
       setRowData(modifyData);
       dispatch(setCreateAddressData(modifyData))
     }
@@ -208,7 +268,7 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll ">
       <CustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <AddressModel onClose={closeModal} updateRowData={updateRowData} rowData={rowData} updatedRowData={updatedRowData} />
+        <AddressModel onClose={closeModal} updateRowData={updateRowData} rowData={rowData} updatedRowData={updatedRowData} allData={allData?.guest} initialValue={initialValue} setFormData={setFormData} formData={formData}/>
       </CustomModal>
       <div className="flex items-center gap-3">
         <FaChevronDown className={`h-4 w-4 transform ${!isHideAddress ? 'rotate-180' : 'rotate-0'} cursor-pointer transition-transform duration-300 ease-in-out`} onClick={(e) => handleHide(e)} />
@@ -216,7 +276,7 @@ const GuestCreateAddress = ({ isHideAll, onHandleHide, allData }) => {
         <div className=" w-[150px] flex gap-2   ">
           <CustomButton
             name="Address"
-            handleClick={() => { setIsModalOpen(true), setUpdateRowData({}) }}
+            handleClick={() => { setIsModalOpen(true), setUpdateRowData({})}}
             isDisable={false}
             isLoading={false}
             icon={<MdOutlineAdd className="h-6 w-6  " />}

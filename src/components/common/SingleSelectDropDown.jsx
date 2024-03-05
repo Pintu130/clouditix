@@ -39,6 +39,8 @@ function SingleSelectDropDown({ handleSelectChange, selectedType, options, place
     const handleChange = (data) => {
         handleSelectChange(data, target)
     }
+    // console.log("🚀 ~ SingleSelectDropDown ~ options:", options)
+    
     return (
         <div className="w-full">
             {creatableSelect ? <CreatableSelect
@@ -70,4 +72,4 @@ function SingleSelectDropDown({ handleSelectChange, selectedType, options, place
     )
 }
 
-export default SingleSelectDropDown
+export default SingleSelectDropDown;

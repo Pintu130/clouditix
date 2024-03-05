@@ -4,8 +4,8 @@ const guestDetailsSlice = createSlice({
     name: 'guestDetail',
     initialState: {
         goldenID: '',
-        link : {},
-        isEdit : ''
+        link: {},
+        isEdit: ''
     },
     reducers: {
         setDetails: (state, action) => {

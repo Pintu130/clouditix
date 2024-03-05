@@ -9,7 +9,7 @@ import { batchJobsStatustbleData, fetchGetAllBatchStatus } from "@/assets/data";
 const BatchJobsStatusTable = ({ getBatchId }) => {
     const tableRef = useRef(null);
     const [rowData, setRowData] = useState([]);
-
+    // console.log("🚀 ~ BatchJobsStatusTable ~ rowData:", rowData)
 
     const [columnDefs] = useState([
         {
@@ -17,7 +17,6 @@ const BatchJobsStatusTable = ({ getBatchId }) => {
             headerName: "Batch_Id ",
             minWidth: 250,
             maxWidth: 300,
-
         },
         {
             field: "status",
@@ -48,10 +47,9 @@ const BatchJobsStatusTable = ({ getBatchId }) => {
 
 
     useEffect(() => {
-        ; (async () => {
+        (async () => {
             const data = await fetchGetAllBatchStatus();
-
-            const sortstartedAt = data.sort((a, b) => new Date(a.startedAt) - new Date(b.startedAt));;
+            const sortstartedAt = data.sort((a, b) => new Date(a.startedAt) - new Date(b.startedAt));
 
             setRowData(sortstartedAt)
         })()

@@ -11,4 +11,4 @@ const dataQualitySlice = createSlice({
 });
 
 export const { setDataQualityCreate } = dataQualitySlice.actions;
-export default dataQualitySlice.reducer;
+export default dataQualitySlice.reducer; 

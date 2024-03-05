@@ -22,7 +22,6 @@ const GuestDataManual = () => {
         setGuestList([...guestList , ''])
     ]
 
-
     return (
         <div className='p-5 flex flex-col justify-between gap-5 w-full'>
             <div className='flex items-center  w-full '>

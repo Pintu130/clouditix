@@ -7,36 +7,51 @@ import { FaChevronDown } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
 import SocialMediaModel from "./SocialMediaModel";
 import SmCustomModal from "@/components/common/SmCustomModal";
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import { BiSolidPencil } from "react-icons/bi";
 import { setSocialMediaData } from "@/store/guestDataCreateSlice";
+
+const initialValue = {
+  smpId: 0,
+  goldenId: 0,
+  socialMediaApp: "",
+  profile: "",
+  createById: "data_entry_user_id",
+  lastUpdatedById: "data_entry_user_id",
+  isDeleted: false,
+  source: "res",
+  isActiveFlag: true
+}
 
 const SocialMedia = ({ isHideAll, onHandleHide, allData }) => {
   const tableRef = useRef(null);
   const [rowData, setRowData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHideSocialMedia, setisHideSocialMedia] = useState(true);
-  const [updateRowData, setUpdateRowData] = useState({})
-  
-  const dispatch = useDispatch()
+  const [updateRowData, setUpdateRowData] = useState({});
+  const [socialMedia, setSocialMedia] = useState(initialValue)
+
+  const dispatch = useDispatch();
 
   const handleSocialModal = () => {
     setIsModalOpen(true);
-    setUpdateRowData({})
+    setUpdateRowData({});
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setUpdateRowData({})
+    setUpdateRowData({});
+    setSocialMedia(initialValue)
   };
-
 
   useEffect(() => {
     if (allData?.socialMediaProfiles?.length > 0) {
-      setRowData(allData?.socialMediaProfiles)
-      dispatch(setSocialMediaData(allData?.socialMediaProfiles))
+      setRowData(allData?.socialMediaProfiles);
+      dispatch(setSocialMediaData(allData?.socialMediaProfiles));
+    }else{
+      setRowData([])
     }
-  }, [allData])
+  }, [allData]);
 
   const [columnDefs] = useState([
     {
@@ -53,14 +68,15 @@ const SocialMedia = ({ isHideAll, onHandleHide, allData }) => {
       filter: true,
     },
     {
-
-      field: '', headerName: "Edit", minWidth: 60, maxWidth: 80, cellRenderer: (params) => {
+      field: "",
+      headerName: "Edit",
+      minWidth: 60,
+      maxWidth: 80,
+      cellRenderer: (params) => {
         const data = params.data;
         return (
           <div className="flex items-center justify-center h-full  ">
-            <button
-              onClick={(e) => handleEdit(e, data)}
-            >
+            <button onClick={(e) => handleEdit(e, data)}>
               <BiSolidPencil className="w-6 h-6 text-blue-B40" />
             </button>
           </div>
@@ -72,7 +88,6 @@ const SocialMedia = ({ isHideAll, onHandleHide, allData }) => {
   const defaultColDef = {
     filter: true,
     sortable: true,
-
     flex: 1,
     headerComponentParams: { placeholder: "Enter Member ID" },
     resizable: true,
@@ -134,49 +149,62 @@ const SocialMedia = ({ isHideAll, onHandleHide, allData }) => {
       }
     }, [socialMedia]) */
 
-
   useEffect(() => {
-    setisHideSocialMedia(isHideAll)
-  }, [isHideAll])
+    setisHideSocialMedia(isHideAll);
+  }, [isHideAll]);
 
   const handleHide = (e) => {
     e.stopPropagation();
     setisHideSocialMedia(!isHideSocialMedia);
     onHandleHide(!isHideSocialMedia);
-  }
+  };
 
   const handleEdit = (e, data) => {
     e.stopPropagation();
     setUpdateRowData(data);
     setIsModalOpen(true);
-  }
+  };
 
   const ModifyRowData = (data) => {
-    console.log(data);
+    // console.log(data);
 
     if (data?.length > 0) {
       const modifyData = data?.map((item) => {
         return {
           ...item,
-          socialMediaApp: item?.socialMediaApp?.value?.length > 0 ? item?.socialMediaApp?.value : item?.socialMediaApp
-        }
+          socialMediaApp:
+            item?.socialMediaApp?.value?.length > 0
+              ? item?.socialMediaApp?.value
+              : item?.socialMediaApp,
+        };
       });
       setRowData(modifyData);
       dispatch(setSocialMediaData(modifyData));
     }
-
-  }
+  };
 
   return (
     <div className="flex flex-col gap-2 border border-gray-400 rounded-lg px-4 py-2 h-full custom-scroll">
-
       <SmCustomModal type="Create" isopen={isModalOpen} onClose={closeModal}>
-        <SocialMediaModel onClose={closeModal} updateRowData={updateRowData} rowData={rowData} ModifyRowData={ModifyRowData} />
+        <SocialMediaModel
+          onClose={closeModal}
+          updateRowData={updateRowData}
+          rowData={rowData}
+          ModifyRowData={ModifyRowData}
+          allData={allData?.guest}
+          initialValue={initialValue}
+          setSocialMedia={setSocialMedia}
+          socialMedia={socialMedia}
+        />
       </SmCustomModal>
 
       <div className="flex items-center gap-3">
-
-        <FaChevronDown className={`h-4 w-4 transform ${!isHideSocialMedia ? 'rotate-180' : 'rotate-0'} cursor-pointer transition-transform duration-300 ease-in-out`} onClick={(e) => handleHide(e)} />
+        <FaChevronDown
+          className={`h-4 w-4 transform ${
+            !isHideSocialMedia ? "rotate-180" : "rotate-0"
+          } cursor-pointer transition-transform duration-300 ease-in-out`}
+          onClick={(e) => handleHide(e)}
+        />
 
         <div className=" w-[150px] flex gap-2   ">
           <CustomButton
@@ -189,30 +217,29 @@ const SocialMedia = ({ isHideAll, onHandleHide, allData }) => {
         </div>
       </div>
 
-      {isHideSocialMedia && <div className="flex w-full h-full min-h-[30vh] pb-10  xl:max-h-[60%]  mx-auto ag-theme-alpine ">
-        <div
-          className="relative overflow-auto"
-          style={{ width: "50%" }}
-        >
-          <AgGridReact
-            ref={tableRef}
-            rowData={rowData}
-            columnDefs={columnDefs}
-            defaultColDef={defaultColDef}
-            frameworkComponents={frameworkComponents}
-            enableBrowserTooltips={true}
-            tooltipShowDelay={{ tooltipShowDelay: 2 }}
-            rowSelection="multiple"
-            pagination={true}
-            onCellClicked={handleCellClicked}
-            gridOptions={gridOptions}
-            paginationAutoPageSize={true}
-            onGridReady={onGridReady}
-            suppressCopyRowsToClipboard={true}
-            animateRows={true}
-          />
+      {isHideSocialMedia && (
+        <div className="flex w-full h-full min-h-[30vh] pb-10  xl:max-h-[60%]  mx-auto ag-theme-alpine ">
+          <div className="relative overflow-auto" style={{ width: "50%" }}>
+            <AgGridReact
+              ref={tableRef}
+              rowData={rowData}
+              columnDefs={columnDefs}
+              defaultColDef={defaultColDef}
+              frameworkComponents={frameworkComponents}
+              enableBrowserTooltips={true}
+              tooltipShowDelay={{ tooltipShowDelay: 2 }}
+              rowSelection="multiple"
+              pagination={true}
+              onCellClicked={handleCellClicked}
+              gridOptions={gridOptions}
+              paginationAutoPageSize={true}
+              onGridReady={onGridReady}
+              suppressCopyRowsToClipboard={true}
+              animateRows={true}
+            />
+          </div>
         </div>
-      </div>}
+      )}
     </div>
   );
 };

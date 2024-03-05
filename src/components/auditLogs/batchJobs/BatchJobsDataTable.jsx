@@ -14,7 +14,7 @@ const BatchJobsDataTable = ({ batchId }) => {
             field: "batchId",
             headerName: "Batch_Id ",
             minWidth: 100,
-            maxWidth: 110,
+            maxWidth: 110, 
 
         },
         {

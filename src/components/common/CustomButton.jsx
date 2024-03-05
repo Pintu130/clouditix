@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CustomButton = ({ name, handleClick, isDisable, isLoading = false, icon }) => {
+const CustomButton = ({ name, handleClick, isDisable=false, isLoading = false, icon }) => {
     return (
         <div className='w-full h-full'>
             <button
